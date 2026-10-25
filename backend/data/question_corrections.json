@@ -1,0 +1,1183 @@
+{
+  "version": "question-audit-2026-10-21",
+  "corrections": [
+    {
+      "exam_type": "cet6",
+      "year": 2019,
+      "month": 12,
+      "set_no": 1,
+      "q_type": "translation",
+      "source_file": "六级\\2019年12月\\第01套.pdf",
+      "source_pages": [
+        12
+      ],
+      "source_sha256": "d3674c2e941ae2b4fe2af81258b3d54aad39bb9ef8339a124f95124400b07993",
+      "fields": {
+        "source_text": {
+          "before": "国许多地方都培育和种植牡丹。千百年来,创作了许多诗歌和绘画赞美牡丹。唐代时期,牡丹在皇家园林普遍种植并被誉为国花,因而特别风行。十世纪时,洛阳古城成为牡丹栽培中心,而且这一地位一直保持到今天。现在,成千上万的国内外游客蜂拥到洛阳参加一年一度的牡丹节,欣赏洛阳牡丹的独特之美,同时探索九朝古都的历史。",
+          "after": "牡丹(peony)花色艳丽，形象高雅，象征着和平与繁荣，因而在中国被称为“花中之王”。中国许多地方都培育和种植牡丹。千百年来,创作了许多诗歌和绘画赞美牡丹。唐代时期,牡丹在皇家园林普遍种植并被誉为国花,因而特别风行。十世纪时,洛阳古城成为牡丹栽培中心,而且这一地位一直保持到今天。现在,成千上万的国内外游客蜂拥到洛阳参加一年一度的牡丹节,欣赏洛阳牡丹的独特之美,同时探索九朝古都的历史。"
+        }
+      }
+    },
+    {
+      "exam_type": "cet6",
+      "year": 2019,
+      "month": 12,
+      "set_no": 2,
+      "q_type": "translation",
+      "source_file": "六级\\2019年12月\\第02套.pdf",
+      "source_pages": [
+        12
+      ],
+      "source_sha256": "275015d14d74ee1c3ae426d170a92ee1acbdf89ed57b027abed072a4cec6dd84",
+      "fields": {
+        "source_text": {
+          "before": "梅花(plumblossom)位居中国十大名花之首,源于中国南方,已有三千多年的栽培和种植历史。隆冬时节，五颜六色的梅花不畏严寒，迎着风雪傲然绽放。在中国传统文化中，梅花象征着坚强、纯洁、高雅，激励人们不畏艰难、砥砺前行。自古以来，许多诗人和画家从梅花中获取灵感，创作了无数不朽的作品。普通大众也都喜爱梅花，春节期间常用于家庭装饰。南京市已将梅花定为市花,每年举办梅花节,成千上万的人冒着严寒到梅花山踏雪赏梅",
+          "after": "梅花(plum blossom)位居中国十大名花之首,源于中国南方,已有三千多年的栽培和种植历史。隆冬时节，五颜六色的梅花不畏严寒，迎着风雪傲然绽放。在中国传统文化中，梅花象征着坚强、纯洁、高雅，激励人们不畏艰难、砥砺前行。自古以来，许多诗人和画家从梅花中获取灵感，创作了无数不朽的作品。普通大众也都喜爱梅花，春节期间常用于家庭装饰。南京市已将梅花定为市花,每年举办梅花节,成千上万的人冒着严寒到梅花山踏雪赏梅。"
+        }
+      }
+    },
+    {
+      "exam_type": "cet6",
+      "year": 2019,
+      "month": 12,
+      "set_no": 3,
+      "q_type": "translation",
+      "source_file": "六级\\2019年12月\\第03套.pdf",
+      "source_pages": [
+        8
+      ],
+      "source_sha256": "89a8c060ab08e5f5c912d8cb43aa89631125b9f756749e08b042bb7bfaaed5bf",
+      "fields": {
+        "source_text": {
+          "before": "荷花(lotusflower)是中国的名花之一,深受人们喜爱。中国许多地方的湖泊和池塘都适宜荷花生长。荷花色彩鲜艳，夏日清晨绽放，夜晚闭合，花期长达两三个月，吸引来自各地的游客前往观赏。荷花具有多种功能，既能绿化水面，又能美化庭园，还可净化水质、减少污染、改善环境。荷花迎骄阳而不惧,出污泥而不染,象征纯洁、高雅,常常用来比喻人的高尚品德,历来是诗人画家创作的重要题材。荷花盛开的地方也是许多摄影爱好者经常光顾之地。",
+          "after": "荷花(lotus flower)是中国的名花之一,深受人们喜爱。中国许多地方的湖泊和池塘都适宜荷花生长。荷花色彩鲜艳，夏日清晨绽放，夜晚闭合，花期长达两三个月，吸引来自各地的游客前往观赏。荷花具有多种功能，既能绿化水面，又能美化庭园，还可净化水质、减少污染、改善环境。荷花迎骄阳而不惧,出污泥而不染,象征纯洁、高雅,常常用来比喻人的高尚品德,历来是诗人画家创作的重要题材。荷花盛开的地方也是许多摄影爱好者经常光顾之地。"
+        }
+      }
+    },
+    {
+      "exam_type": "cet6",
+      "year": 2020,
+      "month": 7,
+      "set_no": 1,
+      "q_type": "writing",
+      "source_file": "六级\\2020年07月\\第01套.pdf",
+      "source_pages": [
+        13
+      ],
+      "source_sha256": "be125ae4035ebd1bea079cf0248d391c023c533433dccf4427da930df743e612",
+      "fields": {
+        "prompt": {
+          "before": "Directions: For this part, you are allowed 30 minutes to write an essay on the saying “The best preparation for tomorrow is doing your best today. ”You should write at least 150 words but no more than 200 words.",
+          "after": "Directions: For this part, you are allowed 30 minutes to write an essay on the saying “The best preparation for tomorrow is doing your best today.” You should write at least 150 words but no more than 200 words."
+        }
+      }
+    },
+    {
+      "exam_type": "cet6",
+      "year": 2020,
+      "month": 9,
+      "set_no": 1,
+      "q_type": "writing",
+      "source_file": "六级\\2020年09月\\第01套.pdf",
+      "source_pages": [
+        12
+      ],
+      "source_sha256": "a7b0eb8e0af8085c2bdff534b16a82e511fcd14348c3a5dfc9c9518566b82d55",
+      "fields": {
+        "prompt": {
+          "before": "Directions: For this part, you are allowed 30 minutes to write an essay on the saying \"Beauty of the soul is the essential beauty. \" You should write at least 150 words but no more than 200 words.",
+          "after": "Directions: For this part, you are allowed 30 minutes to write an essay on the saying \"Beauty of the soul is the essential beauty.\" You should write at least 150 words but no more than 200 words."
+        }
+      }
+    },
+    {
+      "exam_type": "cet6",
+      "year": 2020,
+      "month": 9,
+      "set_no": 1,
+      "q_type": "translation",
+      "source_file": "六级\\2020年09月\\第01套.pdf",
+      "source_pages": [
+        12
+      ],
+      "source_sha256": "a7b0eb8e0af8085c2bdff534b16a82e511fcd14348c3a5dfc9c9518566b82d55",
+      "fields": {
+        "source_text": {
+          "before": "《西游记》（JourneytotheWest)也许是中国文学四大经典小说中最具影响力的一部,当然也是在国外最广为人知的一部小说。这部小说描绘了著名僧侣玄奘在三个随从的陪同下穿越中国西部地区前往印度取经（Buddhistscripture）的艰难历程。虽然故事的主题基于佛教,但这部小说采用了大量中国民间故事和神话的素材，创造了各种栩栩如生的人物和动物形象。其中最著名的是孙悟空，他与各种各样妖魔作斗争的故事几乎为每个中国孩子所熟知。",
+          "after": "《西游记》（Journey to the West)也许是中国文学四大经典小说中最具影响力的一部,当然也是在国外最广为人知的一部小说。这部小说描绘了著名僧侣玄奘在三个随从的陪同下穿越中国西部地区前往印度取经（Buddhist scripture）的艰难历程。虽然故事的主题基于佛教,但这部小说采用了大量中国民间故事和神话的素材，创造了各种栩栩如生的人物和动物形象。其中最著名的是孙悟空，他与各种各样妖魔作斗争的故事几乎为每个中国孩子所熟知。"
+        }
+      }
+    },
+    {
+      "exam_type": "cet6",
+      "year": 2020,
+      "month": 9,
+      "set_no": 2,
+      "q_type": "writing",
+      "source_file": "六级\\2020年09月\\第02套.pdf",
+      "source_pages": [
+        8
+      ],
+      "source_sha256": "fde98c8992a01266d22b1de144ea27e4b8f4a9b25d7c7b9dd52f336941ba1871",
+      "fields": {
+        "prompt": {
+          "before": "Directions: For this part, you are allowed 30 minutes to write an essay on the saying \" What is worth doing is worth doing well. \" You should write at least 150 words but no more than 200 words. Part I Writing (30 minutes) (il T.iE' 7f Js-$1J, fM l*J \u0002.61: ff!Ht, z ls izHT llJr:h (lit) Directions: For this part, you are allowed 30 minutes to write an essay on the saying \" Wealth of the mind is the only true wealth. \" You should write at least 150 words but no more than 200 words.",
+          "after": "Directions: For this part, you are allowed 30 minutes to write an essay on the saying \"What is worth doing is worth doing well.\" You should write at least 150 words but no more than 200 words."
+        }
+      }
+    },
+    {
+      "exam_type": "cet6",
+      "year": 2020,
+      "month": 9,
+      "set_no": 2,
+      "q_type": "translation",
+      "source_file": "六级\\2020年09月\\第02套.pdf",
+      "source_pages": [
+        7
+      ],
+      "source_sha256": "fde98c8992a01266d22b1de144ea27e4b8f4a9b25d7c7b9dd52f336941ba1871",
+      "fields": {
+        "source_text": {
+          "before": "《红楼梦》（DreamoftheRedChamber)是18世纪曹雪芹创作的一部小说。曹雪芹基于自已痛苦的个人经历，讲述了贾宝玉和林黛玉之间的悲剧性爱情故事。书中有大约30个主要人物和400多个次要人物，每个人物都刻画得栩栩如生，具有鲜明的个性。小说详尽地描述了四个贵族世家兴衰的历程，反映了封建社会隐藏的种种危机和错综复杂的社会冲突。《红楼梦》融合了现实主义和浪漫主义,具有很强的艺术感染力。它被普遍认为是中国最伟大的小说,也是世界上最伟大的文学创作之一。",
+          "after": "《红楼梦》(Dream of the Red Chamber)是18世纪曹雪芹创作的一部小说。曹雪芹基于自己痛苦的个人经历，讲述了贾宝玉和林黛玉之间的悲剧性爱情故事。书中有大约30个主要人物和400多个次要人物，每个人物都刻画得栩栩如生，具有鲜明的个性。小说详尽地描述了四个贵族世家的衰败历程，反映了封建社会隐藏的种种危机和错综复杂的社会冲突。\n\n《红楼梦》融合了现实主义和浪漫主义，具有很强的艺术感染力。它被普遍认为是中国最伟大的小说，也是世界上最伟大的文学创作之一。"
+        }
+      }
+    },
+    {
+      "exam_type": "cet6",
+      "year": 2020,
+      "month": 12,
+      "set_no": 1,
+      "q_type": "writing",
+      "source_file": "六级\\2020年12月\\第01套.pdf",
+      "source_pages": [
+        1
+      ],
+      "source_sha256": "7f46faeff9963dd7743db51ff9c32ad8c6a35720787a78252e2fb1687e6d64df",
+      "fields": {
+        "prompt": {
+          "before": "Directions: For this part, you are allowed 30 minutes to write an essay on why students should be encouraged to develop the ability to meet challenges. You should write at least 150 words but no more than 200 words. Part ll Li&iening Comprehension ( 30 minutes) Section A Directions: Jn this section, you will hear two long conversations. At the end of each conversation, you will hear four questions. Both the conversation and the questions will be spoken only once. After you hear a question, you must choose the best answer from the four choices marked A), B), C) and D). Then mark the corresponding letter on Answer Sheet 1 with a single line through the centre. Questions 1 to 4 are based on the conversation you have just heard. 1. A) She has not received any letter from the man. C) She has failed'to reach the manager again. B) Her claim has been completely disregarded;· D) Her house has not been repa",
+          "after": "Directions: For this part, you are allowed 30 minutes to write an essay on why students should be encouraged to develop the ability to meet challenges. You should write at least 150 words but no more than 200 words."
+        }
+      }
+    },
+    {
+      "exam_type": "cet6",
+      "year": 2020,
+      "month": 12,
+      "set_no": 2,
+      "q_type": "writing",
+      "source_file": "六级\\2020年12月\\第02套.pdf",
+      "source_pages": [
+        1
+      ],
+      "source_sha256": "5e84132e4e813a8b21db98a423e28955aaaf7454d0cd771dc32affe0514cd2be",
+      "fields": {
+        "prompt": {
+          "before": "Directions: For this part, you are allowed 30 minutes to write an essa,y on why students should be encouraged to develop effective communication skills. You should write at least 150 oords but no more than 200 words'. Part 1[ Listening Comprehension ( 30 minutes) Section A Directions: In ·this section, yc;u will hear two long conversations. At the end of each conversation, you will hear four questions. Both the conversation and the questions will be spoken only once. After you hear a question, you must choose the best answer from the four choices marked A), B), C) and D). Then mark the corresponding letter on Answer Sheet 1 with a single line through the centre. Questions 1 to 4 are based on the conversation you have just heard. 1. A) A driving test. C) Traffic routes. B) A video game. D) Cargo logistics. 2. A) He found it instructive and realistic. B) He bought it when touring Europe. C) He was re",
+          "after": "Directions: For this part, you are allowed 30 minutes to write an essay on why students should be encouraged to develop effective communication skills. You should write at least 150 words but no more than 200 words."
+        }
+      }
+    },
+    {
+      "exam_type": "cet6",
+      "year": 2020,
+      "month": 12,
+      "set_no": 3,
+      "q_type": "writing",
+      "source_file": "六级\\2020年12月\\第03套.pdf",
+      "source_pages": [
+        1
+      ],
+      "source_sha256": "55f19d43468e22cc1425eff7771dd6d556f018d10a0ef997e0ba214d85fce433",
+      "fields": {
+        "prompt": {
+          "before": "Directions: For this part, you are allowed 30 minutes to write an essay on why students should be encouraged to develop creativity. You should write at least 150 words but no more than 200 words. Part I Listening Comprehension ( 30 minutes) &ijij: lt-=f 2020 12 7'f.l-.½l@/-7011!JrjJ'*1A:Jml!JrjJ.!jfilI01pg.§fflliiJ,.R:m:iz1PJJ!PIMfJ!:iF fffJ, 2JlttE*1A:lm'P3-l'fll4tlilJe. Part l[ Reading Comprehension ( 40 minutes) Section A Directions: In this section, there is a passage with ten blanks. You are required to select one word for each blank from a list of choices given in a word bank following the passage. Read the passage through carefully before making your choices. Each choice in the bank is identified by a letter. Please mark the co\"esponding letter for each item on Answer Sheet 2 with a single line through the centre. You may not use any of the words in the bank more than once. Social distanci",
+          "after": "Directions: For this part, you are allowed 30 minutes to write an essay on why students should be encouraged to develop creativity. You should write at least 150 words but no more than 200 words."
+        }
+      }
+    },
+    {
+      "exam_type": "cet6",
+      "year": 2020,
+      "month": 12,
+      "set_no": 3,
+      "q_type": "translation",
+      "source_file": "六级\\2020年12月\\第03套.pdf",
+      "source_pages": [
+        6
+      ],
+      "source_sha256": "55f19d43468e22cc1425eff7771dd6d556f018d10a0ef997e0ba214d85fce433",
+      "fields": {
+        "source_text": {
+          "before": "青藏铁路是世：界上最高最长的高原铁路，全长1,956公里，其中有960公里在海拔4,000多米之上，是连接西藏和中国其他地区的第一条铁路。由于铁路穿越世界上最脆弱的生态系统，在建设期间和建成后都采取了生态保护措施，以确保其成为一条“绿色铁路”。青藏铁路大大缩短了去往西藏的旅行时间。更重要的是，它极大地促进了西藏的经济发展，改善了当地居民的生活。铁路开通后，愈来愈多的人选择乘火车前往西藏，这样还有机会欣赏沿线的美景。",
+          "after": "青藏铁路是世界上最高最长的高原铁路，全长1,956公里，其中有960公里在海拔4,000多米之上，是连接西藏和中国其他地区的第一条铁路。由于铁路穿越世界上最脆弱的生态系统，在建设期间和建成后都采取了生态保护措施，以确保其成为一条“绿色铁路”。青藏铁路大大缩短了去往西藏的旅行时间。更重要的是，它极大地促进了西藏的经济发展，改善了当地居民的生活。铁路开通后，愈来愈多的人选择乘火车前往西藏，这样还有机会欣赏沿线的美景。"
+        }
+      }
+    },
+    {
+      "exam_type": "cet6",
+      "year": 2021,
+      "month": 6,
+      "set_no": 1,
+      "q_type": "writing",
+      "source_file": "六级\\2021年06月\\第01套.pdf",
+      "source_pages": [
+        1
+      ],
+      "source_sha256": "c4d867b1e666668bca784ee4c19877cbd01435a3883172607cb3fc4f8373849b",
+      "fields": {
+        "prompt": {
+          "before": "Directions: For this part, you are allowed 30 minutes to write an essay based on the graph below. You should start your essay with a brief description of the graph and comment on China's achievements in urbanization. You should write at least 150 words but no more than200 words. Degree of urbanization in China from 1980 to 2019 Part n: Listening Comprehension ( 30 minutes) Section A Directions: In this section, you will hear two long conversations. At the end of each conversation, you will hear four questions. Both the conversation and the questions will be spoken only once. After you hear a question, you must choose the best (Jnswer from the four choices marked A), B), C) and D). Then mark the corresponding letter on Answer Sheet 1 with a single line through the centre. Questions 1 to 4 are based on the conversation you have just heard. 1. A) He is going to leave his present job. B) He is going to",
+          "after": "Directions: For this part, you are allowed 30 minutes to write an essay based on the graph below. You should start your essay with a brief description of the graph and comment on China's achievements in urbanization. You should write at least 150 words but no more than 200 words."
+        }
+      }
+    },
+    {
+      "exam_type": "cet6",
+      "year": 2021,
+      "month": 6,
+      "set_no": 1,
+      "q_type": "translation",
+      "source_file": "六级\\2021年06月\\第01套.pdf",
+      "source_pages": [
+        8
+      ],
+      "source_sha256": "c4d867b1e666668bca784ee4c19877cbd01435a3883172607cb3fc4f8373849b",
+      "fields": {
+        "source_text": {
+          "before": "海南是仅次于台湾的中国第二大岛，是位于中国最南端的省份。海南岛风景秀丽，气候宜人，阳光充足，生物多样，温泉密布，海水清澈，大部分海滩几乎全年都是游泳和日光浴的理想场所，因而被誉为中国的四季花园和度假胜地，每年都吸引了大批中外游客。海南1988年建省以来,旅游业、服务业、高新技术产业飞速发展，是中国唯一的省级经济特区。在中央政府和全国人民的大力支持下，海南将建成中国最大的自由贸易试验区。",
+          "after": "海南是仅次于台湾的中国第二大岛，是位于中国最南端的省份。海南岛风景秀丽，气候宜人，阳光充足，生物多样，温泉密布，海水清澈，大部分海滩几乎全年都是游泳和日光浴的理想场所，因而被誉为中国的四季花园和度假胜地，每年都吸引了大批中外游客。\n\n海南1988年建省以来,旅游业、服务业、高新技术产业飞速发展，是中国唯一的省级经济特区。在中央政府和全国人民的大力支持下，海南将建成中国最大的自由贸易试验区。"
+        }
+      }
+    },
+    {
+      "exam_type": "cet6",
+      "year": 2021,
+      "month": 6,
+      "set_no": 2,
+      "q_type": "writing",
+      "source_file": "六级\\2021年06月\\第02套.pdf",
+      "source_pages": [
+        1
+      ],
+      "source_sha256": "74c5561c6589fff5379447f07327cdfc28d7a988e2b8915af7fbbb6746069b2b",
+      "fields": {
+        "prompt": {
+          "before": "Directions: For this part, you are allowed 30 minutes to write an essay based on the chart below. You should start your essay with a brief description of the chart and comment on China's achievements in higher education. You should write at least 150 words but no more than 200 words. Gross enrolment ratio in higher education in China (1990 - 2019) Part ][ Listening Comprehension (30 minutes) Section A Directions: In this section, you will hear two long conversations. At the end of each conversation, you will hear four questions. Both the conversation and the_ questions will be spoken only once. After you hear a question, you must choose the best answer from the four choices marked A), B), C) and D). Then mark the corresponding letter on Answer Sheet 1 with a single line through the centre. Questions 1 to 4 are based on the conversation you have just heard. 1. A) Weird. B) Efficient. C) Tolerant.",
+          "after": "Directions: For this part, you are allowed 30 minutes to write an essay based on the chart below. You should start your essay with a brief description of the chart and comment on China's achievements in higher education. You should write at least 150 words but no more than 200 words."
+        }
+      }
+    },
+    {
+      "exam_type": "cet6",
+      "year": 2021,
+      "month": 6,
+      "set_no": 2,
+      "q_type": "translation",
+      "source_file": "六级\\2021年06月\\第02套.pdf",
+      "source_pages": [
+        8
+      ],
+      "source_sha256": "74c5561c6589fff5379447f07327cdfc28d7a988e2b8915af7fbbb6746069b2b",
+      "fields": {
+        "source_text": {
+          "before": "Increasingly，evenSiliconValleyhastoacknowledgethecostsoftheintoxicating（令人陶醉的）hurry青海是中国西北部的一个省份,平均海拔3000米以上,大部分地区为高山和高原。青海省得名于全国最大的咸水湖青海湖。青海湖被誉为“中国最美的湖泊”，是最受欢迎的旅游景点之一，也是摄影师和艺术家的天堂。青海山川壮丽,地大物博,石油和天然气储量丰富,省内许多城市的经济在石油和天然气工业带动下得到了长足发展。青海尤以水资源丰富而闻名，是中国三大河流长江，黄河和澜沧江的发源地，在中国的水生态中发挥着重要作用。",
+          "after": "青海是中国西北部的一个省份,平均海拔3000米以上,大部分地区为高山和高原。青海省得名于全国最大的咸水湖青海湖。青海湖被誉为“中国最美的湖泊”，是最受欢迎的旅游景点之一，也是摄影师和艺术家的天堂。\n\n青海山川壮丽,地大物博,石油和天然气储量丰富,省内许多城市的经济在石油和天然气工业带动下得到了长足发展。青海尤以水资源丰富而闻名，是中国三大河流长江，黄河和澜沧江的发源地，在中国的水生态中发挥着重要作用。"
+        }
+      }
+    },
+    {
+      "exam_type": "cet6",
+      "year": 2021,
+      "month": 6,
+      "set_no": 3,
+      "q_type": "writing",
+      "source_file": "六级\\2021年06月\\第03套.pdf",
+      "source_pages": [
+        1
+      ],
+      "source_sha256": "c74babfba25c7e29c6c71c1f57cbb2b380305533062a56a054f98fcc7b74dfa7",
+      "fields": {
+        "prompt": {
+          "before": "Directions: For this part, you are allowed 30 minutes to write an essay based on the chart below. You should start your essay with a briXf description of the chart and comment on China's achievements in poverty alleviation. You should write at least 150 words but no more than 200 words. Rural population in poverty Sources: China's National Bureau of Statistics, China's State Council Leading Group Office of Poverty Alleviation and Development Part ][ Listening Comprehension (30 minutes) Part ][ Section A Reading Comprehension ( 40 minutes) Directions: In this section, there is a passage with ten blanks. You are required to select one word for each blank from a list of choices given in a word. bank following the passage. Read the passage through carefully before making your choices; Each choice in the bank is identified by a letter. Please mark the corresponding letter for each item on Answer Sheet 2",
+          "after": "Directions: For this part, you are allowed 30 minutes to write an essay based on the chart below. You should start your essay with a brief description of the chart and comment on China's achievements in poverty alleviation. You should write at least 150 words but no more than 200 words."
+        }
+      }
+    },
+    {
+      "exam_type": "cet6",
+      "year": 2021,
+      "month": 6,
+      "set_no": 3,
+      "q_type": "translation",
+      "source_file": "六级\\2021年06月\\第03套.pdf",
+      "source_pages": [
+        6
+      ],
+      "source_sha256": "c74babfba25c7e29c6c71c1f57cbb2b380305533062a56a054f98fcc7b74dfa7",
+      "fields": {
+        "source_text": {
+          "before": "云南是位于中国西南的一个省份，平均海拔1500米。云南历史悠久，风景秀丽，气候宜人。云南生态环境优越，生物多种多样，被誉为野生动植物的天堂。云南还有多种矿藏和充足的水资源，为全省经济的可持续发展提供了有利条件。云南居住着25个少数民族，他们大多有自己的语言，习俗和宗教。云南独特的自然景色和丰富的民族文化使其成为中国最受欢迎的旅游目的地之，每年都吸引着大批国内外游客前往观光旅游。",
+          "after": "云南是位于中国西南的一个省份，平均海拔1500米。云南历史悠久，风景秀丽，气候宜人。云南生态环境优越，生物多种多样，被誉为野生动植物的天堂。云南还有多种矿藏和充足的水资源，为全省经济的可持续发展提供了有利条件。\n\n云南居住着25个少数民族，他们大多有自己的语言，习俗和宗教。云南独特的自然景色和丰富的民族文化使其成为中国最受欢迎的旅游目的地之一，每年都吸引着大批国内外游客前往观光旅游。"
+        }
+      }
+    },
+    {
+      "exam_type": "cet6",
+      "year": 2021,
+      "month": 12,
+      "set_no": 1,
+      "q_type": "writing",
+      "source_file": "六级\\2021年12月\\第01套.pdf",
+      "source_pages": [
+        1
+      ],
+      "source_sha256": "6596d24264f19ce8fb45fd0c6aa2ea65809903e3a1f800f3bd9b0809d69d0806",
+      "fields": {
+        "prompt": {
+          "before": "Directions: For this part, you are allowed 30 minutes to write an essay related to the short passage given below. In your essay, you are to comment on the phenomenon described in the passage and suggest measures to address the issue. You should write at least 150 words but no more than 200 words. Young people spend a lot of time on the Internet. However, they are sometimes unable to recognize false information on the Internet, judge the reliability of online information sources, or tell real news stories from fake ones.",
+          "after": "Directions: For this part, you are allowed 30 minutes to write an essay related to the short passage given below. In your essay, you are to comment on the phenomenon described in the passage and suggest measures to address the issue. You should write at least 150 words but no more than 200 words.\n\nYoung people spend a lot of time on the Internet. However, they are sometimes unable to recognize false information on the Internet, judge the reliability of online information sources, or tell real news stories from fake ones."
+        }
+      }
+    },
+    {
+      "exam_type": "cet6",
+      "year": 2021,
+      "month": 12,
+      "set_no": 2,
+      "q_type": "writing",
+      "source_file": "六级\\2021年12月\\第02套.pdf",
+      "source_pages": [
+        1
+      ],
+      "source_sha256": "fa424d7c8fc83ce3f8bbf537a34f0f5704be89582370443febf6be97a0523989",
+      "fields": {
+        "prompt": {
+          "before": "Directions: For this part, you are allowed 30 minutes to write an essay related to the short passage given below. In your essay, you are to comment on the phenomenon described in the passage and suggest measures to address the issue. You should write at least 150 words but no more than 200 words. Nowadays star chasing is prevalent among many teenagers. They take pop stars as their idols, imitating their way of talking, following their style of dressing, and seeking every chance to meet them in person at great expenses.",
+          "after": "Directions: For this part, you are allowed 30 minutes to write an essay related to the short passage given below. In your essay, you are to comment on the phenomenon described in the passage and suggest measures to address the issue. You should write at least 150 words but no more than 200 words.\n\nNowadays star chasing is prevalent among many teenagers. They take pop stars as their idols, imitating their way of talking, following their style of dressing, and seeking every chance to meet them in person at great expenses."
+        }
+      }
+    },
+    {
+      "exam_type": "cet6",
+      "year": 2021,
+      "month": 12,
+      "set_no": 3,
+      "q_type": "writing",
+      "source_file": "六级\\2021年12月\\第03套.pdf",
+      "source_pages": [
+        1
+      ],
+      "source_sha256": "9da7671084af32e4bb14f9aaedf2354204e9c47bbf2e9492ad9aea7b68dfdf30",
+      "fields": {
+        "prompt": {
+          "before": "Directions: For this part, you are allowed 30 minutes to write an essay related to the short passage given below. In your essay, you are to comment on the phenomenon described in the passage and suggest measures to address the issue. You should write at least 150 words but no more than 200 words. Some parents in China are overprotective of their children. They plan everything for their children, make all the decisions for them, and do not allow them to explore on their own in case they make mistakes or get hurt.",
+          "after": "Directions: For this part, you are allowed 30 minutes to write an essay related to the short passage given below. In your essay, you are to comment on the phenomenon described in the passage and suggest measures to address the issue. You should write at least 150 words but no more than 200 words.\n\nSome parents in China are overprotective of their children. They plan everything for their children, make all the decisions for them, and do not allow them to explore on their own in case they make mistakes or get hurt."
+        }
+      }
+    },
+    {
+      "exam_type": "cet6",
+      "year": 2021,
+      "month": 12,
+      "set_no": 3,
+      "q_type": "translation",
+      "source_file": "六级\\2021年12月\\第03套.pdf",
+      "source_pages": [
+        7
+      ],
+      "source_sha256": "9da7671084af32e4bb14f9aaedf2354204e9c47bbf2e9492ad9aea7b68dfdf30",
+      "fields": {
+        "source_text": {
+          "before": "井冈山地处湖南、江西两省交界处，因其辉煌的革命历史被誉为“中国革命红色摇篮1927年10月，毛泽东、朱德等老一辈革命家率领中国工农红军来到这里，开展了艰苦卓绝的斗争，创建了第一个农村革命根据地，点燃了中国革命的星星之火，开辟了“农村包围（besiege）城市，武装夺取政权”这一具有中国特色的革命道路，中国革命从这里迈向胜利。井冈山现有100多处革命旧址，成为一个“没有围墙的革命历史博物馆”，是爱国主义和革命传统教育的重要基地。",
+          "after": "井冈山地处湖南、江西两省交界处，因其辉煌的革命历史被誉为“中国革命红色摇篮”。1927年10月，毛泽东、朱德等老一辈革命家率领中国工农红军来到这里，开展了艰苦卓绝的斗争，创建了第一个农村革命根据地，点燃了中国革命的星星之火，开辟了“农村包围（besiege）城市，武装夺取政权”这一具有中国特色的革命道路，中国革命从这里迈向胜利。井冈山现有100多处革命旧址，成为一个“没有围墙的革命历史博物馆”，是爱国主义和革命传统教育的重要基地。"
+        }
+      }
+    },
+    {
+      "exam_type": "cet6",
+      "year": 2022,
+      "month": 6,
+      "set_no": 1,
+      "q_type": "writing",
+      "source_file": "六级\\2022年06月\\第01套.pdf",
+      "source_pages": [
+        1
+      ],
+      "source_sha256": "c9e11e72c0bb2bebdefd6bcbfc159963f5f6da8261fd215d17461561c5079bb8",
+      "fields": {
+        "prompt": {
+          "before": "Directions: For this part, you are allowed 30 minutes to write an essay that begins with the sentence “Nowadays more and more people choose to live an environmentally friendly lifestyle.99 You can make comments, cite examples, or use your personal experiences to develop your essay. You should write at least 150 words but no more than 200 words.",
+          "after": "Directions: For this part, you are allowed 30 minutes to write an essay that begins with the sentence “Nowadays more and more people choose to live an environmentally friendly lifestyle.” You can make comments, cite examples, or use your personal experiences to develop your essay. You should write at least 150 words but no more than 200 words."
+        }
+      }
+    },
+    {
+      "exam_type": "cet6",
+      "year": 2022,
+      "month": 6,
+      "set_no": 1,
+      "q_type": "translation",
+      "source_file": "六级\\2022年06月\\第01套.pdf",
+      "source_pages": [
+        10
+      ],
+      "source_sha256": "c9e11e72c0bb2bebdefd6bcbfc159963f5f6da8261fd215d17461561c5079bb8",
+      "fields": {
+        "source_text": {
+          "before": "卢沟桥位于天安门广场西南15公里处，横跨永定河，是北京现存最古老的多拱石桥。卢沟桥最初建成于1192年，1698年重建，由281根柱子支撑。每根柱子上都有一头石狮。这些石狮的头、背、腹部或爪子上都藏着更多的狮子。这些石狮生动逼真、千姿百态，是卢沟桥石刻艺术的精品。桥上的石狮不计其数，因而北京地区流传着“卢沟桥上的石狮子—数不清”的说法。卢沟桥不仅以其美学特征闻名于世，还被公认为石桥建筑史上的一座丰碑。",
+          "after": "卢沟桥位于天安门广场西南15公里处，横跨永定河，是北京现存最古老的多拱石桥。卢沟桥最初建成于1192年，1698年重建，由281根柱子支撑。每根柱子上都有一头石狮。这些石狮的头、背、腹部或爪子上都藏着更多的狮子。这些石狮生动逼真、千姿百态，是卢沟桥石刻艺术的精品。桥上的石狮不计其数，因而北京地区流传着“卢沟桥上的石狮子—数不清”的说法。\n\n卢沟桥不仅以其美学特征闻名于世，还被公认为石桥建筑史上的一座丰碑。"
+        }
+      }
+    },
+    {
+      "exam_type": "cet6",
+      "year": 2022,
+      "month": 6,
+      "set_no": 2,
+      "q_type": "writing",
+      "source_file": "六级\\2022年06月\\第02套.pdf",
+      "source_pages": [
+        1
+      ],
+      "source_sha256": "3b75a979ecb71b87aa790c43d33902ab02b60a5124de62050fd3743666138305",
+      "fields": {
+        "prompt": {
+          "before": "Directions: For this part, you are allowed 30 minutes to write an essay that begins with the sentence “Nowadays more and more people keep learning new skills to adapt to a fast-changing world.\" You can make comments, cite examples, or use your personal experiences to develop your essay. You should write at least 150 words but no more than 200 words.",
+          "after": "Directions: For this part, you are allowed 30 minutes to write an essay that begins with the sentence “Nowadays more and more people keep learning new skills to adapt to a fast-changing world.” You can make comments, cite examples, or use your personal experiences to develop your essay. You should write at least 150 words but no more than 200 words."
+        }
+      }
+    },
+    {
+      "exam_type": "cet6",
+      "year": 2022,
+      "month": 6,
+      "set_no": 2,
+      "q_type": "translation",
+      "source_file": "六级\\2022年06月\\第02套.pdf",
+      "source_pages": [
+        8
+      ],
+      "source_sha256": "3b75a979ecb71b87aa790c43d33902ab02b60a5124de62050fd3743666138305",
+      "fields": {
+        "source_text": {
+          "before": "南京长江大桥是长江上首座由中国设计、采用国产材料建造的铁路、公路两用桥，上层的4车道公路桥长4589米，下层的双轨道铁路桥长6772米。铁路桥连接原来的天津一浦口和上海一南京两条铁路线，使火车过江从过去一个半小时缩短为现在的2分钟。大桥是南北交通的重要枢纽，也是南京的著名景点之一。南京长江大桥的建成标志着中国桥梁建设的一个飞跃，大大方便了长江两岸的物资交流和人员来往，对促进经济发展和改善人民生活起到了巨大作用。",
+          "after": "南京长江大桥是长江上首座由中国设计、采用国产材料建造的铁路、公路两用桥，上层的4车道公路桥长4589米，下层的双轨道铁路桥长6772米。铁路桥连接原来的天津—浦口和上海—南京两条铁路线，使火车过江从过去一个半小时缩短为现在的2分钟。大桥是南北交通的重要枢纽，也是南京的著名景点之一。\n\n南京长江大桥的建成标志着中国桥梁建设的一个飞跃，大大方便了长江两岸的物资交流和人员来往，对促进经济发展和改善人民生活起到了巨大作用。"
+        }
+      }
+    },
+    {
+      "exam_type": "cet6",
+      "year": 2022,
+      "month": 12,
+      "set_no": 1,
+      "q_type": "translation",
+      "source_file": "六级\\2022年12月\\第01套.pdf",
+      "source_pages": [
+        8
+      ],
+      "source_sha256": "ea4d214f4ca3479694d647a47d7a049ecd8f22d6516b239a2c1d9f68f7aa9f48",
+      "fields": {
+        "source_text": {
+          "before": "青藏高原(the Qinghai-Tibet Plateau)位于中国西南部，面积约230万平方公里，平均海拔4000米以上，被称为“世界屋脊”。青藏高原自然资源丰富，风景秀丽，拥有多种珍稀野生动物。青藏高原气温很低，形成了大面积高山冰川。这里是亚洲许多著名河流的源头，是中国和东南亚的主要淡水供应源。青藏高原对全球生态系统至关重要。由于气候变化的影响，青藏高原的冰川正在加速融化。中国一直在努力保护青藏高原的生态系统，草地覆盖率不断增加，许多濒危物种得到更为有效的保护。",
+          "after": "青藏高原(the Qinghai-Tibet Plateau)位于中国西南部，面积约230万平方公里，平均海拔4000米以上，被称为“世界屋脊”。青藏高原自然资源丰富，风景秀丽，拥有多种珍稀野生动物。\n\n青藏高原气温很低，形成了大面积高山冰川。这里是亚洲许多著名河流的源头，是中国和东南亚的主要淡水供应源。青藏高原对全球生态系统至关重要。\n\n由于气候变化的影响，青藏高原的冰川正在加速融化。中国一直在努力保护青藏高原的生态系统，草地覆盖率不断增加，许多濒危物种得到更为有效的保护。"
+        }
+      }
+    },
+    {
+      "exam_type": "cet6",
+      "year": 2022,
+      "month": 12,
+      "set_no": 2,
+      "q_type": "translation",
+      "source_file": "六级\\2022年12月\\第02套.pdf",
+      "source_pages": [
+        8
+      ],
+      "source_sha256": "09443b883347009a029d6778c30186a50136549e43f612f729120439606ddd0a",
+      "fields": {
+        "source_text": {
+          "before": "黄土高原(the Loess Plateau）是中国第三大高原，面积约60万平方公里，平均海拔1000—2000米，绝大部分覆盖着50—80米厚的黄土，是世界上黄土分布最集中、覆盖厚度最大的区域。这是大自然创造的一个奇迹，在世界上也是绝无仅有的。黄土高原是中华民族的发祥地之一。早在5500年前，人们就已经在黄土高原上开始农耕。随着农耕业的持续发展，黄土高原人口不断增加，在秦汉时期就成为中国的政治和经济中心。如今，随着西部大开发战略的实施，黄土高原地区的经济得到了迅速发展。",
+          "after": "黄土高原(the Loess Plateau）是中国第三大高原，面积约60万平方公里，平均海拔1000—2000米，绝大部分覆盖着50—80米厚的黄土，是世界上黄土分布最集中、覆盖厚度最大的区域。这是大自然创造的一个奇迹，在世界上也是绝无仅有的。\n\n黄土高原是中华民族的发祥地之一。早在5500年前，人们就已经在黄土高原上开始农耕。随着农耕业的持续发展，黄土高原人口不断增加，在秦汉时期就成为中国的政治和经济中心。如今，随着西部大开发战略的实施，黄土高原地区的经济得到了迅速发展。"
+        }
+      }
+    },
+    {
+      "exam_type": "cet6",
+      "year": 2022,
+      "month": 12,
+      "set_no": 3,
+      "q_type": "translation",
+      "source_file": "六级\\2022年12月\\第03套.pdf",
+      "source_pages": [
+        7
+      ],
+      "source_sha256": "c30e6deafcf807296c3696230e566db97b63144f67666d118ac4cc9c8c796e31",
+      "fields": {
+        "source_text": {
+          "before": "云贵高原(the Yunnan-Guizhou Plateau)大部分位于云南、贵州省境内，总面积约50万平方公里，平均海拔2000—4000米，是中国第四大高原。云贵高原西高东低，河流众多，形成了许多又深又陡的峡谷(canyon)。峡谷中许多地方土壤肥沃，非常有利于多种农作物生长。云贵高原独特的自然环境造就了生物和文化的多样性。它是中国森林和矿产资源类型十分丰富的地区，也是古人类起源的重要地区。云贵高原是中国少数民族数量最多的地区，各民族都保留了自己丰富多彩的文化传统。",
+          "after": "云贵高原(the Yunnan-Guizhou Plateau)大部分位于云南、贵州省境内，总面积约50万平方公里，平均海拔2000—4000米，是中国第四大高原。云贵高原西高东低，河流众多，形成了许多又深又陡的峡谷(canyon)。峡谷中许多地方土壤肥沃，非常有利于多种农作物生长。\n\n云贵高原独特的自然环境造就了生物和文化的多样性。它是中国森林和矿产资源类型十分丰富的地区，也是古人类起源的重要地区。云贵高原是中国少数民族数量最多的地区，各民族都保留了自己丰富多彩的文化传统。"
+        }
+      }
+    },
+    {
+      "exam_type": "cet6",
+      "year": 2024,
+      "month": 6,
+      "set_no": 1,
+      "q_type": "writing",
+      "source_file": "六级\\2024年06月\\第01套.pdf",
+      "source_pages": [
+        1
+      ],
+      "source_sha256": "4a0f39536c2a6747a1e535d46a0aa7de069e2a1b4d893ebf4ffb1d177d8aafea",
+      "fields": {
+        "prompt": {
+          "before": "Directions: For this part, you are allowed 30 minutes to write an essay that begins with the sentence “Nowadays, cultivating independent learning ability is becoming increasingly crucial for personal development.” You can make comments, cite examples or use your personal experiences to develop your essay. You should write at least 150 words but no more than 200 words. (You should copy the sentence given in quotes at the beginning of your essay.)",
+          "after": "Directions: For this part, you are allowed 30 minutes to write an essay that begins with the sentence “Nowadays, cultivating independent learning ability is becoming increasingly crucial for personal development.” You can make comments, cite examples or use your personal experiences to develop your essay. You should write at least 150 words but no more than 200 words.\n\n(You should copy the sentence given in quotes at the beginning of your essay.)"
+        }
+      }
+    },
+    {
+      "exam_type": "cet6",
+      "year": 2024,
+      "month": 6,
+      "set_no": 2,
+      "q_type": "writing",
+      "source_file": "六级\\2024年06月\\第02套.pdf",
+      "source_pages": [
+        1
+      ],
+      "source_sha256": "6421b2600cfc8ff3556583c6b78fa3a3e1ebd39ac553b55f75735a086e5233c7",
+      "fields": {
+        "prompt": {
+          "before": "Directions: For this part, you are allowed 30 minutes to write an essay that begins with the sentence “Nowadays more and more college students have come to realize social practice and academic learning are equally important.” You can make comments, cite examples or use your personal experiences to develop your essay. You should write at least 150 words but no more than 200 words. (You should copy the sentence given in quotes at the beginning of your essay.)",
+          "after": "Directions: For this part, you are allowed 30 minutes to write an essay that begins with the sentence “Nowadays more and more college students have come to realize social practice and academic learning are equally important.” You can make comments, cite examples or use your personal experiences to develop your essay. You should write at least 150 words but no more than 200 words.\n\n(You should copy the sentence given in quotes at the beginning of your essay.)"
+        }
+      }
+    },
+    {
+      "exam_type": "cet6",
+      "year": 2024,
+      "month": 6,
+      "set_no": 3,
+      "q_type": "writing",
+      "source_file": "六级\\2024年06月\\第03套.pdf",
+      "source_pages": [
+        1
+      ],
+      "source_sha256": "5c96942b0b63e7b16fca4faf6c9fd09c73361a602a502bcdde2826d459e49d37",
+      "fields": {
+        "prompt": {
+          "before": "Directions: For this part, you are allowed 30 minutes to write an essay that begins with the sentence “There is a growing awareness of the importance of digital literacy and skills in today’s world.” You can make comments, cite examples or use your personal experiences to develop your essay. You should write at least 150 words but no more than 200 words. (You should copy the sentence given in quotes at the beginning of your essay.)",
+          "after": "Directions: For this part, you are allowed 30 minutes to write an essay that begins with the sentence “There is a growing awareness of the importance of digital literacy and skills in today’s world.” You can make comments, cite examples or use your personal experiences to develop your essay. You should write at least 150 words but no more than 200 words.\n\n(You should copy the sentence given in quotes at the beginning of your essay.)"
+        }
+      }
+    },
+    {
+      "exam_type": "cet6",
+      "year": 2024,
+      "month": 12,
+      "set_no": 1,
+      "q_type": "writing",
+      "source_file": "六级\\2024年12月\\第01套.pdf",
+      "source_pages": [
+        1
+      ],
+      "source_sha256": "f57dccaa559f5bcff40b16c2d5c271bcc0abfeb9052aa9469751fdb37d7e60e6",
+      "fields": {
+        "prompt": {
+          "before": "Directions: For this part, you are allowed 30 minutes to write an essay that begins with the sentence “To increase the likelihood of success, one should set realistic goals and work persistently towards them.” You can make comments, cite examples or use your personal experiences to develop your essay. You should write at least 150 words but no more than 200 words. You should copy the sentence given in quotes at the beginning of your essay.",
+          "after": "Directions: For this part, you are allowed 30 minutes to write an essay that begins with the sentence “To increase the likelihood of success, one should set realistic goals and work persistently towards them.” You can make comments, cite examples or use your personal experiences to develop your essay. You should write at least 150 words but no more than 200 words.\n\nYou should copy the sentence given in quotes at the beginning of your essay."
+        }
+      }
+    },
+    {
+      "exam_type": "cet6",
+      "year": 2024,
+      "month": 12,
+      "set_no": 2,
+      "q_type": "writing",
+      "source_file": "六级\\2024年12月\\第02套.pdf",
+      "source_pages": [
+        1
+      ],
+      "source_sha256": "69e9ef6fe86844241dd608af7009cbc41944811575aa48ba20a22995b78152b0",
+      "fields": {
+        "prompt": {
+          "before": "Directions: For this part, you are allowed 30 minutes to write an essay that begins with the sentence “Nowadays, more and more students have realized the importance of self-discipline in their personal growth.” You can make comments, cite examples or use your personal experiences to develop your essay. You should write at least 150 words but no more than 200 words. You should copy the sentence given in quotes at the beginning of your essay.",
+          "after": "Directions: For this part, you are allowed 30 minutes to write an essay that begins with the sentence “Nowadays, more and more students have realized the importance of self-discipline in their personal growth.” You can make comments, cite examples or use your personal experiences to develop your essay. You should write at least 150 words but no more than 200 words.\n\nYou should copy the sentence given in quotes at the beginning of your essay."
+        }
+      }
+    },
+    {
+      "exam_type": "cet6",
+      "year": 2024,
+      "month": 12,
+      "set_no": 3,
+      "q_type": "writing",
+      "source_file": "六级\\2024年12月\\第03套.pdf",
+      "source_pages": [
+        1
+      ],
+      "source_sha256": "7953f0d194687f5ab7397b0c21758e1c42e5c528f04ca1b56b918aea6685aa67",
+      "fields": {
+        "prompt": {
+          "before": "Directions: For this part, you are allowed 30 minutes to write an essay that begins with the sentence “College provides a great opportunity for students to explore various possibilities and find the right path for themselves.” You can make comments, cite examples or use your personal experiences to develop your essay. You should write at least 150 words but no more than 200 words. You should copy the sentence given in quotes at the beginning of your essay.",
+          "after": "Directions: For this part, you are allowed 30 minutes to write an essay that begins with the sentence “College provides a great opportunity for students to explore various possibilities and find the right path for themselves.” You can make comments, cite examples or use your personal experiences to develop your essay. You should write at least 150 words but no more than 200 words.\n\nYou should copy the sentence given in quotes at the beginning of your essay."
+        }
+      }
+    },
+    {
+      "exam_type": "cet6",
+      "year": 2025,
+      "month": 6,
+      "set_no": 1,
+      "q_type": "writing",
+      "source_file": "六级\\2025年06月\\第01套.pdf",
+      "source_pages": [
+        1
+      ],
+      "source_sha256": "e9204d7d82b502a69898862bbcd794be019fe0977f28ab5d1ab4243d730cfc16",
+      "fields": {
+        "prompt": {
+          "before": "Directions: For this part, you are allowed 30 minutes to write an essay that begins with the sentence “As social media is used more and more extensively, there is a growing awareness of the importance of using it properly and responsibly.” You can make comments, cite examples or use your personal experiences to develop your essay. You should write at least 150 words but no more than 200 words. You should copy the sentence given in quotes at the beginning of your essay.",
+          "after": "Directions: For this part, you are allowed 30 minutes to write an essay that begins with the sentence “As social media is used more and more extensively, there is a growing awareness of the importance of using it properly and responsibly.” You can make comments, cite examples or use your personal experiences to develop your essay. You should write at least 150 words but no more than 200 words.\n\nYou should copy the sentence given in quotes at the beginning of your essay."
+        }
+      }
+    },
+    {
+      "exam_type": "cet6",
+      "year": 2025,
+      "month": 6,
+      "set_no": 2,
+      "q_type": "writing",
+      "source_file": "六级\\2025年06月\\第02套.pdf",
+      "source_pages": [
+        1
+      ],
+      "source_sha256": "ca040e3dc21b5487080c8827f35e200cc44d5d496e5fd9aba7aaa0ccbfc3e608",
+      "fields": {
+        "prompt": {
+          "before": "Directions: For this part, you are allowed 30 minutes to write an essay that begins with the sentence “As requirements for job applications are getting increasingly higher, college students ought to be better prepared for their future career.” You can make comments, cite examples or use your personal experiences to develop your essay. You should write at least 150 words but no more than 200 words. You should copy the sentence given in quotes at the beginning of your essay.",
+          "after": "Directions: For this part, you are allowed 30 minutes to write an essay that begins with the sentence “As requirements for job applications are getting increasingly higher, college students ought to be better prepared for their future career.” You can make comments, cite examples or use your personal experiences to develop your essay. You should write at least 150 words but no more than 200 words.\n\nYou should copy the sentence given in quotes at the beginning of your essay."
+        }
+      }
+    },
+    {
+      "exam_type": "cet6",
+      "year": 2025,
+      "month": 6,
+      "set_no": 3,
+      "q_type": "writing",
+      "source_file": "六级\\2025年06月\\第03套.pdf",
+      "source_pages": [
+        1
+      ],
+      "source_sha256": "1310d1f9e49ae67a9cd0faa6f0c9a1a02c24e28819a05dec18a8e4004a10ab49",
+      "fields": {
+        "prompt": {
+          "before": "Directions: For this part, you are allowed 30 minutes to write an essay that begins with the sentence “With the increasing application of AI technology, there is a growing concern that it may negatively impact human creativity.” You can make comments, cite examples or use your personal experiences to develop your essay. You should write at least 150 words but no more than 200 words. You should copy the sentence given in quotes at the beginning of your essay.",
+          "after": "Directions: For this part, you are allowed 30 minutes to write an essay that begins with the sentence “With the increasing application of AI technology, there is a growing concern that it may negatively impact human creativity.” You can make comments, cite examples or use your personal experiences to develop your essay. You should write at least 150 words but no more than 200 words.\n\nYou should copy the sentence given in quotes at the beginning of your essay."
+        }
+      }
+    },
+    {
+      "exam_type": "cet6",
+      "year": 2025,
+      "month": 12,
+      "set_no": 1,
+      "q_type": "writing",
+      "source_file": "六级\\2025年12月\\第01套.pdf",
+      "source_pages": [
+        1
+      ],
+      "source_sha256": "a0855c46e0da9fc29f349b38d17a6cabf26d63be6c2758d169fc1dd031d3c062",
+      "fields": {
+        "prompt": {
+          "before": "Directions: For this part, you are allowed 30 minutes to write an essay that begins with the sentence “While striving for the Chinese Dream, young people enjoy more opportunities to realize their self-worth.” You can make comments, cite examples or use your personal experiences to develop your essay. You should write at least 150 words but no more than 200 words. You should copy the sentence given in quotes at the beginning of your essay.",
+          "after": "Directions: For this part, you are allowed 30 minutes to write an essay that begins with the sentence “While striving for the Chinese Dream, young people enjoy more opportunities to realize their self-worth.” You can make comments, cite examples or use your personal experiences to develop your essay. You should write at least 150 words but no more than 200 words.\n\nYou should copy the sentence given in quotes at the beginning of your essay."
+        }
+      }
+    },
+    {
+      "exam_type": "cet6",
+      "year": 2025,
+      "month": 12,
+      "set_no": 2,
+      "q_type": "writing",
+      "source_file": "六级\\2025年12月\\第02套.pdf",
+      "source_pages": [
+        1
+      ],
+      "source_sha256": "b103d8f0a56418713e5c7ff4a185b234b0b86578a8c2211f4261810e92006fd1",
+      "fields": {
+        "prompt": {
+          "before": "Directions: For this part, you are allowed 30 minutes to write an essay that begins with the sentence “It is believed that teachers can exert a profound influence on their students’ academic pursuit and personal development.” You can make comments, cite examples or use your personal experiences to develop your essay. You should write at least 150 words but no more than 200 words. You should copy the sentence given in quotes at the beginning of your essay.",
+          "after": "Directions: For this part, you are allowed 30 minutes to write an essay that begins with the sentence “It is believed that teachers can exert a profound influence on their students’ academic pursuit and personal development.” You can make comments, cite examples or use your personal experiences to develop your essay. You should write at least 150 words but no more than 200 words.\n\nYou should copy the sentence given in quotes at the beginning of your essay."
+        }
+      }
+    },
+    {
+      "exam_type": "cet6",
+      "year": 2025,
+      "month": 12,
+      "set_no": 3,
+      "q_type": "writing",
+      "source_file": "六级\\2025年12月\\第03套.pdf",
+      "source_pages": [
+        1
+      ],
+      "source_sha256": "bf908f7ebc17c8f28d1f7ae8bece2bacda73361489005de555ce410b5666886e",
+      "fields": {
+        "prompt": {
+          "before": "Directions: For this part, you are allowed 30 minutes to write an essay that begins with the sentence “Living in an increasingly competitive world, college students should better prepare themselves to confront various challenges.” You can make comments, cite examples or use your personal experiences to develop your essay. You should write at least 150 words but no more than 200 words. You should copy the sentence given in quotes at the beginning of your essay.",
+          "after": "Directions: For this part, you are allowed 30 minutes to write an essay that begins with the sentence “Living in an increasingly competitive world, college students should better prepare themselves to confront various challenges.” You can make comments, cite examples or use your personal experiences to develop your essay. You should write at least 150 words but no more than 200 words.\n\nYou should copy the sentence given in quotes at the beginning of your essay."
+        }
+      }
+    },
+    {
+      "exam_type": "ky2",
+      "year": 2020,
+      "month": 12,
+      "set_no": 1,
+      "q_type": "translation",
+      "source_file": "考研英语二\\2020年\\2020年考研英语二真题.pdf",
+      "source_pages": [
+        13
+      ],
+      "source_sha256": "85e180d03cfb6c203ee06fafa6ebc9ff02e3979df117f36b37351db34cea8310",
+      "fields": {
+        "source_text": {
+          "before": "It’s almost impossible to go through life without experiencing some kind of failure. But, the wonderful thing about failure is that it’s entirely up to us to decide how to look at it. We can choose to see failure as “the end of the world.” Or, we can look at failure as the incredible learning experience that it often is. Every time we fail at something, we can choose to look for the lesson we’re meant to learn. These lessons are very important; they’re how we grow, and how we keep from making that same mistake again. Failures stop us only if we let them. Failure can also teach us things about ourselves that we would never have learned otherwise. For instance, failure can help you discover how strong a person you are. Failing at something can help you discover your truest friends, or help you find unexpected motivation to succeed.",
+          "after": "It’s almost impossible to go through life without experiencing some kind of failure. But, the wonderful thing about failure is that it’s entirely up to us to decide how to look at it.\n\nWe can choose to see failure as “the end of the world.” Or, we can look at failure as the incredible learning experience that it often is. Every time we fail at something, we can choose to look for the lesson we’re meant to learn. These lessons are very important; they’re how we grow, and how we keep from making that same mistake again. Failures stop us only if we let them.\n\nFailure can also teach us things about ourselves that we would never have learned otherwise. For instance, failure can help you discover how strong a person you are. Failing at something can help you discover your truest friends, or help you find unexpected motivation to succeed."
+        }
+      }
+    },
+    {
+      "exam_type": "ky2",
+      "year": 2020,
+      "month": 12,
+      "set_no": 1,
+      "q_type": "small_writing",
+      "source_file": "考研英语二\\2020年\\2020年考研英语二真题.pdf",
+      "source_pages": [
+        13
+      ],
+      "source_sha256": "85e180d03cfb6c203ee06fafa6ebc9ff02e3979df117f36b37351db34cea8310",
+      "fields": {
+        "prompt": {
+          "before": "Suppose you are planning a tour of a historical site for a group of international students. Write them an email to 1) tell them about the site, and 2) give them some tips for the tour. You should write about 100 words on the ANSWER SHEET. Do not use your own name. Use “Li Ming” instead. (10 points)",
+          "after": "Suppose you are planning a tour of a historical site for a group of international students. Write them an email to\n1) tell them about the site, and\n2) give them some tips for the tour.\n\nYou should write about 100 words on the ANSWER SHEET.\nDo not use your own name. Use “Li Ming” instead. (10 points)"
+        }
+      }
+    },
+    {
+      "exam_type": "ky2",
+      "year": 2020,
+      "month": 12,
+      "set_no": 1,
+      "q_type": "big_writing",
+      "source_file": "考研英语二\\2020年\\2020年考研英语二真题.pdf",
+      "source_pages": [
+        14
+      ],
+      "source_sha256": "85e180d03cfb6c203ee06fafa6ebc9ff02e3979df117f36b37351db34cea8310",
+      "fields": {
+        "prompt": {
+          "before": "48. Directions: Write an essay based on the chart below. In your writing, you should 1) interpret the chart, and 2) give your comments. You should write about 150 words on the ANSWER SHEET. (15 points)",
+          "after": "Write an essay based on the chart below. In your writing, you should\n1) interpret the chart, and\n2) give your comments.\n\nYou should write about 150 words on the ANSWER SHEET. (15 points)"
+        }
+      }
+    },
+    {
+      "exam_type": "ky2",
+      "year": 2021,
+      "month": 12,
+      "set_no": 1,
+      "q_type": "translation",
+      "source_file": "考研英语二\\2021年\\2021年考研英语二真题.pdf",
+      "source_pages": [
+        13
+      ],
+      "source_sha256": "76a19e82690f44c0ac56647ee1a96e96cedc3d957a8317b02d631d80b9f8847a",
+      "fields": {
+        "source_text": {
+          "before": "We tend to think that friends and family members are our biggest sources of connection, laughter, and warmth. While that may well be true, researchers have also recently found that interacting with strangers actually brings a boost in mood and feelings of belonging that we didn’t expect. In one series of studies, researchers instructed Chicago-area commuters using public transportation to strike up a conversation with someone near them. On average, participants who followed this instruction felt better than those who had been told to stand or sit in silence. The researchers also argued that when we shy away from casual interactions with strangers, it is often due to a misplaced anxiety that they might not want to talk to us. Much of the time, however, this belief is false. As it turns out, many people are actually perfectly willing to talk — and may even be flattered to receive your attention.",
+          "after": "We tend to think that friends and family members are our biggest sources of connection, laughter, and warmth. While that may well be true, researchers have also recently found that interacting with strangers actually brings a boost in mood and feelings of belonging that we didn’t expect.\n\nIn one series of studies, researchers instructed Chicago-area commuters using public transportation to strike up a conversation with someone near them. On average, participants who followed this instruction felt better than those who had been told to stand or sit in silence. The researchers also argued that when we shy away from casual interactions with strangers, it is often due to a misplaced anxiety that they might not want to talk to us. Much of the time, however, this belief is false. As it turns out, many people are actually perfectly willing to talk — and may even be flattered to receive your attention."
+        }
+      }
+    },
+    {
+      "exam_type": "ky2",
+      "year": 2021,
+      "month": 12,
+      "set_no": 1,
+      "q_type": "small_writing",
+      "source_file": "考研英语二\\2021年\\2021年考研英语二真题.pdf",
+      "source_pages": [
+        13
+      ],
+      "source_sha256": "76a19e82690f44c0ac56647ee1a96e96cedc3d957a8317b02d631d80b9f8847a",
+      "fields": {
+        "prompt": {
+          "before": "Suppose you are organizing an online meeting. Write an email to Jack, an international student, to 1) invite him to participate, and 2) tell him about the details. You should write about 100 words on the ANSWER SHEET. Do not use your own name. Use “Li Ming” instead. (10 points)",
+          "after": "Suppose you are organizing an online meeting. Write an email to Jack, an international student, to\n1) invite him to participate, and\n2) tell him about the details.\n\nYou should write about 100 words on the ANSWER SHEET.\nDo not use your own name. Use “Li Ming” instead. (10 points)"
+        }
+      }
+    },
+    {
+      "exam_type": "ky2",
+      "year": 2021,
+      "month": 12,
+      "set_no": 1,
+      "q_type": "big_writing",
+      "source_file": "考研英语二\\2021年\\2021年考研英语二真题.pdf",
+      "source_pages": [
+        14
+      ],
+      "source_sha256": "76a19e82690f44c0ac56647ee1a96e96cedc3d957a8317b02d631d80b9f8847a",
+      "fields": {
+        "prompt": {
+          "before": "Write an essay based on the chart below. In your writing, you should 1) interpret the chart, and 2) give your comments. You should write about 150 words on the ANSWER SHEET. (15 points) (15 points)",
+          "after": "Write an essay based on the chart below. In your writing, you should\n1) interpret the chart, and\n2) give your comments.\n\nYou should write about 150 words on the ANSWER SHEET. (15 points)"
+        }
+      }
+    },
+    {
+      "exam_type": "ky2",
+      "year": 2022,
+      "month": 12,
+      "set_no": 1,
+      "q_type": "translation",
+      "source_file": "考研英语二\\2022年\\2022年考研英语二真题.pdf",
+      "source_pages": [
+        13
+      ],
+      "source_sha256": "b57fdd456374d973dfdb023963140d8576f788bd1e37e472e2ae2c521ab8490b",
+      "fields": {
+        "source_text": {
+          "before": "Although we try our best, sometimes our paintings rarely turn out as originally planned. Changes in the light, the limitations of your painting materials, and the lack of experience and technique mean that what you start out trying to achieve may not come to life the way that you expected. Although this can be frustrating and disappointing, it turns out that this can actually be good for you. Unexpected results have two benefits: you pretty quickly learn to deal with disappointment and realise that when one door closes, another opens. You also quickly learn to adapt and come up with creative solutions to the problems the painting presents, and thinking outside the box will become your Second nature. In fact, creative problem-solving skills are incredibly useful in daily life, with which you’re more likely to be able to find a solution when problem arises.",
+          "after": "Although we try our best, sometimes our paintings rarely turn out as originally planned. Changes in the light, the limitations of your painting materials, and the lack of experience and technique mean that what you start out trying to achieve may not come to life the way that you expected.\n\nAlthough this can be frustrating and disappointing, it turns out that this can actually be good for you. Unexpected results have two benefits: you pretty quickly learn to deal with disappointment and realise that when one door closes, another opens. You also quickly learn to adapt and come up with creative solutions to the problems the painting presents, and thinking outside the box will become your Second nature. In fact, creative problem-solving skills are incredibly useful in daily life, with which you’re more likely to be able to find a solution when problem arises."
+        }
+      }
+    },
+    {
+      "exam_type": "ky2",
+      "year": 2022,
+      "month": 12,
+      "set_no": 1,
+      "q_type": "small_writing",
+      "source_file": "考研英语二\\2022年\\2022年考研英语二真题.pdf",
+      "source_pages": [
+        13
+      ],
+      "source_sha256": "b57fdd456374d973dfdb023963140d8576f788bd1e37e472e2ae2c521ab8490b",
+      "fields": {
+        "prompt": {
+          "before": "Suppose you are planning a campus food festival. Write an email to the international students in your university to 1) introduce the food festival, and 2) invite them to participate. You should write about 100 words on the ANSWER SHEET. Do not use your own name. Use “Li Ming” instead. (10 points)",
+          "after": "Suppose you are planning a campus food festival. Write an email to the international students in your university to\n1) introduce the food festival, and\n2) invite them to participate.\n\nYou should write about 100 words on the ANSWER SHEET.\nDo not use your own name. Use “Li Ming” instead. (10 points)"
+        }
+      }
+    },
+    {
+      "exam_type": "ky2",
+      "year": 2022,
+      "month": 12,
+      "set_no": 1,
+      "q_type": "big_writing",
+      "source_file": "考研英语二\\2022年\\2022年考研英语二真题.pdf",
+      "source_pages": [
+        14
+      ],
+      "source_sha256": "b57fdd456374d973dfdb023963140d8576f788bd1e37e472e2ae2c521ab8490b",
+      "fields": {
+        "prompt": {
+          "before": "48. Directions: Write an essay based on the chart below. In your writing, you should 1) interpret the chart, and 2) give your comments. You should write about 150 words on the ANSWER SHEET. (15 points)",
+          "after": "Write an essay based on the chart below. In your writing, you should\n1) interpret the chart, and\n2) give your comments.\n\nYou should write about 150 words on the ANSWER SHEET. (15 points)"
+        }
+      }
+    },
+    {
+      "exam_type": "ky2",
+      "year": 2023,
+      "month": 12,
+      "set_no": 1,
+      "q_type": "translation",
+      "source_file": "考研英语二\\2023年\\2023年考研英语二真题.pdf",
+      "source_pages": [
+        13
+      ],
+      "source_sha256": "9a45e06830c57e14be7e982e85af6b35e5930d60d8a924e84068dba31492c29c",
+      "fields": {
+        "source_text": {
+          "before": "In the late 18th century, William Wordsworth became famous for his poems about nature. And he was one of the founders of a movement called Romanticism, which celebrated the wonders of the natural world. Poetry is powerful. Its energy and rhythm can capture a reader, transport them to another world and make them see things differently. Through carefully selected words and phrases, poems can be dramatic, funny, beautiful, moving and inspiring. No one knows for sure when poetry began but it has been around for thousands of years, even before people could write. It was a way to tell stories and pass down history. It is closely related to song and even when written it is usually created to be performed out loud. Poems really come to life when they are recited. This can also help with understanding them too, because the rhythm and sounds of the words become clearer.",
+          "after": "In the late 18th century, William Wordsworth became famous for his poems about nature. And he was one of the founders of a movement called Romanticism, which celebrated the wonders of the natural world.\n\nPoetry is powerful. Its energy and rhythm can capture a reader, transport them to another world and make them see things differently. Through carefully selected words and phrases, poems can be dramatic, funny, beautiful, moving and inspiring.\n\nNo one knows for sure when poetry began but it has been around for thousands of years, even before people could write. It was a way to tell stories and pass down history. It is closely related to song and even when written it is usually created to be performed out loud. Poems really come to life when they are recited. This can also help with understanding them too, because the rhythm and sounds of the words become clearer."
+        }
+      }
+    },
+    {
+      "exam_type": "ky2",
+      "year": 2023,
+      "month": 12,
+      "set_no": 1,
+      "q_type": "small_writing",
+      "source_file": "考研英语二\\2023年\\2023年考研英语二真题.pdf",
+      "source_pages": [
+        13
+      ],
+      "source_sha256": "9a45e06830c57e14be7e982e85af6b35e5930d60d8a924e84068dba31492c29c",
+      "fields": {
+        "prompt": {
+          "before": "An art exhibition and a robot show are to be held on Sunday, and your friend David asks you which one he should go to. Write him an email to 1) make a suggestion, and 2) give your reason(s). Write your answer in about 100 words on the ANSWER SHEET. Do not use your own name in your email, use “Li Ming” instead. (10 points)",
+          "after": "An art exhibition and a robot show are to be held on Sunday, and your friend David asks you which one he should go to. Write him an email to\n1) make a suggestion, and\n2) give your reason(s).\n\nWrite your answer in about 100 words on the ANSWER SHEET.\nDo not use your own name in your email, use “Li Ming” instead. (10 points)"
+        }
+      }
+    },
+    {
+      "exam_type": "ky2",
+      "year": 2023,
+      "month": 12,
+      "set_no": 1,
+      "q_type": "big_writing",
+      "source_file": "考研英语二\\2023年\\2023年考研英语二真题.pdf",
+      "source_pages": [
+        14
+      ],
+      "source_sha256": "9a45e06830c57e14be7e982e85af6b35e5930d60d8a924e84068dba31492c29c",
+      "fields": {
+        "prompt": {
+          "before": "48. Directions: Write an essay based on the chart below. In your writing, you should 1) interpret the chart, and 2) give your comments. You should write about 150 words on the ANSWER SHEET. (15 points)",
+          "after": "Write an essay based on the chart below. In your writing, you should\n1) interpret the chart, and\n2) give your comments.\n\nYou should write about 150 words on the ANSWER SHEET. (15 points)"
+        }
+      }
+    },
+    {
+      "exam_type": "ky2",
+      "year": 2024,
+      "month": 12,
+      "set_no": 1,
+      "q_type": "translation",
+      "source_file": "考研英语二\\2024年\\2024年考研英语二真题.pdf",
+      "source_pages": [
+        13
+      ],
+      "source_sha256": "6576c7aa0767457d66d4f070db20dc13e7758b306cadda433387cb1c54c5bfcc",
+      "fields": {
+        "source_text": {
+          "before": "With the smell of coffee and fresh bread floating in the air, stalls bursting with colourful vegetables and tempting cheeses, and the buzz of friendly chats, farmers’ markets are a feast for the senses. They also provide an opportunity to talk to the people responsible for growing or raising your food, support your local economy and pick up fresh seasonal produce — all at the same time. Farmers’ markets are usually weekly or monthly events, most often with outdoor stalls, which allow farmers or producers to sell their food directly to customers. The size or regularity of markets can vary from season to season, depending on the area’s agricultural calendar, and you’re likely to find different produce on sale at different times of the year. By cutting out the middleman, the farmers secure more profit for their produce. Shoppers also benefit from seeing exactly where — and to who — their money is going.",
+          "after": "With the smell of coffee and fresh bread floating in the air, stalls bursting with colourful vegetables and tempting cheeses, and the buzz of friendly chats, farmers’ markets are a feast for the senses. They also provide an opportunity to talk to the people responsible for growing or raising your food, support your local economy and pick up fresh seasonal produce — all at the same time.\n\nFarmers’ markets are usually weekly or monthly events, most often with outdoor stalls, which allow farmers or producers to sell their food directly to customers. The size or regularity of markets can vary from season to season, depending on the area’s agricultural calendar, and you’re likely to find different produce on sale at different times of the year. By cutting out the middleman, the farmers secure more profit for their produce. Shoppers also benefit from seeing exactly where — and to who — their money is going."
+        }
+      }
+    },
+    {
+      "exam_type": "ky2",
+      "year": 2024,
+      "month": 12,
+      "set_no": 1,
+      "q_type": "small_writing",
+      "source_file": "考研英语二\\2024年\\2024年考研英语二真题.pdf",
+      "source_pages": [
+        13
+      ],
+      "source_sha256": "6576c7aa0767457d66d4f070db20dc13e7758b306cadda433387cb1c54c5bfcc",
+      "fields": {
+        "prompt": {
+          "before": "Suppose you and Jack are going to do a survey on the protection of old houses in an ancient town. Write him an email to 1) put forward your plan, and 2) ask for his opinion. Write your answer in about 100 words on the ANSWER SHEET. Do not use your own name in your email; use “Li Ming” instead. (10 points)",
+          "after": "Suppose you and Jack are going to do a survey on the protection of old houses in an ancient town. Write him an email to\n1) put forward your plan, and\n2) ask for his opinion.\n\nWrite your answer in about 100 words on the ANSWER SHEET.\nDo not use your own name in your email; use “Li Ming” instead. (10 points)"
+        }
+      }
+    },
+    {
+      "exam_type": "ky2",
+      "year": 2024,
+      "month": 12,
+      "set_no": 1,
+      "q_type": "big_writing",
+      "source_file": "考研英语二\\2024年\\2024年考研英语二真题.pdf",
+      "source_pages": [
+        14
+      ],
+      "source_sha256": "6576c7aa0767457d66d4f070db20dc13e7758b306cadda433387cb1c54c5bfcc",
+      "fields": {
+        "prompt": {
+          "before": "Write an essay based on the chart below. In your writing, you should 1) describe and interpret the chart, and 2) give your comments. Write your answer in about 150 words on the ANSWER SHEET. (15 points) (15 points)",
+          "after": "Write an essay based on the chart below. In your writing, you should\n1) describe and interpret the chart, and\n2) give your comments.\n\nWrite your answer in about 150 words on the ANSWER SHEET. (15 points)"
+        }
+      }
+    },
+    {
+      "exam_type": "ky2",
+      "year": 2025,
+      "month": 12,
+      "set_no": 1,
+      "q_type": "translation",
+      "source_file": "考研英语二\\2025年\\2025年考研英语二真题.pdf",
+      "source_pages": [
+        13
+      ],
+      "source_sha256": "c43dbba3e6c9a88d6de02318c8b6782a4b549e71f2b42f6a08801e5290597c4a",
+      "fields": {
+        "source_text": {
+          "before": "You know the moment — the conversation slows, then there’s a pause. It’s awkward, and so awkward that some people will panic and say anything. Do we all find such silences so stressful? Researchers analysed the frequency and impact of gaps greater than 2 seconds during conversations, including an overview of previous studies which indicate that the fear of awkward silences can be so extreme that people avoid talking to strangers, even though doing so is likely to be an enjoyable experience. During conversations with short gaps, people feel more connected to their conversation partners. But such feelings of connection markedly dip when entering a long gap. Long gaps between strangers are likely to be followed by a change in topic. But the opposite seems to be true for conversations between friends. Long gaps there saw increased connection. Between friends, longer gaps seem to provide natural moments for reflection and expression.",
+          "after": "You know the moment — the conversation slows, then there’s a pause. It’s awkward, and so awkward that some people will panic and say anything. Do we all find such silences so stressful?\n\nResearchers analysed the frequency and impact of gaps greater than 2 seconds during conversations, including an overview of previous studies which indicate that the fear of awkward silences can be so extreme that people avoid talking to strangers, even though doing so is likely to be an enjoyable experience.\n\nDuring conversations with short gaps, people feel more connected to their conversation partners. But such feelings of connection markedly dip when entering a long gap. Long gaps between strangers are likely to be followed by a change in topic.\n\nBut the opposite seems to be true for conversations between friends. Long gaps there saw increased connection. Between friends, longer gaps seem to provide natural moments for reflection and expression."
+        }
+      }
+    },
+    {
+      "exam_type": "ky2",
+      "year": 2025,
+      "month": 12,
+      "set_no": 1,
+      "q_type": "small_writing",
+      "source_file": "考研英语二\\2025年\\2025年考研英语二真题.pdf",
+      "source_pages": [
+        14
+      ],
+      "source_sha256": "c43dbba3e6c9a88d6de02318c8b6782a4b549e71f2b42f6a08801e5290597c4a",
+      "fields": {
+        "prompt": {
+          "before": "Suppose you are planning a short play based on a classic Chinese novel. Write your friend John an email to: 1) introduce the play, and 2) invite him to take part in it. Write your answer in about 100 words on the ANSWER SHEET. Do not use your own name in your email. Use “Li Ming” instead. (10 points)",
+          "after": "Suppose you are planning a short play based on a classic Chinese novel. Write your friend John an email to:\n1) introduce the play, and\n2) invite him to take part in it.\n\nWrite your answer in about 100 words on the ANSWER SHEET.\nDo not use your own name in your email. Use “Li Ming” instead. (10 points)"
+        }
+      }
+    },
+    {
+      "exam_type": "ky2",
+      "year": 2025,
+      "month": 12,
+      "set_no": 1,
+      "q_type": "big_writing",
+      "source_file": "考研英语二\\2025年\\2025年考研英语二真题.pdf",
+      "source_pages": [
+        14
+      ],
+      "source_sha256": "c43dbba3e6c9a88d6de02318c8b6782a4b549e71f2b42f6a08801e5290597c4a",
+      "fields": {
+        "prompt": {
+          "before": "Write an essay based on the chart below. In your essay, you should 1) describe and interpret the chart, and 2) give your comments. Write your answer in about 150 words on the ANSWER SHEET. (15 points) 90.80% 68.30% 34.70% 31.80% 18.40% (15 points)",
+          "after": "Write an essay based on the chart below. In your essay, you should\n1) describe and interpret the chart, and\n2) give your comments.\n\nWrite your answer in about 150 words on the ANSWER SHEET. (15 points)"
+        }
+      }
+    },
+    {
+      "exam_type": "ky2",
+      "year": 2026,
+      "month": 12,
+      "set_no": 1,
+      "q_type": "translation",
+      "source_file": "考研英语二\\2026年\\2026年考研英语二真题.pdf",
+      "source_pages": [
+        13
+      ],
+      "source_sha256": "35c5490eac88a02b02013b716c295eb47064ef1fec80ceac5f3d19f78263d8f0",
+      "fields": {
+        "source_text": {
+          "before": "The influence of wearables on psychology refers to how the clothes we wear affect our thoughts, feelings, and behaviors. Clothing is not just about covering our bodies; it plays a significant role in shaping our self-perception and interactions with others. One aspect of this influence is self-expression. The clothes we choose can reflect our personality, mood, and identity. Whether we opt for bold, colorful outfits or prefer more understated styles, our dress choices convey messages about who we are and how we want to be perceived. Additionally, clothing can impact our confidence levels. When we wear clothes that make us feel comfortable and confident, it can positively affect our self-esteem and overall mood. Moreover, cultural and societal influences play a significant role in shaping our dress choices. Different cultures have their norms and expectations regarding dress, which can influence the types of clothing people wear and the meanings attributed to them.",
+          "after": "The influence of wearables on psychology refers to how the clothes we wear affect our thoughts, feelings, and behaviors. Clothing is not just about covering our bodies; it plays a significant role in shaping our self-perception and interactions with others.\n\nOne aspect of this influence is self-expression. The clothes we choose can reflect our personality, mood, and identity. Whether we opt for bold, colorful outfits or prefer more understated styles, our dress choices convey messages about who we are and how we want to be perceived.\n\nAdditionally, clothing can impact our confidence levels. When we wear clothes that make us feel comfortable and confident, it can positively affect our self-esteem and overall mood.\n\nMoreover, cultural and societal influences play a significant role in shaping our dress choices. Different cultures have their norms and expectations regarding dress, which can influence the types of clothing people wear and the meanings attributed to them."
+        }
+      }
+    },
+    {
+      "exam_type": "ky2",
+      "year": 2026,
+      "month": 12,
+      "set_no": 1,
+      "q_type": "small_writing",
+      "source_file": "考研英语二\\2026年\\2026年考研英语二真题.pdf",
+      "source_pages": [
+        14
+      ],
+      "source_sha256": "35c5490eac88a02b02013b716c295eb47064ef1fec80ceac5f3d19f78263d8f0",
+      "fields": {
+        "prompt": {
+          "before": "Suppose your friend Jack has shared with you a video of his family’s travel in China. Write an email to tell him 1) how you feel about the video, and 2) your wish to learn more about their travel. Write your answer in about 100 words on the ANSWER SHEET. Do not use your own name in your email. Use “Li Ming” instead. (10 points)",
+          "after": "Suppose your friend Jack has shared with you a video of his family’s travel in China. Write an email to tell him\n1) how you feel about the video, and\n2) your wish to learn more about their travel.\n\nWrite your answer in about 100 words on the ANSWER SHEET.\nDo not use your own name in your email. Use “Li Ming” instead. (10 points)"
+        }
+      }
+    },
+    {
+      "exam_type": "ky2",
+      "year": 2026,
+      "month": 12,
+      "set_no": 1,
+      "q_type": "big_writing",
+      "source_file": "考研英语二\\2026年\\2026年考研英语二真题.pdf",
+      "source_pages": [
+        14
+      ],
+      "source_sha256": "35c5490eac88a02b02013b716c295eb47064ef1fec80ceac5f3d19f78263d8f0",
+      "fields": {
+        "prompt": {
+          "before": "Write an essay based on the chart below. In your essay, you should 1) describe and interpret the chart, and 2) give your comments. Write your answer in about 150 words on the ANSWER SHEET. (15 points) (15 points)",
+          "after": "Write an essay based on the chart below. In your essay, you should\n1) describe and interpret the chart, and\n2) give your comments.\n\nWrite your answer in about 150 words on the ANSWER SHEET. (15 points)"
+        }
+      }
+    }
+  ],
+  "charts": [
+    {
+      "source_file": "六级\\2021年06月\\第01套.pdf",
+      "source_sha256": "c4d867b1e666668bca784ee4c19877cbd01435a3883172607cb3fc4f8373849b",
+      "page": 1,
+      "rect": [
+        20.0,
+        190.8284149169922,
+        575.2760009765625,
+        463.63446044921875
+      ],
+      "chart_image": "charts/cet6_2021_6_1.png"
+    },
+    {
+      "source_file": "六级\\2021年06月\\第02套.pdf",
+      "source_sha256": "74c5561c6589fff5379447f07327cdfc28d7a988e2b8915af7fbbb6746069b2b",
+      "page": 1,
+      "rect": [
+        20.0,
+        191.19175720214844,
+        575.2760009765625,
+        426.3019104003906
+      ],
+      "chart_image": "charts/cet6_2021_6_2.png"
+    },
+    {
+      "source_file": "六级\\2021年06月\\第03套.pdf",
+      "source_sha256": "c74babfba25c7e29c6c71c1f57cbb2b380305533062a56a054f98fcc7b74dfa7",
+      "page": 1,
+      "rect": [
+        20.0,
+        207.38442993164062,
+        575.2760009765625,
+        398.7232971191406
+      ],
+      "chart_image": "charts/cet6_2021_6_3.png"
+    },
+    {
+      "source_file": "考研英语二\\2025年\\2025年考研英语二真题.pdf",
+      "source_sha256": "c43dbba3e6c9a88d6de02318c8b6782a4b549e71f2b42f6a08801e5290597c4a",
+      "page": 14,
+      "rect": [
+        20.0,
+        495.8720703125,
+        575.3200073242188,
+        691.56005859375
+      ],
+      "chart_image": "charts/ky2_2025.png"
+    },
+    {
+      "source_file": "考研英语二\\2026年\\2026年考研英语二真题.pdf",
+      "source_sha256": "35c5490eac88a02b02013b716c295eb47064ef1fec80ceac5f3d19f78263d8f0",
+      "page": 14,
+      "rect": [
+        20.0,
+        471.7521057128906,
+        575.3200073242188,
+        694.56005859375
+      ],
+      "chart_image": "charts/ky2_2026.png"
+    }
+  ]
+}

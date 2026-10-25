@@ -1,0 +1,33 @@
+# 依赖与虚拟环境（可重装，不入库）
+node_modules/
+.venv/
+venv/
+env/
+
+# Python 缓存
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# 前端构建产物（npm run build 可重建）
+frontend/dist/
+
+# 第三方大数据集（scripts/import_ecdict.py 可重新导入）
+backend/data/ecdict.csv
+backend/data/speech-cache/
+backend/data/*.db
+backend/data/*.db-*
+
+# 编辑器 / 系统
+.DS_Store
+Thumbs.db
+*.log
+.local-validation/
+.local-backups/
+.recovery/
+backend/.recovery-smoke-*/
+shots/
+frontend/*.tsbuildinfo
+.env
+.env.*
+!.env.example
