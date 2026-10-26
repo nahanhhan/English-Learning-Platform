@@ -97,6 +97,7 @@ export interface StudyCard {
   reps: number
   id: number
   headword?: string
+  part_of_speech?: string
   phonetic_us?: string
   text?: string
   translation: string

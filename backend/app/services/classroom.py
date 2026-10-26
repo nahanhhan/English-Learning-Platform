@@ -12,6 +12,7 @@ from ..models import (ClassroomEntry as Entry, ClassroomGroup as Group,
                       Phrase, Word)
 from .study import MISTAKE_EXIT_STREAK
 from .phonetics import american_ipa
+from .parts_of_speech import parts_of_speech
 
 
 class ClassroomError(ValueError):
@@ -29,6 +30,7 @@ def entry_payload(db, entry):
     return {"id": entry.id, "group_id": entry.group_id,
             "group_name": group.name if group else "已删除分组", "item_type": entry.item_type,
             "english": entry.english, "translation": entry.translation, "source": entry.source,
+            "part_of_speech": parts_of_speech(entry.english, entry.translation) if entry.item_type == "word" else "",
             "phonetic_us": american_ipa(entry.english) if entry.item_type == "word" else "",
             "in_mistake_book": entry.in_mistake_book,
             "mistake_consec": entry.mistake_consec, "completed": entry.completed}
@@ -159,6 +161,8 @@ def session_payload(db, session):
                "updated_at": session.updated_at.isoformat(), "current": None}
     if current:
         snapshot = json.loads(current.snapshot)
+        if snapshot["item_type"] == "word" and not snapshot.get("part_of_speech"):
+            snapshot["part_of_speech"] = parts_of_speech(snapshot["english"], snapshot["translation"])
         # 兼容音标功能加入前已经保存的轮次，不重建题目或改变拼写阶段。
         if snapshot["item_type"] == "word" and not snapshot.get("phonetic_us"):
             snapshot["phonetic_us"] = american_ipa(snapshot["english"])

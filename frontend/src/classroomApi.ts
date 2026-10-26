@@ -10,6 +10,7 @@ export interface ClassroomEntry {
   id: number; group_id: number; group_name: string; item_type: 'word' | 'phrase'
   english: string; translation: string; source: string
   phonetic_us?: string
+  part_of_speech?: string
   in_mistake_book: boolean; mistake_consec: number; completed: number
 }
 export interface PracticeQuestion extends ClassroomEntry {

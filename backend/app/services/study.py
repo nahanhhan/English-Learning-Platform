@@ -9,6 +9,7 @@ from sqlalchemy.orm import Session
 from ..models import Phrase, ReviewLog, SrsCard, UserSetting, Word
 from . import srs
 from .phonetics import american_ipa
+from .parts_of_speech import parts_of_speech
 
 # 干扰项词池缓存：题库只读，短 TTL 缓存避免每次队列都全表扫描释义
 _pool_cache: dict[tuple, tuple[float, list[str]]] = {}
@@ -174,6 +175,7 @@ def _card_payload(db: Session, card: SrsCard) -> dict:
             return base
         base.update({
             "id": w.id, "headword": w.headword,
+            "part_of_speech": parts_of_speech(w.headword, w.translation, w.definition),
             "phonetic_us": american_ipa(w.headword) or (w.phonetic_us if w.book == "custom" else ""),
             "translation": (w.translation or "").replace("\\n", "\n"),
             "definition": (w.definition or "").replace("\\n", "\n"),
@@ -334,6 +336,7 @@ def make_quiz(db: Session, item_type: str, book: str, count: int = 10,
             "card_id": p["card_id"],
             "front": p.get("headword") or p.get("text"),
             "phonetic": p.get("phonetic_us", ""),
+            "part_of_speech": p.get("part_of_speech", ""),
             "answer": correct,
             "options": options,
             "full_translation": p["translation"],

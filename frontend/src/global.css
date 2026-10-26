@@ -189,6 +189,8 @@ body {
 .speech-loading { font-size: 13px; color: #7383a0; }
 .speech-retry.ant-btn { height: 24px; padding: 0 2px; font-size: 12px; }
 .american-phonetic { display: block; color: #66758a; font-size: 14px; font-weight: 400; line-height: 1.5; margin: 2px 0 6px; font-family: 'Segoe UI', 'Arial', sans-serif; letter-spacing: normal; }
+.part-of-speech { display: inline-block; margin-left: 8px; padding: 1px 7px; border-radius: 5px; background: #edf3fb; color: #476488; font-size: 13px; font-weight: 400; line-height: 1.7; letter-spacing: normal; vertical-align: middle; white-space: normal; overflow-wrap: anywhere; max-width: 100%; }
+.part-of-speech-missing { color: #8c96a7; background: #f4f5f7; font-size: 12px; }
 
 /* 练习页优先把题目和操作留在一屏内；长释义依然完整换行。 */
 .study-page, .classroom-page { padding: 14px 22px 20px; }

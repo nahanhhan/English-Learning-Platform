@@ -13,6 +13,7 @@ import { get } from '../api'
 import { cancelPendingSpeech, speak, stopSpeaking } from '../speak'
 import VolumeControl from '../components/VolumeControl'
 import AmericanPhonetic from '../components/AmericanPhonetic'
+import PartOfSpeech from '../components/PartOfSpeech'
 
 type Tab = 'review' | 'mistakes' | 'browse'
 const typeName = (kind: string) => kind === 'word' ? '单词' : '短语'
@@ -337,7 +338,8 @@ export default function Classroom() {
       <Progress percent={Math.round(round.completed / Math.max(round.total, 1) * 100)} showInfo={false} />
       <Card className="classroom-practice-card">
         {current.stage === 'choice' && <>
-          <div className="classroom-prompt"><h2>{current.english}</h2>
+          <div className="classroom-prompt"><h2>{current.english}
+            {current.item_type === 'word' && <PartOfSpeech value={current.part_of_speech} />}</h2>
             {current.item_type === 'word' && <AmericanPhonetic value={current.phonetic_us} />}
             <AmericanAudio english={current.english} />
             <p>选择正确的中文意思 · 可按数字键 1–4</p></div>
@@ -360,7 +362,8 @@ export default function Classroom() {
           <div className="classroom-prompt"><div className="classroom-meaning">{current.translation}</div>
             <AmericanAudio english={current.english} />
             <p>{current.picked === current.translation ? `拼写这个${typeName(current.item_type)}` : '选择有误，继续拼写加深记忆'}</p>
-            <div className="classroom-spell-hint">{current.spell_wrong ? current.english : spellHint}</div>
+            <div className="classroom-spell-hint">{current.spell_wrong ? current.english : spellHint}
+              {current.item_type === 'word' && <PartOfSpeech value={current.part_of_speech} />}</div>
           </div>
           {current.spell_wrong && <Alert type="warning" showIcon message="首次拼写有误，已计入错题本。请照正确拼写重输一次。" style={{ marginBottom: 18 }} />}
           <Space.Compact style={{ width: '100%' }}>
@@ -375,7 +378,8 @@ export default function Classroom() {
         {current.stage === 'done' && <div className="classroom-prompt">
           {current.rating === 'good' ? <CheckCircleFilled style={{ color: '#52c41a', fontSize: 44 }} /> : <CloseCircleFilled style={{ color: '#e6a23c', fontSize: 44 }} />}
           <h2>{current.rating === 'good' ? '选择和拼写全部正确' : current.rating === 'hard' ? '拼写已纠正，继续巩固' : '继续练习，加深记忆'}</h2>
-          <div className="classroom-meaning">{current.english}</div><p>{current.translation}</p>
+          <div className="classroom-meaning">{current.english}
+            {current.item_type === 'word' && <PartOfSpeech value={current.part_of_speech} />}</div><p>{current.translation}</p>
           <p>{current.in_mistake_book ? `已保存在错题本 · 连对 ${current.mistake_consec}/3` : '本题进度已保存'}</p>
           <Button size="large" type="primary" loading={busy} onClick={() => submit('next')}>
             {round.completed >= round.total ? '查看本轮结果' : '下一题'}
@@ -422,6 +426,7 @@ export default function Classroom() {
         locale={{ emptyText: <Empty description={tab === 'mistakes' ? '当前范围没有错题，继续保持！' : '还没有词汇，添加或导入你的课堂笔记吧'} /> }}
         columns={[
           { title: '英文', dataIndex: 'english', width: 200, render: (value, entry) => <><b>{value}</b>
+            {entry.item_type === 'word' && <PartOfSpeech value={entry.part_of_speech} />}
             {entry.item_type === 'word' && <AmericanPhonetic value={entry.phonetic_us} />}
             <div><Tag>{typeName(entry.item_type)}</Tag></div></> },
           { title: '中文释义', dataIndex: 'translation', render: value => <span style={{ whiteSpace: 'pre-wrap' }}>{value}</span> },
@@ -443,7 +448,7 @@ export default function Classroom() {
         <Form.Item name="group_id" label="所属分组" rules={[{ required: true, message: '请选择分组' }]}><Select options={groupOptions} placeholder="先建立课程或单元分组" /></Form.Item>
         <Form.Item name="item_type" label="类型"><Select options={[{ value: 'word', label: '单词' }, { value: 'phrase', label: '短语' }]} /></Form.Item>
         <Form.Item name="english" label="英文" rules={[{ required: true, whitespace: true, message: '请输入英文' }]}><Input maxLength={300} /></Form.Item>
-        <Form.Item name="translation" label="中文释义" rules={[{ required: true, whitespace: true, message: '请输入中文释义' }]}><Input.TextArea rows={3} maxLength={5000} /></Form.Item>
+        <Form.Item name="translation" label="中文释义" rules={[{ required: true, whitespace: true, message: '请输入中文释义' }]}><Input.TextArea rows={3} maxLength={5000} placeholder="可注明词性，如 n. 名词释义；adj. 形容词释义" /></Form.Item>
       </Form>
       {!groups.length && <Button onClick={() => { setEditingGroup(null); setGroupName(''); setGroupOpen(true) }}>新建分组</Button>}
     </Modal>

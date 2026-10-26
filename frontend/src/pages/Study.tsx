@@ -11,6 +11,7 @@ import { get, post, type BookProgress, type StudyCard } from '../api'
 import { cancelPendingSpeech, speak, stopSpeaking } from '../speak'
 import VolumeControl from '../components/VolumeControl'
 import AmericanPhonetic from '../components/AmericanPhonetic'
+import PartOfSpeech from '../components/PartOfSpeech'
 
 function AccentButtons({ word }: { word: string }) {
   return (
@@ -353,6 +354,7 @@ export default function Study({ itemType }: { itemType: 'word' | 'phrase' }) {
             <div className="study-prompt">
               <div className="study-headword">
                 {currentCard.headword || currentCard.text}
+                {isW && <PartOfSpeech value={currentCard.part_of_speech} />}
               </div>
               {isW && <AmericanPhonetic value={currentCard.phonetic_us} />}
               <div style={{ marginTop: 8, fontSize: 14, display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 4 }}>
@@ -401,6 +403,7 @@ export default function Study({ itemType }: { itemType: 'word' | 'phrase' }) {
               </div>
               <div style={{ marginTop: 10, fontSize: 18, letterSpacing: 4, color: '#3562a7', fontFamily: 'monospace' }}>
                 {spellWrong ? currentCard.headword : spellHint}
+                <PartOfSpeech value={currentCard.part_of_speech} />
               </div>
             </div>
             <Space.Compact style={{ width: '100%', maxWidth: 420, display: 'flex', margin: '0 auto' }}>
@@ -436,6 +439,7 @@ export default function Study({ itemType }: { itemType: 'word' | 'phrase' }) {
               <div style={{ fontSize: 16, fontWeight: 700, color: meta.color, marginBottom: 6 }}>{meta.text}</div>
               <div style={{ color: '#666', fontSize: 14 }}>
                 <b>{currentCard.headword || currentCard.text}</b>
+                {isW && <PartOfSpeech value={currentCard.part_of_speech} />}
                 <span style={{ margin: '0 8px', color: '#ddd' }}>|</span>
                 {currentCard.answer}
               </div>
@@ -545,7 +549,9 @@ export default function Study({ itemType }: { itemType: 'word' | 'phrase' }) {
               <Empty description="错题本已清空 🎉" style={{ margin: '24px 0' }} />
             ) : mistakes.map((m) => (
               <div key={m.card_id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 4px', borderBottom: '1px solid #f4f5f7' }}>
-                <span style={{ minWidth: 140, fontWeight: 600 }}>{m.headword || m.text}</span>
+                <span style={{ minWidth: 140, fontWeight: 600 }}>{m.headword || m.text}
+                  {isW && <PartOfSpeech value={m.part_of_speech} />}
+                </span>
                 <span style={{ flex: 1, color: '#666', fontSize: 13.5 }}>{m.translation?.split('\n')[0]}</span>
                 <span style={{ fontSize: 12.5 }}>
                   {[0, 1, 2].map((i) => (
@@ -583,6 +589,7 @@ export default function Study({ itemType }: { itemType: 'word' | 'phrase' }) {
               </div>
               <div style={{ fontSize: 28, fontWeight: 700, textAlign: 'center', margin: '18px 0 24px' }}>
                 {quiz[quizIdx].front}
+                {isW && <PartOfSpeech value={quiz[quizIdx].part_of_speech} />}
                 <div style={{ marginTop: 6, display: 'flex', justifyContent: 'center', fontWeight: 400 }}>
                   {isW && <AmericanPhonetic value={quiz[quizIdx].phonetic} />}
                   <AccentButtons word={quiz[quizIdx].front || ''} />
@@ -653,6 +660,7 @@ export default function Study({ itemType }: { itemType: 'word' | 'phrase' }) {
               }}
             >
               <span style={{ minWidth: 150, fontWeight: 600 }}>{c.headword || c.text}
+                {isW && <PartOfSpeech value={c.part_of_speech} />}
                 {isW && <AmericanPhonetic value={c.phonetic_us} />}
               </span>
               <AccentButtons word={c.headword || c.text || ''} />
@@ -688,7 +696,7 @@ export default function Study({ itemType }: { itemType: 'word' | 'phrase' }) {
       >
         <Space direction="vertical" style={{ width: '100%' }} size={12}>
           <Input placeholder={isW ? '单词，如 ethos' : '短语，如 shed light on'} value={customForm.headword} onChange={(e) => setCustomForm({ ...customForm, headword: e.target.value })} />
-          <Input.TextArea placeholder="中文释义" rows={3} value={customForm.translation} onChange={(e) => setCustomForm({ ...customForm, translation: e.target.value })} />
+          <Input.TextArea placeholder={isW ? '中文释义，可注明词性，如 n. 名词释义；v. 动词释义' : '中文释义'} rows={3} value={customForm.translation} onChange={(e) => setCustomForm({ ...customForm, translation: e.target.value })} />
           <Alert type="info" message="添加后进入「我的收藏」词书，可正常学习与复习。" />
         </Space>
       </Modal>
