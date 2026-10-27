@@ -184,7 +184,8 @@ def test_normalize_spelling_and_punctuation(database):
     group = seed(db, "phrase")
     session = c.start(db, group.id)
     session = act(db, session, "choice", session["current"]["translation"])
-    session = act(db, session, "spell", "  TAKE   NOTE0 ")
+    spelling = "  " + "   ".join(session["current"]["english"].upper().split()) + " "
+    session = act(db, session, "spell", spelling)
     assert session["current"]["rating"] == "good"
 
 
@@ -302,7 +303,7 @@ def test_ocr_pairs_boxes_on_same_line(monkeypatch):
 def test_phonetics_backfill_old_snapshot_without_resetting_progress(database):
     db, _ = database
     seed_classroom(db)
-    session = c.start(db)
+    session = c.start(db, item_type="word")
     original_id = session["current"]["question_id"]
     assert session["current"]["phonetic_us"]
     question = db.get(Question, original_id)
@@ -311,7 +312,7 @@ def test_phonetics_backfill_old_snapshot_without_resetting_progress(database):
     question.snapshot = json.dumps(snapshot)
     db.commit()
     session = act(db, session, "choice", session["current"]["translation"])
-    resumed = c.start(db)
+    resumed = c.start(db, item_type="word")
     assert resumed["current"]["question_id"] == original_id
     assert resumed["current"]["stage"] == "spell"
     assert resumed["current"]["phonetic_us"]
@@ -352,3 +353,91 @@ def test_http_validation_and_preview_without_writes(database):
         assert client.post("/api/classroom/groups", json={"name": "Unit 1"}).status_code == 200
         assert client.post("/api/classroom/groups", json={"name": "Unit 1"}).status_code == 409
         assert client.post("/api/classroom/sessions", json={}).status_code == 400
+
+
+@pytest.mark.parametrize("kind", ["all", "word", "phrase"])
+@pytest.mark.parametrize("source", ["normal", "mistake"])
+def test_new_rounds_shuffle_scoped_entries_and_option_positions(database, monkeypatch, kind, source):
+    db, _ = database
+    group = seed(db)
+    for i in range(4):
+        c.save_entry(db, {"group_id": group.id, "english": f"take note{i}",
+                          "translation": f"短语释义{i}", "item_type": "phrase"})
+    other = seed(db)
+    for entry in db.query(Entry):
+        entry.in_mistake_book = entry.id % 2 == 0
+    db.commit()
+    expected = [e.id for e in c.filtered(db, group.id, kind, mistakes=source == "mistake")]
+    round_number = 0
+
+    def controlled_shuffle(values):
+        # 固定抽样结果，避免“随机后碰巧相同”导致测试偶发失败。
+        nonlocal round_number
+        if values and isinstance(values[0], Entry):
+            round_number += 1
+        if values and isinstance(values[0], tuple):
+            values.reverse()
+        elif values:
+            shift = round_number % len(values)
+            values[:] = values[shift:] + values[:shift]
+
+    monkeypatch.setattr(c.random, "shuffle", controlled_shuffle)
+
+    def saved_questions(session):
+        rows = db.query(Question).filter_by(session_id=session["id"]).order_by(Question.position).all()
+        assert [q.position for q in rows] == list(range(len(expected)))
+        assert {q.entry_id for q in rows} == set(expected)
+        assert len(rows) == len(set(q.entry_id for q in rows))
+        assert not any(db.get(Entry, q.entry_id).group_id == other.id for q in rows)
+        answer_positions = {}
+        for question in rows:
+            options = json.loads(question.options)
+            answer = json.loads(question.snapshot)["translation"]
+            assert len(options) == len(set(options)) == 4
+            assert options.count(answer) == 1
+            answer_positions[question.entry_id] = options.index(answer)
+        return [q.entry_id for q in rows], answer_positions
+
+    first = c.start(db, group.id, kind, source)
+    first_order, first_positions = saved_questions(first)
+    assert first_order == expected[1:] + expected[:1]
+    second = c.start(db, group.id, kind, source, restart=True)
+    second_order, second_positions = saved_questions(second)
+    assert second["id"] != first["id"]
+    assert second_order == expected[2:] + expected[:2]
+    assert second_order != first_order
+    assert all(first_positions[key] != second_positions[key] for key in expected)
+    assert round_number == 2
+    # 浏览列表仍按原始词条顺序展示。
+    assert [e.id for e in c.filtered(db, group.id, kind, mistakes=source == "mistake")] == expected
+
+
+def test_randomized_round_resume_preserves_all_questions_and_spelling(database, monkeypatch):
+    db, factory = database
+    group = seed(db)
+    group_id = group.id
+    rng = c.random.Random(2026)
+    monkeypatch.setattr(c.random, "shuffle", rng.shuffle)
+    session = c.start(db, group_id)
+    session = act(db, session, "choice", session["current"]["translation"])
+    session = act(db, session, "spell", "incorrect")
+
+    def saved_questions(connection):
+        return [(q.id, q.entry_id, q.position, q.options, q.snapshot)
+                for q in connection.query(Question).filter_by(session_id=session["id"]).order_by(Question.position)]
+
+    original = saved_questions(db)
+    db.close()
+
+    def must_not_shuffle(values):
+        raise AssertionError("继续已有轮次不应打乱题目或选项")
+
+    monkeypatch.setattr(c.random, "shuffle", must_not_shuffle)
+    with factory() as reopened:
+        resumed = c.start(reopened, group_id)
+        assert resumed["id"] == session["id"]
+        assert resumed["version"] == session["version"]
+        assert resumed["current"] == session["current"]
+        assert resumed["current"]["stage"] == "spell"
+        assert resumed["current"]["spell_wrong"]
+        assert saved_questions(reopened) == original

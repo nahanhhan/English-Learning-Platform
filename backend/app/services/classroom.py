@@ -115,6 +115,8 @@ def start(db, group_id=None, item_type="all", source="normal", restart=False):
     entries = filtered(db, group_id, item_type, mistakes=source == "mistake").all()
     if not entries:
         raise ClassroomError("当前范围没有错题" if source == "mistake" else "当前范围还没有词汇，请先添加或导入")
+    # 只在创建新轮次时打乱；题序和选项均保存，恢复进度时保持不变。
+    random.shuffle(entries)
     pools = {}
     for kind in {e.item_type for e in entries}:
         local = [(e.english, e.translation) for e in db.query(Entry).filter_by(item_type=kind).all()]

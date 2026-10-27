@@ -312,6 +312,7 @@ export default function Classroom() {
       <BookOutlined style={{ fontSize: 44, color: '#3562a7' }} />
       <h2>{source === 'mistake' ? '错题专项练习' : '从课堂学过的词开始'}</h2>
       <p>{source === 'mistake' ? '只练当前范围的错题，连续 3 次全部答对后移出错题本。' : '每个单词和短语先选意思，再练拼写。进度自动保存，随时回来继续。'}</p>
+      <p>每轮随机排列词汇和选项；继续上次复习时保留原顺序。</p>
       {round && !round.finished && <Alert style={{ textAlign: 'left', marginBottom: 20 }} type="info" showIcon
         message={`上次已完成 ${round.completed} / ${round.total} 题，${round.current?.stage === 'spell' ? '正在拼写' : round.current?.stage === 'done' ? '已保存当前题结果' : '正在选择释义'}`}
         description={`保存于 ${round.updated_at.replace('T', ' ').slice(0, 16)}`} />}
@@ -319,7 +320,7 @@ export default function Classroom() {
         <Button type="primary" size="large" loading={busy} disabled={!wordCount} onClick={() => begin(!!round?.finished)}>
           {round && !round.finished ? '继续上次复习' : round?.finished ? '开始新一轮' : '开始复习'}
         </Button>
-        {round && !round.finished && <Popconfirm title="重新开始会替换当前范围的未完成轮次，错题记录保留。" onConfirm={() => begin(true)}>
+        {round && !round.finished && <Popconfirm title="重新开始会重新打乱词汇和选项，替换当前未完成轮次，错题记录保留。" onConfirm={() => begin(true)}>
           <Button size="large" disabled={busy}>重新开始</Button>
         </Popconfirm>}
         {!wordCount && <Button onClick={openImport}>添加首批词汇</Button>}
