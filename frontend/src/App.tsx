@@ -29,6 +29,7 @@ export default function App() {
     if (p.startsWith('/vocab')) return '/vocab'
     if (p.startsWith('/phrases')) return '/phrases'
     if (p.startsWith('/classroom')) return '/classroom'
+    if (p.startsWith('/accumulation')) return '/accumulation'
     if (p.startsWith('/settings')) return '/settings'
     return '/'
   }, [location.pathname])
@@ -43,6 +44,7 @@ export default function App() {
       [/^\/vocab/, '背单词'],
       [/^\/phrases/, '背短语'],
       [/^\/classroom/, '课内生词和短语'],
+      [/^\/accumulation/, '平时单词短语积累'],
       [/^\/settings/, '设置'],
     ]
     const name = names.find(([re]) => re.test(p))?.[1]
@@ -64,6 +66,7 @@ export default function App() {
     { key: '/vocab', icon: <BookOutlined />, label: <Link to="/vocab">背单词</Link> },
     { key: '/phrases', icon: <ReadOutlined />, label: <Link to="/phrases">背短语</Link> },
     { key: '/classroom', icon: <BookOutlined />, label: <Link to="/classroom">课内生词和短语</Link> },
+    { key: '/accumulation', icon: <ReadOutlined />, label: <Link to="/accumulation">平时单词短语积累</Link> },
     { key: '/settings', icon: <SettingOutlined />, label: <Link to="/settings">设置</Link> },
   ]
 
@@ -107,7 +110,8 @@ export default function App() {
               <Route path="/practice/writing" element={<Practice mode="writing" key="w" />} />
               <Route path="/vocab" element={<Vocab />} />
               <Route path="/phrases" element={<Phrases />} />
-              <Route path="/classroom" element={<Classroom />} />
+              <Route path="/classroom" element={<Classroom key="classroom" />} />
+              <Route path="/accumulation" element={<Classroom key="accumulation" library="accumulation" />} />
               <Route path="/settings" element={<Settings />} />
               <Route path="*" element={<Dashboard />} />
             </Routes>

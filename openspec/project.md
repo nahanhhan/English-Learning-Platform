@@ -9,6 +9,7 @@
 - **后端**：Python 3.11 + FastAPI + SQLAlchemy 2.0（SQLite，文件 `backend/data/app.db`）+ httpx（OpenAI 兼容 AI 调用）+ PyMuPDF / RapidOCR（真题 PDF 抽取）
 - **前端**：React 18 + Vite + TypeScript + Ant Design 5 + ECharts（按需引入、路由级代码分割），构建产物 `frontend/dist` 由 FastAPI 托管
 - **课内词汇**：独立分组词库，单词/短语释义选择后拼写，持久化整轮进度和错题本；PDF/Word 预览导入与本地 RapidOCR 扫描识别
+- **平时积累**：`/accumulation` 独立词库与数据表，复用课内的页面、训练服务和接口工厂，词条、错题、轮次及浏览器草稿彼此隔离；整理笔记一次性导入。
 - **AI**：任意 OpenAI 兼容 Chat Completions 服务（DeepSeek / 智谱 GLM / OpenCode Zen 等），Provider 可配置、可切换
 
 ## 目录结构

@@ -2,6 +2,7 @@ import { api } from './api'
 
 export type Kind = 'all' | 'word' | 'phrase'
 export type PracticeSource = 'normal' | 'mistake'
+export type VocabularyLibrary = 'classroom' | 'accumulation'
 export interface ClassroomGroup {
   id: number; name: string; total: number; mistakes: number
   words: number; phrases: number; word_mistakes: number; phrase_mistakes: number
@@ -27,3 +28,7 @@ export interface ImportRow {
   source: string; raw: string; group_id?: number; included: boolean; key: number
 }
 export const classroom = <T,>(path: string, options?: RequestInit) => api<T>(`/api/classroom${path}`, options)
+export const vocabularyApis = {
+  classroom,
+  accumulation: <T,>(path: string, options?: RequestInit) => api<T>(`/api/accumulation${path}`, options),
+}

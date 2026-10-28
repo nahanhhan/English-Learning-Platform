@@ -190,3 +190,54 @@ class ClassroomSessionItem(Base):
     picked: Mapped[str | None] = mapped_column(Text, nullable=True)
     spell_wrong: Mapped[bool] = mapped_column(Boolean, default=False)
     rating: Mapped[str] = mapped_column(String(10), default="")
+
+
+# ---- 平时积累：独立数据，复用课内训练流程 ----
+
+class AccumulationGroup(Base):
+    __tablename__ = "accumulation_groups"
+    __table_args__ = {"sqlite_autoincrement": True}
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    name: Mapped[str] = mapped_column(String(200), unique=True)
+
+
+class AccumulationEntry(Base):
+    __tablename__ = "accumulation_entries"
+    __table_args__ = (UniqueConstraint("group_id", "item_type", "normalized"), {"sqlite_autoincrement": True})
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    group_id: Mapped[int] = mapped_column(ForeignKey("accumulation_groups.id"), index=True)
+    item_type: Mapped[str] = mapped_column(String(10))
+    english: Mapped[str] = mapped_column(String(300))
+    normalized: Mapped[str] = mapped_column(String(300))
+    translation: Mapped[str] = mapped_column(Text)
+    source: Mapped[str] = mapped_column(Text, default="")
+    in_mistake_book: Mapped[bool] = mapped_column(Boolean, default=False)
+    mistake_consec: Mapped[int] = mapped_column(Integer, default=0)
+    completed: Mapped[int] = mapped_column(Integer, default=0)
+
+
+class AccumulationSession(Base):
+    __tablename__ = "accumulation_sessions"
+    __table_args__ = {"sqlite_autoincrement": True}
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    scope: Mapped[str] = mapped_column(String(100), unique=True)
+    source: Mapped[str] = mapped_column(String(10))
+    cursor: Mapped[int] = mapped_column(Integer, default=0)
+    version: Mapped[int] = mapped_column(Integer, default=0)
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now)
+    receipts: Mapped[str] = mapped_column(Text, default="[]")
+
+
+class AccumulationSessionItem(Base):
+    __tablename__ = "accumulation_session_items"
+    __table_args__ = (UniqueConstraint("session_id", "position"), {"sqlite_autoincrement": True})
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    session_id: Mapped[int] = mapped_column(ForeignKey("accumulation_sessions.id"), index=True)
+    entry_id: Mapped[int] = mapped_column(Integer, index=True)
+    position: Mapped[int] = mapped_column(Integer)
+    snapshot: Mapped[str] = mapped_column(Text)
+    options: Mapped[str] = mapped_column(Text)
+    stage: Mapped[str] = mapped_column(String(10), default="choice")
+    picked: Mapped[str | None] = mapped_column(Text, nullable=True)
+    spell_wrong: Mapped[bool] = mapped_column(Boolean, default=False)
+    rating: Mapped[str] = mapped_column(String(10), default="")

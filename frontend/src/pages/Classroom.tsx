@@ -4,10 +4,10 @@ import {
 } from '@ant-design/icons'
 import {
   Alert, Button, Card, Checkbox, Empty, Form, Input, type InputRef, Modal, Pagination, Popconfirm,
-  Progress, Result, Segmented, Select, Space, Spin, Statistic, Table, Tag, message,
+  Progress, Result, Segmented, Select, Space, Spin, Statistic, Table, Tag, Tooltip, message,
 } from 'antd'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { classroom, type ClassroomEntry, type ClassroomGroup, type ImportRow, type Kind,
+import { vocabularyApis, type VocabularyLibrary, type ClassroomEntry, type ClassroomGroup, type ImportRow, type Kind,
   type PracticeRound, type PracticeSource } from '../classroomApi'
 import { get } from '../api'
 import { cancelPendingSpeech, speak, stopSpeaking } from '../speak'
@@ -17,7 +17,6 @@ import PartOfSpeech from '../components/PartOfSpeech'
 
 type Tab = 'review' | 'mistakes' | 'browse'
 const typeName = (kind: string) => kind === 'word' ? '单词' : '短语'
-const DRAFT_PREFIX = 'classroom-spell:'
 function readLocal(key: string) { try { return localStorage.getItem(key) || '' } catch { return '' } }
 function writeLocal(key: string, value: string) { try { localStorage.setItem(key, value) } catch { /* 存储不可用不影响答题 */ } }
 function clearLocal(key: string) { try { localStorage.removeItem(key) } catch { /* 忽略 */ } }
@@ -26,15 +25,19 @@ function AmericanAudio({ english }: { english: string }) {
   return <Button icon={<SoundOutlined />} onClick={() => speak(english, 'us')}>美式发音</Button>
 }
 
-export default function Classroom() {
+export default function Classroom({ library = 'classroom' }: { library?: VocabularyLibrary }) {
+  const classroom = vocabularyApis[library]
+  const isAccumulation = library === 'accumulation'
+  const title = isAccumulation ? '平时单词短语积累' : '课内生词和短语'
+  const collectionName = isAccumulation ? '积累词汇' : '课内词汇'
   const [groups, setGroups] = useState<ClassroomGroup[]>([])
-  const [group, setGroup] = useState<number | undefined>(() => Number(readLocal('classroom-group')) || undefined)
+  const [group, setGroup] = useState<number | undefined>(() => Number(readLocal(`${library}-group`)) || undefined)
   const [kind, setKind] = useState<Kind>(() => {
-    const value = readLocal('classroom-kind')
+    const value = readLocal(`${library}-kind`)
     return value === 'word' || value === 'phrase' ? value : 'all'
   })
   const [tab, setTab] = useState<Tab>('review')
-  const [source, setSource] = useState<PracticeSource>(() => readLocal('classroom-source') === 'mistake' ? 'mistake' : 'normal')
+  const [source, setSource] = useState<PracticeSource>(() => readLocal(`${library}-source`) === 'mistake' ? 'mistake' : 'normal')
   const [round, setRound] = useState<PracticeRound | null>(null)
   const [roundLoading, setRoundLoading] = useState(true)
   const [roundError, setRoundError] = useState('')
@@ -46,7 +49,7 @@ export default function Classroom() {
   const [autoSpeak, setAutoSpeak] = useState(false)
   const spokenRef = useRef('')
   const feedbackTimer = useRef<ReturnType<typeof setTimeout>>()
-  const scope = `${group || 'all'}:${kind}:${source}`
+  const scope = `${library}:${group || 'all'}:${kind}:${source}`
   const scopeRef = useRef(scope)
   scopeRef.current = scope
   const actionLock = useRef(false)
@@ -83,17 +86,17 @@ export default function Classroom() {
   const query = params.toString()
   const groupOptions = groups.map(g => ({ value: g.id, label: g.name }))
   const current = round?.current
-  const draftKey = current ? `${DRAFT_PREFIX}${round!.id}:${current.question_id}` : ''
+  const draftKey = current ? `${library}-spell:${round!.id}:${current.question_id}` : ''
 
   const loadGroups = useCallback(async () => {
     const data = await classroom<ClassroomGroup[]>('/groups')
     setGroups(data)
     setGroup(value => value && !data.some(g => g.id === value) ? undefined : value)
-  }, [])
+  }, [classroom])
   useEffect(() => { loadGroups().catch(e => message.error(e.message)) }, [loadGroups, refresh])
-  useEffect(() => { writeLocal('classroom-group', String(group || '')) }, [group])
-  useEffect(() => { writeLocal('classroom-kind', kind) }, [kind])
-  useEffect(() => { writeLocal('classroom-source', source) }, [source])
+  useEffect(() => { writeLocal(`${library}-group`, String(group || '')) }, [group, library])
+  useEffect(() => { writeLocal(`${library}-kind`, kind) }, [kind, library])
+  useEffect(() => { writeLocal(`${library}-source`, source) }, [source, library])
   useEffect(() => {
     let alive = true
     get('/api/settings').then(data => { if (alive) setAutoSpeak(data?.prefs?.auto_speak === '1') }).catch(() => {})
@@ -111,7 +114,7 @@ export default function Classroom() {
       .catch(e => { if (alive) setRoundError(e.message) })
       .finally(() => { if (alive) setRoundLoading(false) })
     return () => { alive = false; clearTimeout(feedbackTimer.current); stopSpeaking() }
-  }, [query])
+  }, [query, classroom])
 
   useEffect(() => { setSpell(draftKey ? readLocal(draftKey) : '') }, [draftKey])
   // 异步判定时输入框会禁用，必须等重新启用后再聚焦；每次提交均处理连续输错。
@@ -145,7 +148,7 @@ export default function Classroom() {
       .catch(e => { if (alive) message.error(e.message) })
       .finally(() => { if (alive) setListLoading(false) })
     return () => { alive = false }
-  }, [tab, group, kind, page, search, refresh])
+  }, [tab, group, kind, page, search, refresh, classroom])
 
   async function begin(restart = false) {
     if (actionLock.current) return
@@ -310,7 +313,7 @@ export default function Classroom() {
       }).catch(e => message.error(e.message)) }}>重试</Button>} />
     if (!running) return <Card className="classroom-start">
       <BookOutlined style={{ fontSize: 44, color: '#3562a7' }} />
-      <h2>{source === 'mistake' ? '错题专项练习' : '从课堂学过的词开始'}</h2>
+      <h2>{source === 'mistake' ? '错题专项练习' : isAccumulation ? '把平时积累的词记牢' : '从课堂学过的词开始'}</h2>
       <p>{source === 'mistake' ? '只练当前范围的错题，连续 3 次全部答对后移出错题本。' : '每个单词和短语先选意思，再练拼写。进度自动保存，随时回来继续。'}</p>
       <p>每轮随机排列词汇和选项；继续上次复习时保留原顺序。</p>
       {round && !round.finished && <Alert style={{ textAlign: 'left', marginBottom: 20 }} type="info" showIcon
@@ -374,7 +377,7 @@ export default function Classroom() {
               onPressEnter={e => { if (!e.nativeEvent.isComposing) void submit('spell', spell) }} />
             <Button size="large" type="primary" loading={busy} onClick={() => submit('spell', spell)}>提交拼写</Button>
           </Space.Compact>
-          <p className="classroom-note">按教材词条填写，sb / sth 等占位写法保留；大小写和多余空格不影响判断。</p>
+          <p className="classroom-note">按词条原样填写，sb / sth 等占位写法保留；大小写和多余空格不影响判断。</p>
         </>}
         {current.stage === 'done' && <div className="classroom-prompt">
           {current.rating === 'good' ? <CheckCircleFilled style={{ color: '#52c41a', fontSize: 44 }} /> : <CloseCircleFilled style={{ color: '#e6a23c', fontSize: 44 }} />}
@@ -393,12 +396,12 @@ export default function Classroom() {
 
   return <div className="page classroom-page">
     <div className="classroom-toolbar">
-      <div><h1 className="page-title">课内生词和短语</h1><div className="page-subtitle">把课上学过的词记牢 · 选意思，再拼写 · 随时继续上次进度</div></div>
+      <div><h1 className="page-title">{title}</h1><div className="page-subtitle">{isAccumulation ? '把日常遇见的词留下来' : '把课上学过的词记牢'} · 选意思，再拼写 · 随时继续上次进度</div></div>
       <Space wrap><VolumeControl /><Button icon={<FolderOutlined />} onClick={() => { setEditingGroup(null); setGroupName(''); setGroupOpen(true) }}>管理分组</Button>
         <Button icon={<FileAddOutlined />} onClick={openImport}>批量添加 / 导入</Button>
         <Button type="primary" icon={<PlusOutlined />} onClick={() => openEntry()}>添加词汇</Button></Space>
     </div>
-    <div className="classroom-filters"><Select aria-label="课内分组" value={group || 0} style={{ minWidth: 230, maxWidth: '100%' }}
+    <div className="classroom-filters"><Select aria-label={isAccumulation ? '积累分组' : '课内分组'} value={group || 0} style={{ minWidth: 230, maxWidth: '100%' }}
       options={[{ value: 0, label: '全部分组' }, ...groupOptions]} onChange={value => { setGroup(value || undefined); setPage(1) }} />
       <Segmented value={kind} options={[{ label: '全部词汇', value: 'all' }, { label: '单词', value: 'word' }, { label: '短语', value: 'phrase' }]}
         onChange={value => { setKind(value as Kind); setPage(1) }} />
@@ -418,7 +421,7 @@ export default function Classroom() {
       {renderReview()}
     </div> : <Card style={{ marginTop: 18 }}>
       <div className="classroom-toolbar" style={{ marginBottom: 16 }}>
-        <Input.Search allowClear placeholder="搜索英文或中文释义" aria-label="搜索课内词汇" style={{ width: 280, maxWidth: '100%' }}
+        <Input.Search allowClear placeholder="搜索英文或中文释义" aria-label={`搜索${collectionName}`} style={{ width: 280, maxWidth: '100%' }}
           value={search} onChange={e => { setSearch(e.target.value); setPage(1) }} />
         {tab === 'mistakes' && <Button type="primary" disabled={!total} onClick={() => { setSource('mistake'); setTab('review'); setRunning(false) }}>错题专项练习</Button>}
       </div>
@@ -429,7 +432,10 @@ export default function Classroom() {
           { title: '英文', dataIndex: 'english', width: 200, render: (value, entry) => <><b>{value}</b>
             {entry.item_type === 'word' && <PartOfSpeech value={entry.part_of_speech} />}
             {entry.item_type === 'word' && <AmericanPhonetic value={entry.phonetic_us} />}
-            <div><Tag>{typeName(entry.item_type)}</Tag></div></> },
+            <div><Tag>{typeName(entry.item_type)}</Tag></div>
+            {isAccumulation && entry.source && <Tooltip title={<span style={{ whiteSpace: 'pre-wrap' }}>{entry.source}</span>}>
+              <Button type="link" size="small">来源说明</Button>
+            </Tooltip>}</> },
           { title: '中文释义', dataIndex: 'translation', render: value => <span style={{ whiteSpace: 'pre-wrap' }}>{value}</span> },
           { title: '分组', dataIndex: 'group_name', width: 160 },
           { title: '状态', width: 110, render: (_, entry) => entry.in_mistake_book ? <Tag color="volcano">连对 {entry.mistake_consec}/3</Tag> : <Tag color={entry.completed ? 'green' : 'default'}>{entry.completed ? '已练习' : '未练习'}</Tag> },
@@ -444,9 +450,9 @@ export default function Classroom() {
       <Pagination style={{ marginTop: 18, textAlign: 'right' }} current={page} pageSize={30} total={total} showSizeChanger={false} onChange={setPage} />
     </Card>}
 
-    <Modal title={editing ? '编辑课内词汇' : '添加课内词汇'} open={entryOpen} onCancel={() => setEntryOpen(false)} onOk={saveEntry} confirmLoading={saving} okText="保存">
+    <Modal title={`${editing ? '编辑' : '添加'}${collectionName}`} open={entryOpen} onCancel={() => setEntryOpen(false)} onOk={saveEntry} confirmLoading={saving} okText="保存">
       <Form form={entryForm} layout="vertical">
-        <Form.Item name="group_id" label="所属分组" rules={[{ required: true, message: '请选择分组' }]}><Select options={groupOptions} placeholder="先建立课程或单元分组" /></Form.Item>
+        <Form.Item name="group_id" label="所属分组" rules={[{ required: true, message: '请选择分组' }]}><Select options={groupOptions} placeholder={isAccumulation ? '先建立积累主题分组' : '先建立课程或单元分组'} /></Form.Item>
         <Form.Item name="item_type" label="类型"><Select options={[{ value: 'word', label: '单词' }, { value: 'phrase', label: '短语' }]} /></Form.Item>
         <Form.Item name="english" label="英文" rules={[{ required: true, whitespace: true, message: '请输入英文' }]}><Input maxLength={300} /></Form.Item>
         <Form.Item name="translation" label="中文释义" rules={[{ required: true, whitespace: true, message: '请输入中文释义' }]}><Input.TextArea rows={3} maxLength={5000} placeholder="可注明词性，如 n. 名词释义；adj. 形容词释义" /></Form.Item>
@@ -454,8 +460,8 @@ export default function Classroom() {
       {!groups.length && <Button onClick={() => { setEditingGroup(null); setGroupName(''); setGroupOpen(true) }}>新建分组</Button>}
     </Modal>
 
-    <Modal title="课程 / 单元分组" open={groupOpen} onCancel={() => setGroupOpen(false)} footer={null}>
-      <Space.Compact style={{ width: '100%', margin: '12px 0 20px' }}><Input maxLength={200} placeholder="例如 大学英语 Unit 1" aria-label="分组名称"
+    <Modal title={isAccumulation ? '积累主题分组' : '课程 / 单元分组'} open={groupOpen} onCancel={() => setGroupOpen(false)} footer={null}>
+      <Space.Compact style={{ width: '100%', margin: '12px 0 20px' }}><Input maxLength={200} placeholder={isAccumulation ? '例如 阅读摘记、日常表达' : '例如 大学英语 Unit 1'} aria-label="分组名称"
         value={groupName} onChange={e => setGroupName(e.target.value)} onPressEnter={saveGroup} />
         <Button type="primary" loading={groupBusy} onClick={saveGroup}>{editingGroup ? '保存名称' : '新建分组'}</Button></Space.Compact>
       {groups.map(g => <div className="classroom-group-row" key={g.id}><span>{g.name}<small> · {g.total} 条</small></span><Space>

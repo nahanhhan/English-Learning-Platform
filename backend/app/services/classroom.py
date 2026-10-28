@@ -1,4 +1,4 @@
-"""课内词库与持久化练习。每次提交在同一事务内推进阶段和维护错题。"""
+"""课内与平时积累共用的持久化练习。每次提交在同一事务内推进阶段和维护错题。"""
 import json
 import random
 import re
@@ -9,6 +9,7 @@ from sqlalchemy.orm import Session
 
 from ..models import (ClassroomEntry as Entry, ClassroomGroup as Group,
                       ClassroomSession as Round, ClassroomSessionItem as Question,
+                      AccumulationEntry, AccumulationGroup, AccumulationSession, AccumulationSessionItem,
                       Phrase, Word)
 from .study import MISTAKE_EXIT_STREAK
 from .phonetics import american_ipa
@@ -21,11 +22,20 @@ class ClassroomError(ValueError):
         self.status = status
 
 
+def library_models(library="classroom"):
+    if library == "classroom":
+        return Entry, Group, Round, Question
+    if library == "accumulation":
+        return AccumulationEntry, AccumulationGroup, AccumulationSession, AccumulationSessionItem
+    raise ValueError("无效词库")
+
+
 def normalize(value: str) -> str:
     return re.sub(r"\s+", " ", value.strip()).casefold()
 
 
-def entry_payload(db, entry):
+def entry_payload(db, entry, *, library="classroom"):
+    _, Group, _, _ = library_models(library)
     group = db.get(Group, entry.group_id)
     return {"id": entry.id, "group_id": entry.group_id,
             "group_name": group.name if group else "已删除分组", "item_type": entry.item_type,
@@ -36,7 +46,8 @@ def entry_payload(db, entry):
             "mistake_consec": entry.mistake_consec, "completed": entry.completed}
 
 
-def filtered(db, group_id=None, item_type="all", search="", mistakes=False):
+def filtered(db, group_id=None, item_type="all", search="", mistakes=False, *, library="classroom"):
+    Entry, _, _, _ = library_models(library)
     q = db.query(Entry)
     if group_id is not None:
         q = q.filter(Entry.group_id == group_id)
@@ -50,7 +61,8 @@ def filtered(db, group_id=None, item_type="all", search="", mistakes=False):
     return q.order_by(Entry.id)
 
 
-def save_entry(db, data, entry_id=None, commit=True):
+def save_entry(db, data, entry_id=None, commit=True, *, library="classroom"):
+    Entry, Group, _, _ = library_models(library)
     if not db.get(Group, data["group_id"]):
         raise ClassroomError("请先选择有效分组")
     english = re.sub(r"\s+", " ", data["english"].strip())
@@ -107,12 +119,13 @@ def _options(entry, classroom_pool, fallback):
     return options
 
 
-def start(db, group_id=None, item_type="all", source="normal", restart=False):
+def start(db, group_id=None, item_type="all", source="normal", restart=False, *, library="classroom"):
+    Entry, _, Round, Question = library_models(library)
     scope = scope_key(group_id, item_type, source)
     old = db.query(Round).filter_by(scope=scope).first()
     if old and not restart:
-        return session_payload(db, old)
-    entries = filtered(db, group_id, item_type, mistakes=source == "mistake").all()
+        return session_payload(db, old, library=library)
+    entries = filtered(db, group_id, item_type, mistakes=source == "mistake", library=library).all()
     if not entries:
         raise ClassroomError("当前范围没有错题" if source == "mistake" else "当前范围还没有词汇，请先添加或导入")
     # 只在创建新轮次时打乱；题序和选项均保存，恢复进度时保持不变。
@@ -138,13 +151,14 @@ def start(db, group_id=None, item_type="all", source="normal", restart=False):
     db.flush()
     for position, (entry, options) in enumerate(snapshots):
         db.add(Question(session_id=session.id, entry_id=entry.id, position=position,
-                        snapshot=json.dumps(entry_payload(db, entry), ensure_ascii=False),
+                        snapshot=json.dumps(entry_payload(db, entry, library=library), ensure_ascii=False),
                         options=json.dumps(options, ensure_ascii=False)))
     db.commit()
-    return session_payload(db, session)
+    return session_payload(db, session, library=library)
 
 
-def session_payload(db, session):
+def session_payload(db, session, *, library="classroom"):
+    Entry, _, _, Question = library_models(library)
     questions = db.query(Question).filter_by(session_id=session.id).order_by(Question.position).all()
     alive = set(db.scalars(select(Entry.id)).all())
     # 删除只跳过未完成题；完成结果继续留在本轮统计中。
@@ -183,13 +197,14 @@ def mark_wrong(entry):
 
 
 def act(db: Session, session_id: int, question_id: int, version: int,
-        request_id: str, action: str, value: str = ""):
+        request_id: str, action: str, value: str = "", *, library="classroom"):
+    Entry, _, Round, Question = library_models(library)
     session = db.get(Round, session_id)
     if session is None:
         raise ClassroomError("这一轮已被重新开始，请返回复习页", 404)
     receipts = json.loads(session.receipts)
     if request_id in receipts:
-        return session_payload(db, session)
+        return session_payload(db, session, library=library)
     # 数据库条件更新取得写锁；并发或过期请求不会重复修改错题记录。
     claimed = db.execute(update(Round).where(Round.id == session_id, Round.version == version)
                          .values(version=version + 1).execution_options(synchronize_session=False))
@@ -204,7 +219,7 @@ def act(db: Session, session_id: int, question_id: int, version: int,
     entry = db.get(Entry, question.entry_id)
     if not entry and question.stage != "done":
         db.rollback()
-        return session_payload(db, session)
+        return session_payload(db, session, library=library)
     snapshot = json.loads(question.snapshot)
     try:
         if action == "choice" and question.stage == "choice":
@@ -243,4 +258,4 @@ def act(db: Session, session_id: int, question_id: int, version: int,
     except Exception:
         db.rollback()
         raise
-    return session_payload(db, session)
+    return session_payload(db, session, library=library)

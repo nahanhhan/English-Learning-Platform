@@ -96,6 +96,8 @@ def ensure_seeded(force: bool = False):
         db.commit()
         from scripts.seed_classroom import seed_classroom
         seed_classroom(db)
+        from scripts.seed_accumulation import seed_accumulation
+        seed_accumulation(db)
     finally:
         db.close()
 

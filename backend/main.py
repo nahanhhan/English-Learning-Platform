@@ -29,7 +29,7 @@ from fastapi.staticfiles import StaticFiles as _StaticFiles  # noqa: E402
 
 app.mount("/data-static", _StaticFiles(directory=DATA_DIR), name="data")
 
-for r in (speech.router, classroom.router, questions.router, practice.router, vocab.router, phrases.router,
+for r in (speech.router, classroom.router, classroom.accumulation_router, questions.router, practice.router, vocab.router, phrases.router,
           stats.router, settings.router):
     app.include_router(r)
 
