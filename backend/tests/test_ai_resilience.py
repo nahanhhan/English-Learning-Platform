@@ -1,4 +1,4 @@
-"""重建模块的故障处理验证；不连接真实 AI 服务。"""
+"""AI 客户端和评分模块的故障处理验证；不连接真实 AI 服务。"""
 import sys
 from pathlib import Path
 

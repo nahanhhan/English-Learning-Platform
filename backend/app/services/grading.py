@@ -1,4 +1,4 @@
-"""考试评分、结构校验与写作字数保障；依据项目规格和测试重建。"""
+"""考试评分、结构校验与写作字数保障。"""
 import json
 import math
 import re
@@ -10,7 +10,7 @@ FULL_SCORES = {
     ('ky2', 'translation'): 15, ('ky2', 'small_writing'): 10, ('ky2', 'big_writing'): 15,
 }
 
-# 档位沿用项目规格；描述为概括表述，来源及恢复范围见 docs/recovery-2026-10-25.md。
+# 档位沿用项目规格；描述为概括表述，详见 openspec/specs/practice-grading/spec.md。
 CET6_TRANSLATION_RUBRIC = '''13-15分档：准确完整表达原文，措辞恰当、行文流畅，基本无语言错误。
 10-12分档：基本表达原文，文字通顺连贯，有少量语言错误。
 7-9分档：勉强表达原意，措辞不够准确，有相当多语言错误。

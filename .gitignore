@@ -31,3 +31,6 @@ frontend/*.tsbuildinfo
 .env
 .env.*
 !.env.example
+
+# 用户指定仅保存在本地的资料
+/《全国大学英语四、六级考试大纲（2016年修订版）》.pdf

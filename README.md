@@ -1,7 +1,5 @@
 # 英语学习平台（个人本地版）
 
-> 2026-10-25 已完成项目重建。可双击 `start.bat` 启动；旧学习记录与 AI 设置未找回，需要重新配置。恢复范围和验证结果见 [恢复记录](docs/recovery-2026-10-25.md)。
-
 针对 **大学英语六级** 与 **考研英语（二）** 的个人英语学习平台：真题翻译 / 作文 AI 批改 + 单词短语间隔重复记忆 + 学习数据统计。所有数据保存在本机。
 
 ## 功能
@@ -67,7 +65,7 @@
 
 每次开始新训练、重新开始或再练一轮，都会随机排列所选范围内的词汇与每题选项。选择「全部词汇」时，单词和短语一起打乱；普通复习和错题专项均适用。随机结果可能偶然相同。点击「继续上次复习」保留已保存的题序、选项和进度，词表浏览顺序不变。
 
-进度保存在本地数据库，刷新、离开或重启后点击「继续上次复习」恢复；拼写草稿保存在当前浏览器。重新开始仅替换当前范围的轮次，保留词条和错题记录。教材中的 sb、sth 及斜杠选用写法按词条原样填写，大小写和多余空格不影响判断。
+进度保存在本地数据库，刷新、离开或重启后可点击「继续上次复习」接着学习；拼写草稿保存在当前浏览器。重新开始仅替换当前范围的轮次，保留词条和错题记录。教材中的 sb、sth 及斜杠选用写法按词条原样填写，大小写和多余空格不影响判断。
 
 「批量添加 / 导入」支持每行 `英文 | 中文释义`、制表符分列，以及 PDF 和 Word `.docx` 中已有的中英词表。扫描 PDF 使用本地识别；旧版 `.doc` 请先另存为 `.docx`。提取后先核对预览，可编辑、排除和调整分组，再确认入库。同组同类型的重复英文跳过，不覆盖已有记录。复杂排版或无法配对的内容可结合完整提取原文人工修正；纯图片 Word 可另存为 PDF 后导入。此流程不调用 AI。
 
@@ -100,13 +98,13 @@ setup.bat / start.bat
 
 今后加功能先走 OpenSpec 流程：在本目录执行 `openspec` 相关命令（或在 ZCode 中使用 `/opsx:propose "想法"`）提案 → 实施 → `openspec archive` 归档并更新主规格。
 
-## 重建数据（可选）
+## 数据生成工具（可选）
 
 ```bash
 cd backend
-.venv\Scripts\python scripts\extract_questions.py   # 从真题 PDF 重新抽取题目（含 OCR 兜底）
+.venv\Scripts\python scripts\extract_questions.py   # 从真题 PDF 提取题目（含 OCR 兜底）
 .venv\Scripts\python scripts\import_ecdict.py       # 需要 data/ecdict.csv（ECDICT 词典）
-.venv\Scripts\python scripts\seed.py --force        # 重建数据库中的题库/词库
+.venv\Scripts\python scripts\seed.py --force        # 重新导入题库/词库数据
 .venv\Scripts\python scripts\redraw_charts.py       # 按已核对数据重新生成清晰图表，保留原卷裁图
 ```
 
