@@ -2,14 +2,21 @@
 import json
 from pathlib import Path
 
-from app.models import AccumulationGroup, UserSetting
-from app.services.classroom import ClassroomError, save_entry
+from app.models import AccumulationEntry, AccumulationGroup, UserSetting
+from app.services.classroom import ClassroomError, normalize, save_entry
 
 INITIAL_PATH = Path(__file__).resolve().parent.parent / "data" / "accumulation_initial.json"
 
 
+UPDATE_PATH = INITIAL_PATH.with_name("accumulation_notes_20261101.json")
+
+
 def seed_accumulation(db):
-    data = json.loads(INITIAL_PATH.read_text(encoding="utf-8"))
+    for path in (INITIAL_PATH, UPDATE_PATH):
+        _seed_batch(db, json.loads(path.read_text(encoding="utf-8")))
+
+
+def _seed_batch(db, data):
     if db.get(UserSetting, data["version"]):
         return
     try:
@@ -20,6 +27,11 @@ def seed_accumulation(db):
                 db.add(group)
                 db.flush()
             for entry in source_group["entries"]:
+                # 同一积累词库跨分组去重，保留既有释义和学习记录。
+                if db.query(AccumulationEntry).filter_by(
+                    item_type=entry["item_type"], normalized=normalize(entry["english"])
+                ).first():
+                    continue
                 try:
                     save_entry(db, {**entry, "group_id": group.id}, commit=False, library="accumulation")
                 except ClassroomError as exc:
