@@ -61,11 +61,11 @@ def test_notes_cover_all_paragraphs_and_normalized_entries(client_db):
     client, db, _ = client_db
     data = json.loads(INITIAL_PATH.read_text(encoding="utf-8"))
     entries = client.get("/api/accumulation/entries?page_size=100").json()["items"]
-    assert len(entries) == 50
-    assert sum(e["item_type"] == "word" for e in entries) == 41
-    assert sum(e["item_type"] == "phrase" for e in entries) == 9
-    assert len({e["english"] for e in entries}) == 50
-    assert {int(re.search(r"第(\d+)段", e["source"])[1]) for e in entries} == set(range(1, 48))
+    assert len(entries) == 67
+    assert sum(e["item_type"] == "word" for e in entries) == 56
+    assert sum(e["item_type"] == "phrase" for e in entries) == 11
+    assert len({e["english"] for e in entries}) == 67
+    assert {int(re.search(r"第(\d+)段", e["source"])[1]) for e in entries} == set(range(1, 64))
     assert data["source_paragraphs"] == 20 and len(data["source_sha256"]) == 64
     by_name = {e["english"]: e for e in entries}
     assert {"utterly", "completely", "conjure up", "be deprived of", "a dirty word", "a body of"} <= by_name.keys()
@@ -86,7 +86,7 @@ def test_seed_once_preserves_user_edits_and_deletions(client_db):
     db.delete(removed)
     db.commit()
     seed_accumulation(db)
-    assert db.query(AccumulationEntry).count() == 49
+    assert db.query(AccumulationEntry).count() == 66
     assert word.translation == "adv. 用户补充释义" and word.mistake_consec == 2
     assert not db.query(AccumulationEntry).filter_by(english="completely").count()
     assert db.get(UserSetting, "accumulation_notes_20261028_v1") is not None
@@ -166,7 +166,7 @@ def test_old_classroom_session_survives_adding_new_library(client_db):
     old_rows = [(e.id, e.english, e.translation) for e in db.query(ClassroomEntry).order_by(ClassroomEntry.id)]
     seed_accumulation(db)
     accumulated = client.post("/api/accumulation/sessions", json={}).json()
-    assert accumulated["total"] == 50
+    assert accumulated["total"] == 67
     assert client.get(f"/api/classroom/sessions/current?group_id={group}").json() == session
     assert [(e.id, e.english, e.translation) for e in db.query(ClassroomEntry).order_by(ClassroomEntry.id)] == old_rows
 
@@ -193,7 +193,7 @@ def test_incremental_notes_preserve_existing_data_and_skip_other_group_duplicate
     db.delete(db.get(UserSetting, data["version"]))
     db.commit()
     seed_accumulation(db)
-    assert db.query(AccumulationEntry).count() == 49
+    assert db.query(AccumulationEntry).count() == 66
     assert db.query(AccumulationEntry).filter_by(normalized="scrutinize").count() == 1
     assert db.query(AccumulationEntry).filter_by(normalized="scrutinize").one().translation == "v. 用户自定细查"
     assert (old.translation, old.completed, old.in_mistake_book, old.mistake_consec) == ("adv. 用户自己的解释", 7, True, 2)
@@ -204,6 +204,44 @@ def test_incremental_notes_preserve_existing_data_and_skip_other_group_duplicate
     db.delete(db.query(AccumulationEntry).filter_by(english="turn out").one())
     db.commit()
     seed_accumulation(db)
-    assert db.query(AccumulationEntry).count() == 48
+    assert db.query(AccumulationEntry).count() == 65
     assert erosion.translation == "n. 用户补充侵蚀义"
     assert not db.query(AccumulationEntry).filter_by(english="turn out").count()
+
+
+def test_november_second_batch_upgrade_and_replay(client_db):
+    from scripts.seed_accumulation import LATEST_PATH
+    _, db, _ = client_db
+    batch = json.loads(LATEST_PATH.read_text(encoding="utf-8"))
+    entries = batch["groups"][0]["entries"]
+    assert len(entries) == 17
+    assert batch["source_paragraph_range"] == [48, 63]
+    assert sum(e["item_type"] == "word" for e in entries) == 15
+    assert len(batch["source_sha256"]) == 64
+    older = db.query(AccumulationEntry).filter_by(english="scrutinize").one()
+    older.translation, older.completed, older.in_mistake_book = "v. 旧词用户释义", 5, True
+    for entry in entries:
+        db.delete(db.query(AccumulationEntry).filter_by(english=entry["english"]).one())
+    db.delete(db.get(UserSetting, batch["version"]))
+    group = AccumulationGroup(name="此前自行积累")
+    db.add(group)
+    db.flush()
+    service.save_entry(db, {"group_id": group.id, "item_type": "word",
+        "english": "  SWELL  ", "translation": "v. 用户释义"},
+        commit=False, library="accumulation")
+    db.commit()
+    seed_accumulation(db)
+    assert db.query(AccumulationEntry).count() == 67
+    assert db.query(AccumulationEntry).filter_by(normalized="swell").count() == 1
+    assert db.query(AccumulationEntry).filter_by(normalized="swell").one().translation == "v. 用户释义"
+    assert (older.translation, older.completed, older.in_mistake_book) == ("v. 旧词用户释义", 5, True)
+    assert db.query(AccumulationEntry).filter_by(english="resort to sth").one().item_type == "phrase"
+    state = db.query(AccumulationEntry).filter_by(english="state").one()
+    state.translation = "n. 用户补充状态义"
+    state.completed = 3
+    db.delete(db.query(AccumulationEntry).filter_by(english="culminate in sth").one())
+    db.commit()
+    seed_accumulation(db)
+    assert db.query(AccumulationEntry).count() == 66
+    assert state.translation == "n. 用户补充状态义" and state.completed == 3
+    assert not db.query(AccumulationEntry).filter_by(english="culminate in sth").count()
