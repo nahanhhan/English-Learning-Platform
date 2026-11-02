@@ -132,6 +132,10 @@ class AiProvider(Base):
     api_key: Mapped[str] = mapped_column(String(300), default="")
     model: Mapped[str] = mapped_column(String(100), default="")
     is_default: Mapped[bool] = mapped_column(Boolean, default=False)
+    service_type: Mapped[str] = mapped_column(String(30), default="custom")
+    reasoning_mode: Mapped[str] = mapped_column(String(12), default="auto")
+    reasoning_effort: Mapped[str] = mapped_column(String(20), default="")
+    models_json: Mapped[str] = mapped_column(Text, default="[]")
 
 
 class UserSetting(Base):
@@ -241,3 +245,51 @@ class AccumulationSessionItem(Base):
     picked: Mapped[str | None] = mapped_column(Text, nullable=True)
     spell_wrong: Mapped[bool] = mapped_column(Boolean, default=False)
     rating: Mapped[str] = mapped_column(String(10), default="")
+
+
+# ---- 短句翻译：独立题库、练习版本和跨日复习 ----
+
+class ShortQuestion(Base):
+    __tablename__ = "short_questions"
+    id: Mapped[str] = mapped_column(String(40), primary_key=True)
+    topic: Mapped[str] = mapped_column(String(80), index=True)
+    title: Mapped[str] = mapped_column(String(200))
+    data_json: Mapped[str] = mapped_column(Text)
+    batch: Mapped[str] = mapped_column(String(60))
+
+
+class ShortRun(Base):
+    __tablename__ = "short_runs"
+    id: Mapped[str] = mapped_column(String(40), primary_key=True)
+    question_id: Mapped[str] = mapped_column(ForeignKey("short_questions.id"), index=True)
+    snapshot: Mapped[str] = mapped_column(Text)
+    is_review: Mapped[bool] = mapped_column(Boolean, default=False)
+    review_applied: Mapped[bool] = mapped_column(Boolean, default=False)
+    version: Mapped[int] = mapped_column(Integer, default=0)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now)
+
+
+class ShortAttempt(Base):
+    __tablename__ = "short_attempts"
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    run_id: Mapped[str] = mapped_column(ForeignKey("short_runs.id"), index=True)
+    request_id: Mapped[str] = mapped_column(String(100), unique=True)
+    content: Mapped[str] = mapped_column(Text)
+    requested_provider_id: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    provider_id: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    profile_json: Mapped[str] = mapped_column(Text, default="{}")
+    is_revision: Mapped[bool] = mapped_column(Boolean, default=False)
+    status: Mapped[str] = mapped_column(String(12), default="pending")
+    score: Mapped[float] = mapped_column(Float, default=0)
+    result_json: Mapped[str] = mapped_column(Text, default="{}")
+    error: Mapped[str] = mapped_column(Text, default="")
+    mock: Mapped[bool] = mapped_column(Boolean, default=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now)
+
+
+class ShortProgress(Base):
+    __tablename__ = "short_progress"
+    question_id: Mapped[str] = mapped_column(ForeignKey("short_questions.id"), primary_key=True)
+    in_review: Mapped[bool] = mapped_column(Boolean, default=False)
+    streak: Mapped[int] = mapped_column(Integer, default=0)
+    last_count_date: Mapped[date | None] = mapped_column(Date, nullable=True)

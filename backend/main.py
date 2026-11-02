@@ -10,7 +10,7 @@ from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
 from app.database import Base, engine, DATA_DIR
-from app.routers import classroom, phrases, practice, questions, settings, speech, stats, vocab
+from app.routers import classroom, phrases, practice, questions, settings, speech, stats, vocab, short_translation
 from app.services.classroom import ClassroomError
 
 app = FastAPI(title="英语学习平台", docs_url="/api/docs", openapi_url="/api/openapi.json")
@@ -29,7 +29,7 @@ from fastapi.staticfiles import StaticFiles as _StaticFiles  # noqa: E402
 
 app.mount("/data-static", _StaticFiles(directory=DATA_DIR), name="data")
 
-for r in (speech.router, classroom.router, classroom.accumulation_router, questions.router, practice.router, vocab.router, phrases.router,
+for r in (short_translation.router, speech.router, classroom.router, classroom.accumulation_router, questions.router, practice.router, vocab.router, phrases.router,
           stats.router, settings.router):
     app.include_router(r)
 
@@ -55,6 +55,10 @@ def startup():
     # 首次启动导入题库与词库
     from scripts.seed import ensure_seeded
     ensure_seeded()
+    from app.database import SessionLocal
+    from app.services.short_translation import recover_interrupted
+    with SessionLocal() as db:
+        recover_interrupted(db)
 
 
 if __name__ == "__main__":

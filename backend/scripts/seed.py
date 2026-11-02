@@ -16,10 +16,21 @@ def _count(db, model) -> int:
 
 
 def _migrate(db):
-    """存量库增量迁移：为 srs_cards 补齐错题本字段。"""
+    """存量库增量迁移：补齐错题本及 AI 推理配置字段。"""
     from sqlalchemy import text
+    provider_cols = {r[1] for r in db.execute(text("PRAGMA table_info(ai_providers)"))}
+    if provider_cols:
+        for name, ddl in {'service_type': "VARCHAR(30) DEFAULT 'custom'",
+                          'reasoning_mode': "VARCHAR(12) DEFAULT 'auto'",
+                          'reasoning_effort': "VARCHAR(20) DEFAULT ''",
+                          'models_json': "TEXT DEFAULT '[]'"}.items():
+            if name not in provider_cols:
+                db.execute(text(f'ALTER TABLE ai_providers ADD COLUMN {name} {ddl}'))
+        if 'reasoning_mode' not in provider_cols:
+            db.execute(text("UPDATE ai_providers SET reasoning_mode='disabled' WHERE lower(model) LIKE 'glm-4%'"))
     cols = [r[1] for r in db.execute(text("PRAGMA table_info(srs_cards)")).fetchall()]
     if not cols:
+        db.commit()
         return  # 表尚不存在，create_all 会带全字段建表
     if "in_mistake_book" not in cols:
         db.execute(text("ALTER TABLE srs_cards ADD COLUMN in_mistake_book BOOLEAN DEFAULT 0"))
@@ -98,6 +109,8 @@ def ensure_seeded(force: bool = False):
         seed_classroom(db)
         from scripts.seed_accumulation import seed_accumulation
         seed_accumulation(db)
+        from scripts.seed_short_translation import seed_short_translation
+        seed_short_translation(db)
     finally:
         db.close()
 

@@ -10,7 +10,8 @@
 - **前端**：React 18 + Vite + TypeScript + Ant Design 5 + ECharts（按需引入、路由级代码分割），构建产物 `frontend/dist` 由 FastAPI 托管
 - **课内词汇**：独立分组词库，单词/短语释义选择后拼写，持久化整轮进度和错题本；PDF/Word 预览导入与本地 RapidOCR 扫描识别
 - **平时积累**：`/accumulation` 独立词库与数据表，复用课内的页面、训练服务和接口工厂，词条、错题、轮次及浏览器草稿彼此隔离；整理笔记一次性导入。
-- **AI**：任意 OpenAI 兼容 Chat Completions 服务（DeepSeek / 智谱 GLM / OpenCode Zen 等），Provider 可配置、可切换
+- **短句翻译**：`/short-translation` 与 `/api/short-translation` 独立题库、练习版本和复习状态；30 道原创模拟题按稳定编号增量导入，草稿留在浏览器。北京时间跨日巩固，模拟批改与即时修改不计次。
+- **AI**：兼容 Chat Completions 服务（DeepSeek 官方 / OpenCode Go 订阅 / 智谱 / 自定义），每条服务模型配置分别保存推理模式与支持的强度，各练习可临时选择；密钥仅本地保存、接口掩码返回。Go 使用真实平台身份和每次独立练习稳定的会话头，不转按量接口；订阅适用范围与可用额度单独核对。
 
 ## 目录结构
 

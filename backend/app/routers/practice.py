@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 
 from ..database import SessionLocal, get_db
 from ..models import AiProvider, Grading, Question, Submission, UserSetting
-from ..services import ai_client
+from ..services import ai_client, ai_profiles
 from ..services.grading import FULL_SCORES, grade, mock_grading
 
 router = APIRouter(prefix="/api/practice", tags=["practice"])
@@ -55,8 +55,7 @@ def _run_grading(submission_id: int, provider_id: int | None):
             else:
                 result = grade(sub.exam_type, sub.q_type, sub.prompt, sub.source_text,
                                sub.content, sub.word_count,
-                               {"base_url": provider.base_url, "api_key": provider.api_key,
-                                "model": provider.model}, full)
+                               ai_profiles.config(provider, f'practice-{sub.id}'), full)
                 g.provider, g.model = provider.name, provider.model
             g.score = float(result.get("score", 0))
             g.result_json = json.dumps(result, ensure_ascii=False)

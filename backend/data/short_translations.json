@@ -1,0 +1,768 @@
+{
+  "batch": "short-c2e-20261102-v1",
+  "review": "逐句核对原文与参考译文的信息对应、语法和自然表达；参考不构成唯一正确译法。",
+  "questions": [
+    {
+      "id": "ST-C2E-001",
+      "topic": "文化",
+      "title": "非遗与日常生活",
+      "direction": "c2e",
+      "sentences": [
+        "保护非物质文化遗产，不仅要记录它过去的样貌，更要让它在当代生活中继续发挥作用。"
+      ],
+      "reference": "Protecting intangible cultural heritage requires not only documenting what it looked like in the past but also enabling it to continue to play a role in contemporary life.",
+      "reference_sentences": [
+        "Protecting intangible cultural heritage requires not only documenting what it looked like in the past but also enabling it to continue to play a role in contemporary life."
+      ],
+      "key_points": [
+        "保护非遗既要记录过去，也要使其继续融入当代生活。"
+      ],
+      "training_points": [
+        "not only ... but also",
+        "动名词主语"
+      ],
+      "source": "AI原创模拟题，非官方真题；依据六级考纲范围设计强化练习",
+      "syllabus_url": "https://www.neea.edu.cn/res/Home/1704/55b02330ac17274664f06d9d3db8249d.pdf"
+    },
+    {
+      "id": "ST-C2E-002",
+      "topic": "文化",
+      "title": "手艺人的新选择",
+      "direction": "c2e",
+      "sentences": [
+        "一些年轻手艺人尝试借助网络销售传统工艺品，以适应不断变化的消费习惯。",
+        "对他们而言，真正的挑战是扩大市场的同时，保留作品背后的文化内涵。"
+      ],
+      "reference": "Some young craftspeople are trying to sell traditional handicrafts online in order to adapt to changing consumer habits. For them, the real challenge is to expand the market while preserving the cultural meaning behind their work.",
+      "reference_sentences": [
+        "Some young craftspeople are trying to sell traditional handicrafts online in order to adapt to changing consumer habits.",
+        "For them, the real challenge is to expand the market while preserving the cultural meaning behind their work."
+      ],
+      "key_points": [
+        "年轻手艺人借助网络销售传统工艺品以适应消费习惯变化。",
+        "挑战是同时扩大市场并保留文化内涵。"
+      ],
+      "training_points": [
+        "目的表达",
+        "while 表达同时发生"
+      ],
+      "source": "AI原创模拟题，非官方真题；依据六级考纲范围设计强化练习",
+      "syllabus_url": "https://www.neea.edu.cn/res/Home/1704/55b02330ac17274664f06d9d3db8249d.pdf"
+    },
+    {
+      "id": "ST-C2E-003",
+      "topic": "文化",
+      "title": "地方戏曲进校园",
+      "direction": "c2e",
+      "sentences": [
+        "地方戏曲承载着一个地区独特的语言与记忆。",
+        "让学生接触这类艺术，并不意味着要求他们立即喜欢上所有传统剧目。",
+        "更重要的是为他们提供理解本土文化的机会，使传统不再只是课本中的概念。"
+      ],
+      "reference": "Local opera carries the distinctive language and memories of a region. Introducing students to this art form does not mean expecting them to enjoy every traditional play immediately. What matters more is giving them opportunities to understand local culture, so that tradition becomes more than a concept in textbooks.",
+      "reference_sentences": [
+        "Local opera carries the distinctive language and memories of a region.",
+        "Introducing students to this art form does not mean expecting them to enjoy every traditional play immediately.",
+        "What matters more is giving them opportunities to understand local culture, so that tradition becomes more than a concept in textbooks."
+      ],
+      "key_points": [
+        "地方戏曲承载地区语言与记忆。",
+        "接触艺术不等于要求学生立即喜爱所有传统剧目。",
+        "更重要的是提供理解本土文化的机会，让传统超越课本概念。"
+      ],
+      "training_points": [
+        "否定范围",
+        "主语从句",
+        "结果衔接"
+      ],
+      "source": "AI原创模拟题，非官方真题；依据六级考纲范围设计强化练习",
+      "syllabus_url": "https://www.neea.edu.cn/res/Home/1704/55b02330ac17274664f06d9d3db8249d.pdf"
+    },
+    {
+      "id": "ST-C2E-004",
+      "topic": "文化",
+      "title": "公共文化空间",
+      "direction": "c2e",
+      "sentences": [
+        "一座城市的文化活力，不应只由大型演出的数量来衡量，还应体现在普通居民能否方便地使用身边的公共文化空间。"
+      ],
+      "reference": "The cultural vitality of a city should be measured not only by the number of large-scale performances but also by how easily ordinary residents can access public cultural spaces nearby.",
+      "reference_sentences": [
+        "The cultural vitality of a city should be measured not only by the number of large-scale performances but also by how easily ordinary residents can access public cultural spaces nearby."
+      ],
+      "key_points": [
+        "城市文化活力既涉及大型演出数量，也涉及普通居民使用身边公共文化空间的便利程度。"
+      ],
+      "training_points": [
+        "被动语态",
+        "by how 引导的从句"
+      ],
+      "source": "AI原创模拟题，非官方真题；依据六级考纲范围设计强化练习",
+      "syllabus_url": "https://www.neea.edu.cn/res/Home/1704/55b02330ac17274664f06d9d3db8249d.pdf"
+    },
+    {
+      "id": "ST-C2E-005",
+      "topic": "文化",
+      "title": "节日的连接作用",
+      "direction": "c2e",
+      "sentences": [
+        "传统节日的意义并不会因为庆祝方式发生变化而必然减弱。",
+        "只要人们仍借此表达关怀、维系联系，节日就能在新的生活节奏中找到自己的位置。"
+      ],
+      "reference": "The significance of traditional festivals does not necessarily diminish when the ways of celebrating them change. As long as people continue to use these occasions to show care and maintain their connections, festivals can find a place in the new rhythm of life.",
+      "reference_sentences": [
+        "The significance of traditional festivals does not necessarily diminish when the ways of celebrating them change.",
+        "As long as people continue to use these occasions to show care and maintain their connections, festivals can find a place in the new rhythm of life."
+      ],
+      "key_points": [
+        "庆祝方式改变不一定削弱传统节日意义。",
+        "表达关怀和维系联系是节日融入新生活节奏的条件。"
+      ],
+      "training_points": [
+        "not necessarily",
+        "条件与结果"
+      ],
+      "source": "AI原创模拟题，非官方真题；依据六级考纲范围设计强化练习",
+      "syllabus_url": "https://www.neea.edu.cn/res/Home/1704/55b02330ac17274664f06d9d3db8249d.pdf"
+    },
+    {
+      "id": "ST-C2E-006",
+      "topic": "历史",
+      "title": "博物馆的解释责任",
+      "direction": "c2e",
+      "sentences": [
+        "历史文物能够吸引观众，却未必能自行讲清它们所处的时代。",
+        "博物馆需要通过可靠而易懂的说明，帮助参观者理解这些物件与普通人生活之间的联系。"
+      ],
+      "reference": "Historical artifacts can attract visitors, but they cannot necessarily tell the story of their era by themselves. Museums need to provide reliable and accessible explanations to help visitors understand the connections between these objects and the lives of ordinary people.",
+      "reference_sentences": [
+        "Historical artifacts can attract visitors, but they cannot necessarily tell the story of their era by themselves.",
+        "Museums need to provide reliable and accessible explanations to help visitors understand the connections between these objects and the lives of ordinary people."
+      ],
+      "key_points": [
+        "文物吸引人不等于能自行讲清时代背景。",
+        "博物馆应以可靠易懂的说明解释物件与普通人生活的联系。"
+      ],
+      "training_points": [
+        "定语从句",
+        "抽象名词具体化"
+      ],
+      "source": "AI原创模拟题，非官方真题；依据六级考纲范围设计强化练习",
+      "syllabus_url": "https://www.neea.edu.cn/res/Home/1704/55b02330ac17274664f06d9d3db8249d.pdf"
+    },
+    {
+      "id": "ST-C2E-007",
+      "topic": "历史",
+      "title": "历史街区的更新",
+      "direction": "c2e",
+      "sentences": [
+        "历史街区既是可供参观的地方，也是居民真实生活的空间。",
+        "如果改造只考虑游客的需要，原有的邻里关系就可能受到破坏。",
+        "因此，改善基础设施应当与保留社区生活相结合，而不是以赶走居民为代价。"
+      ],
+      "reference": "Historic neighborhoods are not only places to visit but also spaces where residents actually live. If renovation takes only tourists' needs into account, existing neighborhood ties may be damaged. Therefore, improvements to infrastructure should be combined with the preservation of community life rather than achieved at the cost of displacing residents.",
+      "reference_sentences": [
+        "Historic neighborhoods are not only places to visit but also spaces where residents actually live.",
+        "If renovation takes only tourists' needs into account, existing neighborhood ties may be damaged.",
+        "Therefore, improvements to infrastructure should be combined with the preservation of community life rather than achieved at the cost of displacing residents."
+      ],
+      "key_points": [
+        "历史街区兼具参观与居民生活功能。",
+        "只顾游客可能破坏邻里关系。",
+        "改善基础设施应兼顾社区生活，不以迁走居民为代价。"
+      ],
+      "training_points": [
+        "条件句",
+        "rather than",
+        "at the cost of"
+      ],
+      "source": "AI原创模拟题，非官方真题；依据六级考纲范围设计强化练习",
+      "syllabus_url": "https://www.neea.edu.cn/res/Home/1704/55b02330ac17274664f06d9d3db8249d.pdf"
+    },
+    {
+      "id": "ST-C2E-008",
+      "topic": "历史",
+      "title": "档案与历史认识",
+      "direction": "c2e",
+      "sentences": [
+        "随着更多地方档案向公众开放，人们有机会从普通家庭的经历出发，重新理解那些看似遥远的社会变化。"
+      ],
+      "reference": "As more local archives become available to the public, people have the opportunity to reconsider seemingly distant social changes through the experiences of ordinary families.",
+      "reference_sentences": [
+        "As more local archives become available to the public, people have the opportunity to reconsider seemingly distant social changes through the experiences of ordinary families."
+      ],
+      "key_points": [
+        "地方档案更开放使公众可通过普通家庭经历重新理解社会变化。"
+      ],
+      "training_points": [
+        "as 引导背景变化",
+        "介词短语组织信息"
+      ],
+      "source": "AI原创模拟题，非官方真题；依据六级考纲范围设计强化练习",
+      "syllabus_url": "https://www.neea.edu.cn/res/Home/1704/55b02330ac17274664f06d9d3db8249d.pdf"
+    },
+    {
+      "id": "ST-C2E-009",
+      "topic": "历史",
+      "title": "遗址保护的取舍",
+      "direction": "c2e",
+      "sentences": [
+        "一处历史遗址的价值，往往不仅在于保存完整的建筑，也在于它与周围环境形成的整体关系。",
+        "因此，附近的新建设项目需要经过审慎评估，以免短期便利损害难以恢复的历史景观。"
+      ],
+      "reference": "The value of a historic site often lies not only in well-preserved buildings but also in its overall relationship with the surrounding environment. New construction projects nearby therefore require careful assessment to prevent short-term convenience from damaging a historic landscape that would be difficult to restore.",
+      "reference_sentences": [
+        "The value of a historic site often lies not only in well-preserved buildings but also in its overall relationship with the surrounding environment.",
+        "New construction projects nearby therefore require careful assessment to prevent short-term convenience from damaging a historic landscape that would be difficult to restore."
+      ],
+      "key_points": [
+        "遗址价值包括完整建筑及其与周边环境的整体关系。",
+        "周边新建设须审慎评估，防止短期便利损害难以恢复的历史景观。"
+      ],
+      "training_points": [
+        "lie in",
+        "目的与潜在后果"
+      ],
+      "source": "AI原创模拟题，非官方真题；依据六级考纲范围设计强化练习",
+      "syllabus_url": "https://www.neea.edu.cn/res/Home/1704/55b02330ac17274664f06d9d3db8249d.pdf"
+    },
+    {
+      "id": "ST-C2E-010",
+      "topic": "历史",
+      "title": "历史知识与判断",
+      "direction": "c2e",
+      "sentences": [
+        "学习历史并不是为了给今天的每个问题寻找一个现成答案。",
+        "不同时代的条件存在差异，过去的做法不能被简单照搬。",
+        "然而，理解人们当时为何作出某种选择，有助于我们更谨慎地看待当前的处境。"
+      ],
+      "reference": "Studying history is not about finding a ready-made answer to every problem today. Conditions differ across periods, so past practices cannot simply be copied. However, understanding why people made certain choices at the time helps us view our present circumstances with greater caution.",
+      "reference_sentences": [
+        "Studying history is not about finding a ready-made answer to every problem today.",
+        "Conditions differ across periods, so past practices cannot simply be copied.",
+        "However, understanding why people made certain choices at the time helps us view our present circumstances with greater caution."
+      ],
+      "key_points": [
+        "学历史不是给今天所有问题找现成答案。",
+        "时代条件不同，过去做法不能照搬。",
+        "理解历史选择的原因有助于审慎看待当下。"
+      ],
+      "training_points": [
+        "否定目的",
+        "跨句转折与因果"
+      ],
+      "source": "AI原创模拟题，非官方真题；依据六级考纲范围设计强化练习",
+      "syllabus_url": "https://www.neea.edu.cn/res/Home/1704/55b02330ac17274664f06d9d3db8249d.pdf"
+    },
+    {
+      "id": "ST-C2E-011",
+      "topic": "经济与城乡",
+      "title": "乡村产业的长期发展",
+      "direction": "c2e",
+      "sentences": [
+        "乡村产业的发展需要稳定的市场，而不能只依赖短期的网络关注。",
+        "当生产者能够了解消费者真正的需要时，他们才更有可能持续改进产品。",
+        "这种联系越稳定，地方产业应对市场变化的能力就越强。"
+      ],
+      "reference": "The development of rural industries requires stable markets rather than short-lived online attention alone. Only when producers understand consumers' real needs are they more likely to keep improving their products. The more stable this connection is, the better local industries can respond to changes in the market.",
+      "reference_sentences": [
+        "The development of rural industries requires stable markets rather than short-lived online attention alone.",
+        "Only when producers understand consumers' real needs are they more likely to keep improving their products.",
+        "The more stable this connection is, the better local industries can respond to changes in the market."
+      ],
+      "key_points": [
+        "乡村产业需要稳定市场，不能仅依赖短期网络热度。",
+        "理解真实消费需求才更可能持续改进产品。",
+        "联系越稳定，产业越能应对市场变化。"
+      ],
+      "training_points": [
+        "only when",
+        "the more ... the better"
+      ],
+      "source": "AI原创模拟题，非官方真题；依据六级考纲范围设计强化练习",
+      "syllabus_url": "https://www.neea.edu.cn/res/Home/1704/55b02330ac17274664f06d9d3db8249d.pdf"
+    },
+    {
+      "id": "ST-C2E-012",
+      "topic": "经济与城乡",
+      "title": "通勤方式的改变",
+      "direction": "c2e",
+      "sentences": [
+        "尽管公共交通网络不断完善，如何让更多通勤者减少对私家车的依赖，仍是许多城市面临的现实挑战。"
+      ],
+      "reference": "Although public transport networks continue to improve, persuading more commuters to rely less on private cars remains a practical challenge for many cities.",
+      "reference_sentences": [
+        "Although public transport networks continue to improve, persuading more commuters to rely less on private cars remains a practical challenge for many cities."
+      ],
+      "key_points": [
+        "公共交通不断改善仍面临让更多通勤者减少私家车依赖的挑战。"
+      ],
+      "training_points": [
+        "让步从句",
+        "动名词主语",
+        "保持信息层次"
+      ],
+      "source": "AI原创模拟题，非官方真题；依据六级考纲范围设计强化练习",
+      "syllabus_url": "https://www.neea.edu.cn/res/Home/1704/55b02330ac17274664f06d9d3db8249d.pdf"
+    },
+    {
+      "id": "ST-C2E-013",
+      "topic": "经济与城乡",
+      "title": "数字服务的包容性",
+      "direction": "c2e",
+      "sentences": [
+        "数字化能够降低部分公共服务的使用成本，但并非所有居民都能同样熟练地操作手机。",
+        "在推出线上服务的同时保留必要的线下渠道，有助于避免便利成为新的门槛。"
+      ],
+      "reference": "Digitalization can reduce the cost of accessing some public services, but not all residents are equally skilled at using smartphones. Maintaining essential offline channels while introducing online services helps prevent convenience from becoming a new barrier.",
+      "reference_sentences": [
+        "Digitalization can reduce the cost of accessing some public services, but not all residents are equally skilled at using smartphones.",
+        "Maintaining essential offline channels while introducing online services helps prevent convenience from becoming a new barrier."
+      ],
+      "key_points": [
+        "数字化降低部分服务使用成本，但手机操作能力存在差异。",
+        "线上服务与必要线下渠道并存，有助于防止便利形成新门槛。"
+      ],
+      "training_points": [
+        "部分否定",
+        "prevent ... from"
+      ],
+      "source": "AI原创模拟题，非官方真题；依据六级考纲范围设计强化练习",
+      "syllabus_url": "https://www.neea.edu.cn/res/Home/1704/55b02330ac17274664f06d9d3db8249d.pdf"
+    },
+    {
+      "id": "ST-C2E-014",
+      "topic": "经济与城乡",
+      "title": "老旧社区的改造",
+      "direction": "c2e",
+      "sentences": [
+        "老旧社区改造常常涉及看似细小却影响日常生活的问题。",
+        "一条安全的步道或一部方便老人使用的电梯，可能比外观整齐的墙面更有价值。",
+        "资金有限时，充分听取居民意见能够帮助管理者确定真正需要优先解决的事项。"
+      ],
+      "reference": "The renovation of older neighborhoods often involves problems that seem minor but affect everyday life. A safe footpath or a lift that is easy for older people to use may be more valuable than neatly painted walls. When funds are limited, listening carefully to residents can help administrators identify the issues that truly deserve priority.",
+      "reference_sentences": [
+        "The renovation of older neighborhoods often involves problems that seem minor but affect everyday life.",
+        "A safe footpath or a lift that is easy for older people to use may be more valuable than neatly painted walls.",
+        "When funds are limited, listening carefully to residents can help administrators identify the issues that truly deserve priority."
+      ],
+      "key_points": [
+        "社区改造涉及看似细小但影响生活的问题。",
+        "步道和便于老人使用的电梯可能比墙面外观更重要。",
+        "资金有限时听取居民意见有助于确定优先事项。"
+      ],
+      "training_points": [
+        "定语从句",
+        "比较结构",
+        "条件下的优先顺序"
+      ],
+      "source": "AI原创模拟题，非官方真题；依据六级考纲范围设计强化练习",
+      "syllabus_url": "https://www.neea.edu.cn/res/Home/1704/55b02330ac17274664f06d9d3db8249d.pdf"
+    },
+    {
+      "id": "ST-C2E-015",
+      "topic": "经济与城乡",
+      "title": "便民设施的布局",
+      "direction": "c2e",
+      "sentences": [
+        "与其单纯增加商业设施的数量，城市规划者更需要考虑这些设施是否能够满足不同社区居民的实际需求。"
+      ],
+      "reference": "Rather than simply increasing the number of commercial facilities, urban planners need to consider whether these facilities can meet the actual needs of residents in different neighborhoods.",
+      "reference_sentences": [
+        "Rather than simply increasing the number of commercial facilities, urban planners need to consider whether these facilities can meet the actual needs of residents in different neighborhoods."
+      ],
+      "key_points": [
+        "规划更应关注设施满足各社区实际需求的能力，而不是单纯增加数量。"
+      ],
+      "training_points": [
+        "rather than",
+        "whether 宾语从句"
+      ],
+      "source": "AI原创模拟题，非官方真题；依据六级考纲范围设计强化练习",
+      "syllabus_url": "https://www.neea.edu.cn/res/Home/1704/55b02330ac17274664f06d9d3db8249d.pdf"
+    },
+    {
+      "id": "ST-C2E-016",
+      "topic": "社会民生",
+      "title": "养老服务的连续性",
+      "direction": "c2e",
+      "sentences": [
+        "养老服务的改善，不仅取决于增加服务项目，还取决于这些服务能否在老人真正需要时持续、可靠地提供。"
+      ],
+      "reference": "Improvements in elderly care depend not only on adding more services but also on whether those services can be provided consistently and reliably when older people actually need them.",
+      "reference_sentences": [
+        "Improvements in elderly care depend not only on adding more services but also on whether those services can be provided consistently and reliably when older people actually need them."
+      ],
+      "key_points": [
+        "养老服务改善既取决于项目增加，也取决于需要时持续可靠的供给。"
+      ],
+      "training_points": [
+        "depend on",
+        "嵌套时间从句"
+      ],
+      "source": "AI原创模拟题，非官方真题；依据六级考纲范围设计强化练习",
+      "syllabus_url": "https://www.neea.edu.cn/res/Home/1704/55b02330ac17274664f06d9d3db8249d.pdf"
+    },
+    {
+      "id": "ST-C2E-017",
+      "topic": "社会民生",
+      "title": "志愿服务的组织",
+      "direction": "c2e",
+      "sentences": [
+        "许多人愿意参与志愿服务，却不一定知道自己的能力最适合用在哪里。",
+        "组织者如果能够提供清晰的任务说明和必要的培训，就更容易把一时的热情转化为长期参与。"
+      ],
+      "reference": "Many people are willing to volunteer but do not necessarily know where their abilities can be put to the best use. By providing clear descriptions of tasks and the necessary training, organizers can more easily turn initial enthusiasm into long-term participation.",
+      "reference_sentences": [
+        "Many people are willing to volunteer but do not necessarily know where their abilities can be put to the best use.",
+        "By providing clear descriptions of tasks and the necessary training, organizers can more easily turn initial enthusiasm into long-term participation."
+      ],
+      "key_points": [
+        "志愿者有意愿但未必知道能力最适用的地方。",
+        "清晰任务与必要培训有助于热情变为长期参与。"
+      ],
+      "training_points": [
+        "被动语态",
+        "turn ... into"
+      ],
+      "source": "AI原创模拟题，非官方真题；依据六级考纲范围设计强化练习",
+      "syllabus_url": "https://www.neea.edu.cn/res/Home/1704/55b02330ac17274664f06d9d3db8249d.pdf"
+    },
+    {
+      "id": "ST-C2E-018",
+      "topic": "社会民生",
+      "title": "社区公共空间",
+      "direction": "c2e",
+      "sentences": [
+        "社区中的公共空间并不只承担休闲功能。",
+        "它们还为年龄和背景不同的人提供相遇的机会，减少彼此之间的陌生感。",
+        "因此，在规划这些空间时，除了考虑使用效率，也应重视人们是否愿意停留并展开交流。"
+      ],
+      "reference": "Public spaces in a community serve more than recreational purposes. They also give people of different ages and backgrounds opportunities to meet and become more familiar with one another. When planning these spaces, therefore, attention should be paid not only to efficiency but also to whether people are willing to stay and interact.",
+      "reference_sentences": [
+        "Public spaces in a community serve more than recreational purposes.",
+        "They also give people of different ages and backgrounds opportunities to meet and become more familiar with one another.",
+        "When planning these spaces, therefore, attention should be paid not only to efficiency but also to whether people are willing to stay and interact."
+      ],
+      "key_points": [
+        "公共空间不仅用于休闲。",
+        "它们促进不同年龄背景的人相遇并减少陌生感。",
+        "规划除效率还应关注停留与交流意愿。"
+      ],
+      "training_points": [
+        "more than",
+        "被动建议",
+        "段落衔接"
+      ],
+      "source": "AI原创模拟题，非官方真题；依据六级考纲范围设计强化练习",
+      "syllabus_url": "https://www.neea.edu.cn/res/Home/1704/55b02330ac17274664f06d9d3db8249d.pdf"
+    },
+    {
+      "id": "ST-C2E-019",
+      "topic": "社会民生",
+      "title": "健康信息的表达",
+      "direction": "c2e",
+      "sentences": [
+        "公共健康建议只有在解释清楚行动理由、并考虑人们实际生活条件时，才更可能被理解和长期采纳。"
+      ],
+      "reference": "Public health advice is more likely to be understood and followed over the long term only when it explains the reasons for action clearly and takes people's actual living conditions into account.",
+      "reference_sentences": [
+        "Public health advice is more likely to be understood and followed over the long term only when it explains the reasons for action clearly and takes people's actual living conditions into account."
+      ],
+      "key_points": [
+        "解释行动理由并考虑实际生活条件，是健康建议更易理解及长期采纳的条件。"
+      ],
+      "training_points": [
+        "only when 的位置",
+        "并列谓语一致性"
+      ],
+      "source": "AI原创模拟题，非官方真题；依据六级考纲范围设计强化练习",
+      "syllabus_url": "https://www.neea.edu.cn/res/Home/1704/55b02330ac17274664f06d9d3db8249d.pdf"
+    },
+    {
+      "id": "ST-C2E-020",
+      "topic": "社会民生",
+      "title": "家庭与工作责任",
+      "direction": "c2e",
+      "sentences": [
+        "灵活的工作安排可以帮助人们协调家庭与职业责任，但其效果取决于规则是否清晰、公平。",
+        "如果员工仍被期待随时回应工作消息，表面上的自由反而可能模糊休息与工作的界限。"
+      ],
+      "reference": "Flexible working arrangements can help people balance family and professional responsibilities, but their effectiveness depends on clear and fair rules. If employees are still expected to respond to work messages at all times, apparent freedom may instead blur the boundary between work and rest.",
+      "reference_sentences": [
+        "Flexible working arrangements can help people balance family and professional responsibilities, but their effectiveness depends on clear and fair rules.",
+        "If employees are still expected to respond to work messages at all times, apparent freedom may instead blur the boundary between work and rest."
+      ],
+      "key_points": [
+        "灵活工作有助于协调家庭职业责任，但依赖清晰公平规则。",
+        "随时响应消息的期待可能使表面自由模糊工作休息边界。"
+      ],
+      "training_points": [
+        "依赖条件",
+        "if 与转折含义"
+      ],
+      "source": "AI原创模拟题，非官方真题；依据六级考纲范围设计强化练习",
+      "syllabus_url": "https://www.neea.edu.cn/res/Home/1704/55b02330ac17274664f06d9d3db8249d.pdf"
+    },
+    {
+      "id": "ST-C2E-021",
+      "topic": "教育科技",
+      "title": "获取信息与判断信息",
+      "direction": "c2e",
+      "sentences": [
+        "学生能够迅速找到资料，并不意味着他们已经掌握了判断信息可靠性的方法。",
+        "教育的任务之一，是帮助他们在便利的技术环境中形成独立核实和审慎思考的习惯。"
+      ],
+      "reference": "Being able to find materials quickly does not mean that students have mastered the methods of assessing the reliability of information. One task of education is to help them develop habits of independent verification and careful thinking in an environment where technology makes information easy to access.",
+      "reference_sentences": [
+        "Being able to find materials quickly does not mean that students have mastered the methods of assessing the reliability of information.",
+        "One task of education is to help them develop habits of independent verification and careful thinking in an environment where technology makes information easy to access."
+      ],
+      "key_points": [
+        "快速找到资料不等于掌握可靠性判断。",
+        "教育应帮助学生在便利技术环境中形成独立核实和审慎思考习惯。"
+      ],
+      "training_points": [
+        "动名词",
+        "does not mean",
+        "信息重组"
+      ],
+      "source": "AI原创模拟题，非官方真题；依据六级考纲范围设计强化练习",
+      "syllabus_url": "https://www.neea.edu.cn/res/Home/1704/55b02330ac17274664f06d9d3db8249d.pdf"
+    },
+    {
+      "id": "ST-C2E-022",
+      "topic": "教育科技",
+      "title": "人工智能辅助学习",
+      "direction": "c2e",
+      "sentences": [
+        "人工智能可以为学习者提供及时反馈，却不能替代他们对问题本身的思考。",
+        "如果学生只是接受系统给出的答案，工具带来的便利未必会转化为能力的提高。",
+        "更有价值的使用方式，是比较不同解释，并说明自己为何接受或拒绝某一种说法。"
+      ],
+      "reference": "Artificial intelligence can provide learners with timely feedback, but it cannot replace their own thinking about a problem. If students simply accept the answers a system gives them, the convenience of the tool may not translate into improved ability. A more valuable approach is to compare different explanations and state why they accept or reject a particular account.",
+      "reference_sentences": [
+        "Artificial intelligence can provide learners with timely feedback, but it cannot replace their own thinking about a problem.",
+        "If students simply accept the answers a system gives them, the convenience of the tool may not translate into improved ability.",
+        "A more valuable approach is to compare different explanations and state why they accept or reject a particular account."
+      ],
+      "key_points": [
+        "AI提供及时反馈但不能替代自身思考。",
+        "只接受答案可能不提升能力。",
+        "更有价值的是比较解释并阐明接受或拒绝的理由。"
+      ],
+      "training_points": [
+        "translate into",
+        "原因从句",
+        "指代一致性"
+      ],
+      "source": "AI原创模拟题，非官方真题；依据六级考纲范围设计强化练习",
+      "syllabus_url": "https://www.neea.edu.cn/res/Home/1704/55b02330ac17274664f06d9d3db8249d.pdf"
+    },
+    {
+      "id": "ST-C2E-023",
+      "topic": "教育科技",
+      "title": "科研与公众理解",
+      "direction": "c2e",
+      "sentences": [
+        "科研成果能否真正改善社会生活，既取决于技术本身的可靠性，也取决于公众是否理解其用途与局限。"
+      ],
+      "reference": "Whether research findings can genuinely improve social life depends both on the reliability of the technology itself and on whether the public understands its uses and limitations.",
+      "reference_sentences": [
+        "Whether research findings can genuinely improve social life depends both on the reliability of the technology itself and on whether the public understands its uses and limitations."
+      ],
+      "key_points": [
+        "科研改善社会生活取决于技术可靠及公众理解用途局限两个条件。"
+      ],
+      "training_points": [
+        "whether 主语从句",
+        "both ... and"
+      ],
+      "source": "AI原创模拟题，非官方真题；依据六级考纲范围设计强化练习",
+      "syllabus_url": "https://www.neea.edu.cn/res/Home/1704/55b02330ac17274664f06d9d3db8249d.pdf"
+    },
+    {
+      "id": "ST-C2E-024",
+      "topic": "教育科技",
+      "title": "线上教育的支持条件",
+      "direction": "c2e",
+      "sentences": [
+        "线上课程扩大了人们接触优质教育资源的机会，却不能自动消除学习条件的差异。",
+        "稳定的网络、适当的学习空间和必要的指导，仍会影响学生能从课程中获得多少实际帮助。"
+      ],
+      "reference": "Online courses have expanded access to high-quality educational resources, but they do not automatically eliminate differences in learning conditions. Reliable internet access, a suitable study space and the necessary guidance still affect how much practical benefit students can gain from these courses.",
+      "reference_sentences": [
+        "Online courses have expanded access to high-quality educational resources, but they do not automatically eliminate differences in learning conditions.",
+        "Reliable internet access, a suitable study space and the necessary guidance still affect how much practical benefit students can gain from these courses."
+      ],
+      "key_points": [
+        "线上课程扩大优质资源机会但不自动消除条件差异。",
+        "网络、学习空间和指导影响学生实际受益程度。"
+      ],
+      "training_points": [
+        "转折",
+        "并列主语",
+        "how much 宾语从句"
+      ],
+      "source": "AI原创模拟题，非官方真题；依据六级考纲范围设计强化练习",
+      "syllabus_url": "https://www.neea.edu.cn/res/Home/1704/55b02330ac17274664f06d9d3db8249d.pdf"
+    },
+    {
+      "id": "ST-C2E-025",
+      "topic": "教育科技",
+      "title": "技术创新的评价",
+      "direction": "c2e",
+      "sentences": [
+        "评价一项技术创新时，速度和成本通常最容易被注意到。",
+        "然而，使用者能否理解操作方式、出现问题时能否获得帮助，也同样重要。",
+        "只有把这些实际体验纳入评价，创新才更有可能真正回应人的需要。"
+      ],
+      "reference": "Speed and cost are often the most noticeable factors when a technological innovation is assessed. However, it is equally important to consider whether users can understand how to operate it and obtain help when problems arise. Only when these practical experiences are taken into account is innovation more likely to respond meaningfully to people's needs.",
+      "reference_sentences": [
+        "Speed and cost are often the most noticeable factors when a technological innovation is assessed.",
+        "However, it is equally important to consider whether users can understand how to operate it and obtain help when problems arise.",
+        "Only when these practical experiences are taken into account is innovation more likely to respond meaningfully to people's needs."
+      ],
+      "key_points": [
+        "速度成本通常最显眼。",
+        "操作理解与出问题可获得帮助同样重要。",
+        "将实际体验纳入评价才更可能真正回应人的需要。"
+      ],
+      "training_points": [
+        "被动语态",
+        "形式主语",
+        "only by 倒装"
+      ],
+      "source": "AI原创模拟题，非官方真题；依据六级考纲范围设计强化练习",
+      "syllabus_url": "https://www.neea.edu.cn/res/Home/1704/55b02330ac17274664f06d9d3db8249d.pdf"
+    },
+    {
+      "id": "ST-C2E-026",
+      "topic": "环境发展",
+      "title": "垃圾分类与后续处理",
+      "direction": "c2e",
+      "sentences": [
+        "垃圾分类需要居民参与，也需要可靠的收集和处理体系。",
+        "如果已经分好的垃圾在运输途中被重新混合，公众继续参与的意愿就可能下降。",
+        "因此，清晰说明分类后的去向，有助于增强人们对整个体系的信任。"
+      ],
+      "reference": "Waste sorting requires both residents' participation and a reliable system of collection and treatment. If waste that has already been sorted is mixed again during transport, the public may become less willing to keep participating. Clearly explaining where sorted waste goes can therefore help build people's trust in the system as a whole.",
+      "reference_sentences": [
+        "Waste sorting requires both residents' participation and a reliable system of collection and treatment.",
+        "If waste that has already been sorted is mixed again during transport, the public may become less willing to keep participating.",
+        "Clearly explaining where sorted waste goes can therefore help build people's trust in the system as a whole."
+      ],
+      "key_points": [
+        "分类需要居民参与与可靠收集处理体系。",
+        "运输重新混合会降低持续参与意愿。",
+        "说明分类去向能增强对整个体系的信任。"
+      ],
+      "training_points": [
+        "条件句",
+        "完成时被动",
+        "因果衔接"
+      ],
+      "source": "AI原创模拟题，非官方真题；依据六级考纲范围设计强化练习",
+      "syllabus_url": "https://www.neea.edu.cn/res/Home/1704/55b02330ac17274664f06d9d3db8249d.pdf"
+    },
+    {
+      "id": "ST-C2E-027",
+      "topic": "环境发展",
+      "title": "城市绿地的公平性",
+      "direction": "c2e",
+      "sentences": [
+        "城市绿地的价值不应只通过总面积来衡量，还应考虑老人、儿童和行动不便者能否安全、方便地到达并使用这些空间。"
+      ],
+      "reference": "The value of urban green spaces should be measured not only by their total area but also by whether older people, children and people with limited mobility can reach and use them safely and conveniently.",
+      "reference_sentences": [
+        "The value of urban green spaces should be measured not only by their total area but also by whether older people, children and people with limited mobility can reach and use them safely and conveniently."
+      ],
+      "key_points": [
+        "绿地价值还取决于不同人群安全便利到达与使用，不能仅看总面积。"
+      ],
+      "training_points": [
+        "被动语态",
+        "并列人群与行为"
+      ],
+      "source": "AI原创模拟题，非官方真题；依据六级考纲范围设计强化练习",
+      "syllabus_url": "https://www.neea.edu.cn/res/Home/1704/55b02330ac17274664f06d9d3db8249d.pdf"
+    },
+    {
+      "id": "ST-C2E-028",
+      "topic": "环境发展",
+      "title": "绿色消费的条件",
+      "direction": "c2e",
+      "sentences": [
+        "鼓励绿色消费，不能只要求消费者作出更负责任的选择。",
+        "只有当环保产品容易获得、价格合理，而且相关信息可信时，这种选择才更可能成为日常习惯。"
+      ],
+      "reference": "Encouraging green consumption requires more than asking consumers to make more responsible choices. Only when environmentally friendly products are readily available, reasonably priced and accompanied by reliable information are such choices more likely to become everyday habits.",
+      "reference_sentences": [
+        "Encouraging green consumption requires more than asking consumers to make more responsible choices.",
+        "Only when environmentally friendly products are readily available, reasonably priced and accompanied by reliable information are such choices more likely to become everyday habits."
+      ],
+      "key_points": [
+        "绿色消费不能仅要求消费者负责选择。",
+        "产品易得、价格合理、信息可信才更可能使选择日常化。"
+      ],
+      "training_points": [
+        "requires more than",
+        "only when 倒装"
+      ],
+      "source": "AI原创模拟题，非官方真题；依据六级考纲范围设计强化练习",
+      "syllabus_url": "https://www.neea.edu.cn/res/Home/1704/55b02330ac17274664f06d9d3db8249d.pdf"
+    },
+    {
+      "id": "ST-C2E-029",
+      "topic": "环境发展",
+      "title": "河流治理的整体视角",
+      "direction": "c2e",
+      "sentences": [
+        "一条河流的治理效果，不能只看某一段水面是否清澈。",
+        "上游的生产活动、沿岸的生活方式以及下游的生态需要，往往彼此相连。",
+        "把这些关系纳入长期规划，才能避免局部改善的同时把问题转移到别处。"
+      ],
+      "reference": "The effectiveness of river management cannot be judged solely by whether the water in one section looks clear. Production activities upstream, ways of life along the banks and ecological needs downstream are often interconnected. These relationships must be included in long-term planning to avoid shifting problems elsewhere while improving conditions in one area.",
+      "reference_sentences": [
+        "The effectiveness of river management cannot be judged solely by whether the water in one section looks clear.",
+        "Production activities upstream, ways of life along the banks and ecological needs downstream are often interconnected.",
+        "These relationships must be included in long-term planning to avoid shifting problems elsewhere while improving conditions in one area."
+      ],
+      "key_points": [
+        "治理不能仅看某段水面清澈。",
+        "上游生产、沿岸生活和下游生态相互联系。",
+        "长期规划须纳入联系以避免改善局部时转移问题。"
+      ],
+      "training_points": [
+        "solely",
+        "并列信息",
+        "目的与同时关系"
+      ],
+      "source": "AI原创模拟题，非官方真题；依据六级考纲范围设计强化练习",
+      "syllabus_url": "https://www.neea.edu.cn/res/Home/1704/55b02330ac17274664f06d9d3db8249d.pdf"
+    },
+    {
+      "id": "ST-C2E-030",
+      "topic": "环境发展",
+      "title": "节能改造的长期收益",
+      "direction": "c2e",
+      "sentences": [
+        "尽管建筑节能改造通常需要较高的前期投入，其长期收益仍应结合能源支出、居住舒适度和环境影响来综合评估。"
+      ],
+      "reference": "Although improving the energy efficiency of buildings usually requires substantial initial investment, its long-term benefits should still be assessed in terms of energy costs, living comfort and environmental impact.",
+      "reference_sentences": [
+        "Although improving the energy efficiency of buildings usually requires substantial initial investment, its long-term benefits should still be assessed in terms of energy costs, living comfort and environmental impact."
+      ],
+      "key_points": [
+        "建筑节能改造前期投入较高；长期收益应综合能源支出、舒适度及环境影响。"
+      ],
+      "training_points": [
+        "让步",
+        "名词化",
+        "in terms of"
+      ],
+      "source": "AI原创模拟题，非官方真题；依据六级考纲范围设计强化练习",
+      "syllabus_url": "https://www.neea.edu.cn/res/Home/1704/55b02330ac17274664f06d9d3db8249d.pdf"
+    }
+  ]
+}

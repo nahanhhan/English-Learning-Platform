@@ -7,13 +7,11 @@
 ## Requirements
 
 ### Requirement: 服务商管理
-
-用户 SHALL 可添加、编辑、删除多个 AI 服务商，每家包含名称、Base URL、API Key、模型名；名称 SHALL 唯一。删除默认服务商时系统 SHALL 自动指定剩余中的第一家为默认。
+用户 SHALL 可添加、编辑、删除多条服务模型配置，每条包含名称、Base URL、API Key、模型名、服务类型、推理模式和支持的强度；名称唯一。删除默认配置时自动指定剩余第一条为默认。界面提供 DeepSeek 官方、OpenCode Go 订阅、智谱和自定义兼容服务。
 
 #### Scenario: 快速填充预设
-
-- **WHEN** 用户在添加表单点击「DeepSeek」或「智谱 GLM」预设按钮
-- **THEN** Base URL 与模型名自动填充（https://api.deepseek.com + deepseek-chat；https://open.bigmodel.cn/api/paas/v4 + glm-4.6），API Key 由用户自行填写
+- **WHEN** 用户选择 DeepSeek 官方或 OpenCode Go 订阅预设
+- **THEN** 自动填写已核对的独立接口和兼容模型，密钥由用户填写；不将 Go 改成按量接口
 
 ### Requirement: Base URL 兼容多种写法
 
@@ -25,13 +23,11 @@
 - **THEN** 实际请求地址为 https://open.bigmodel.cn/api/paas/v4/chat/completions
 
 ### Requirement: 连通性测试
-
-每个服务商 SHALL 提供「测试」按钮，发送极小请求（max_tokens 512）验证连通并显示模型响应摘要；失败时 SHALL 显示可操作的错误原因（如模型名错误、思考型模型配额不足、HTTP 状态码）。
+每条配置 SHALL 提供测试，复用正式批改的请求构造及推理设置。普通模型使用小输出配额，推理模型使用足够配额避免只有思考没有正文，截断重试沿用会话。成功显示正文摘要，失败仅显示分类后的可操作原因，不暴露密钥或供应商原始响应。
 
 #### Scenario: Key 无效时的提示
-
-- **WHEN** 用户使用错误 API Key 点击测试
-- **THEN** 显示失败及服务商返回的错误摘要，而不是空内容成功
+- **WHEN** 用户使用错误密钥点击测试
+- **THEN** 显示认证失败，而不是空正文成功或自动换服务
 
 ### Requirement: Key 安全展示
 
@@ -43,13 +39,15 @@ API Key SHALL 仅保存在本地 SQLite；接口与界面 SHALL 只返回掩码�
 - **THEN** 保存后数据库中仍为原 Key
 
 ### Requirement: 思考模式差异化处理
+系统 SHALL 按每条配置与模型能力构造推理参数。可调模型支持默认、开启和关闭，关闭时不发送强度；强制推理的 GLM-5 不发送关闭参数，未知能力使用模型默认。原 GLM-4 配置迁移保持旧有关闭行为，新配置默认跟随模型，用户可以显式选择。
 
-对智谱直连（bigmodel.cn）的 glm-4.x 模型，请求 SHALL 附加 `thinking: {"type": "disabled"}`；对 glm-5.x 系列（强制思考、传 disabled 会 400）SHALL 不附加任何思考参数；其他服务商 SHALL 不附加额外参数，避免网关拒绝未知字段。
+#### Scenario: 保留旧 GLM-4 行为
+- **WHEN** 旧数据库迁移且原 GLM-4 配置没有推理字段
+- **THEN** 保留服务地址、密钥与默认状态，并将推理模式迁移为关闭
 
 #### Scenario: glm-4.6 自动关思考
-
-- **WHEN** 使用智谱直连 glm-4.6 批改
-- **THEN** 请求体包含 thinking disabled，避免思维链耗尽输出配额
+- **WHEN** 使用迁移后保持关闭的旧 GLM-4.6 配置，或用户显式选择关闭
+- **THEN** 请求包含 thinking disabled，避免思维链耗尽输出配额
 
 ### Requirement: 学习偏好
 
@@ -69,3 +67,17 @@ API Key SHALL 仅保存在本地 SQLite；接口与界面 SHALL 只返回掩码�
 
 - **WHEN** 用户在设置页关闭「自动发音」，随后进入背单词页换到下一张卡
 - **THEN** 不自动发声；点击「美」按钮仍能正常播放
+
+### Requirement: 推理模式与模型能力
+每条服务模型配置 SHALL 保存服务类型、默认或开启或关闭的推理模式及实际支持的强度，提供 DeepSeek 官方和 OpenCode Go 订阅预设、官方说明及模型刷新。未知能力仅使用模型默认，强制推理模型不得关闭，关闭时不发送强度。旧配置和密钥掩码行为保持兼容；各练习共用默认配置且可临时切换。
+
+#### Scenario: 切换推理模式
+- **WHEN** 用户将可关闭推理的模型设为关闭
+- **THEN** 请求发送对应关闭参数，且不携带推理强度
+
+### Requirement: Go 会话与错误分类
+OpenCode Go 的连接测试和正式调用 SHALL 发送真实平台 User-Agent 和每次练习稳定的 x-opencode-session，重试和重译复用，新的独立练习重新生成。不切换到普通按量接口。系统 SHALL 分类显示会话头、认证、额度、参数、超时及格式错误，错误不暴露密钥。请求头兼容不等同于订阅适用性或额度保证。
+
+#### Scenario: 重试保持会话
+- **WHEN** 同一次练习在输出截断或人工重试后再次请求 Go
+- **THEN** 使用同一会话标识；新练习使用不同标识

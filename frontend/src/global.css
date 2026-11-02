@@ -192,6 +192,47 @@ body {
 .part-of-speech { display: inline-block; margin-left: 8px; padding: 1px 7px; border-radius: 5px; background: #edf3fb; color: #476488; font-size: 13px; font-weight: 400; line-height: 1.7; letter-spacing: normal; vertical-align: middle; white-space: normal; overflow-wrap: anywhere; max-width: 100%; }
 .part-of-speech-missing { color: #8c96a7; background: #f4f5f7; font-size: 12px; }
 
+/* 短句训练沿用平台配色，以原文、作答和逐句反馈构成阅读顺序。 */
+.short-page { max-width: 1180px; margin: 0 auto; }
+.short-toolbar, .short-navigation, .short-answer-actions, .short-score-line, .short-version-toolbar, .short-expression, .short-history-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.short-stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; padding: 18px 0; margin-bottom: 12px; border-bottom: 1px solid #e7ebf0; }
+.short-stats .ant-statistic-content { font-size: 23px; }
+.short-navigation { justify-content: flex-start; margin-bottom: 18px; }
+.short-workspace { max-width: 900px; margin: 0 auto; display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; }
+.short-workspace > * { min-width: 0; }
+.short-start { text-align: center; padding: 28px 12px; color: #778396; }
+.short-start h2 { color: #24364d; }
+.short-source { font-size: 17px; line-height: 1.95; color: #25364c; margin: 12px 0; overflow-wrap: anywhere; }
+.short-question-meta, .short-source-note, .short-profile-note { color: #8692a2; font-size: 12px; line-height: 1.7; }
+.short-question .ant-card-head-title { white-space: normal; }
+.short-answer-actions { margin-top: 12px; }
+.short-answer-actions > span { color: #8692a2; font-size: 12px; }
+.short-page textarea { font-size: 16px; line-height: 1.85; }
+.short-feedback { display: grid; gap: 16px; margin-top: 16px; }
+.short-prose { white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.85; margin: 12px 0; }
+.short-english { font-family: Georgia, 'Times New Roman', serif; font-size: 17px; }
+.short-versions, .short-comparison { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.short-comparison { border-top: 1px solid #edf0f4; margin-top: 14px; padding-top: 14px; line-height: 1.8; }
+.short-comparison ul { padding-left: 20px; }
+.short-sentence-feedback { padding: 16px 0; border-bottom: 1px solid #edf0f4; line-height: 1.8; }
+.short-sentence-feedback:last-child { border-bottom: 0; }
+.short-sentence-feedback p { margin: 8px 0; }
+.short-quote { padding: 10px 14px; background: #f5f7fa; border-left: 3px solid #9fb4ce; white-space: pre-wrap; overflow-wrap: anywhere; }
+.short-expression, .short-history-row { padding: 12px 0; border-bottom: 1px solid #edf0f4; }
+.short-expression > div { flex: 1; min-width: 180px; }
+.short-expression p, .short-history-row p { margin: 5px 0; line-height: 1.7; }
+.short-version-toolbar { margin-bottom: 12px; }
+.short-profile-note { margin-top: 10px; }
+@media (max-width: 700px) {
+  .short-page { padding: 18px 12px; }
+  .short-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .short-versions, .short-comparison { grid-template-columns: minmax(0, 1fr); }
+  .short-navigation .ant-segmented { max-width: 100%; overflow-x: auto; }
+  .short-question .ant-card-head-wrapper { flex-wrap: wrap; gap: 8px; padding: 10px 0; }
+  .short-question .ant-card-head-title { min-width: 0; }
+  .short-question .ant-card-extra { margin-left: auto; }
+}
+
 /* 练习页优先把题目和操作留在一屏内；长释义依然完整换行。 */
 .study-page, .classroom-page { padding: 14px 22px 20px; }
 .study-toolbar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }

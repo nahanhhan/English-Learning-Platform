@@ -6,6 +6,7 @@ import {
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { get, post, type Question, type Submission, type Grading } from '../api'
 import GradingResult from '../components/GradingResult'
+import ProviderSelect from '../components/ProviderSelect'
 
 const Q_TYPE_LABEL: Record<string, string> = {
   translation: '翻译',
@@ -26,6 +27,7 @@ export default function Practice({ mode }: { mode: Mode }) {
   const [questions, setQuestions] = useState<Question[]>([])
   const [current, setCurrent] = useState<Question | null>(null)
   const [answer, setAnswer] = useState('')
+  const [providerId, setProviderId] = useState<number>()
   const [freeMode, setFreeMode] = useState(false)
   const [freeSource, setFreeSource] = useState('')
   const [freeTitle, setFreeTitle] = useState('')
@@ -142,7 +144,7 @@ export default function Practice({ mode }: { mode: Mode }) {
             source_text: freeSource, content,
           }
         : { question_id: current!.id, content }
-      const resp = await post<{ submission_id: number }>('/api/practice/submit', body)
+      const resp = await post<{ submission_id: number }>('/api/practice/submit', { ...body, provider_id: providerId })
       try { localStorage.removeItem(draftKey) } catch { /* ignore */ }
       message.success('已提交，AI 批改中…')
       pollResult(resp.submission_id)
@@ -157,7 +159,7 @@ export default function Practice({ mode }: { mode: Mode }) {
     setSubmitting(true)
     setGrading(null)
     try {
-      await post(`/api/practice/${submission.id}/regrade`, {})
+      await post(`/api/practice/${submission.id}/regrade`, { provider_id: providerId })
       pollResult(submission.id)
     } catch (e: any) {
       setSubmitting(false)
@@ -298,6 +300,7 @@ export default function Practice({ mode }: { mode: Mode }) {
           )}
 
           <div className="panel">
+            <div style={{ marginBottom: 12 }}><ProviderSelect value={providerId} onChange={setProviderId} disabled={submitting} /></div>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
               <span style={{ fontWeight: 600 }}>我的作答</span>
               <Space size={14}>

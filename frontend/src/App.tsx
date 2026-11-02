@@ -16,6 +16,7 @@ const Vocab = lazy(() => import('./pages/Vocab'))
 const Phrases = lazy(() => import('./pages/Phrases'))
 const Settings = lazy(() => import('./pages/Settings'))
 const Classroom = lazy(() => import('./pages/Classroom'))
+const ShortTranslation = lazy(() => import('./pages/ShortTranslation'))
 
 const { Sider, Content, Header } = Layout
 
@@ -30,6 +31,7 @@ export default function App() {
     if (p.startsWith('/phrases')) return '/phrases'
     if (p.startsWith('/classroom')) return '/classroom'
     if (p.startsWith('/accumulation')) return '/accumulation'
+    if (p.startsWith('/short-translation')) return '/short-translation'
     if (p.startsWith('/settings')) return '/settings'
     return '/'
   }, [location.pathname])
@@ -45,6 +47,7 @@ export default function App() {
       [/^\/phrases/, '背短语'],
       [/^\/classroom/, '课内生词和短语'],
       [/^\/accumulation/, '平时单词短语积累'],
+      [/^\/short-translation/, '短句翻译'],
       [/^\/settings/, '设置'],
     ]
     const name = names.find(([re]) => re.test(p))?.[1]
@@ -62,6 +65,7 @@ export default function App() {
   const items = [
     { key: '/', icon: <BarChartOutlined />, label: <Link to="/">学习概览</Link> },
     { key: '/practice/translation', icon: <TranslationOutlined />, label: <Link to="/practice/translation">翻译练习</Link> },
+    { key: '/short-translation', icon: <TranslationOutlined />, label: <Link to="/short-translation">短句翻译</Link> },
     { key: '/practice/writing', icon: <EditOutlined />, label: <Link to="/practice/writing">写作练习</Link> },
     { key: '/vocab', icon: <BookOutlined />, label: <Link to="/vocab">背单词</Link> },
     { key: '/phrases', icon: <ReadOutlined />, label: <Link to="/phrases">背短语</Link> },
@@ -106,6 +110,7 @@ export default function App() {
           >
             <Routes>
               <Route path="/" element={<Dashboard />} />
+              <Route path="/short-translation" element={<ShortTranslation />} />
               <Route path="/practice/translation" element={<Practice mode="translation" key="t" />} />
               <Route path="/practice/writing" element={<Practice mode="writing" key="w" />} />
               <Route path="/vocab" element={<Vocab />} />
