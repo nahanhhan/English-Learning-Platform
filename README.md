@@ -14,7 +14,7 @@
 | 🔗 背短语 | 442 条考试高频短语，与单词同样的学习/测验/浏览体验 |
 | 📚 课内生词和短语 | 按课文/单元分组，单词与短语均先选释义再拼写，美式发音、错题专项和自动保存进度；支持粘贴、PDF/Word 预览导入 |
 | 📝 平时单词短语积累 | 独立记录日常词汇，复用课内学习与答题模式；已整理 English_notes.docx 中 41 个单词、9 个短语 |
-| ⚙️ 设置 | DeepSeek 官方 / OpenCode Go 订阅 / 智谱 / 自定义兼容服务；推理模式与强度、模型刷新、连接测试和学习偏好 |
+| ⚙️ 设置 | Anthropic 官方 / DeepSeek 官方 / OpenCode Go 订阅 / 智谱 / 自定义兼容服务；推理模式与强度、模型刷新、连接测试和学习偏好 |
 
 ## 快速开始
 
@@ -35,7 +35,7 @@
 ## 启用 AI 批改
 
 1. 打开「设置」→「AI 批改服务商」→ 添加；
-2. 可点击「DeepSeek 官方」「OpenCode Go 订阅」「智谱 GLM」快速填充，填入对应服务的 API Key；
+2. 可点击「Anthropic 官方」「DeepSeek 官方」「OpenCode Go 订阅」「智谱 GLM」快速填充，填入对应服务的 API Key；
 3. 点「测试」验证连通，设为默认；
 4. 未配置 Key 时可在设置中开启「模拟批改」体验完整流程。
 
@@ -43,7 +43,9 @@
 
 每条「服务＋模型」分别保存推理模式和强度，支持保存同一服务的多条模型配置。推理可选择跟随模型默认、开启或关闭；强制推理模型不能关闭，未知能力使用模型默认，关闭后不发送强度参数。DeepSeek 官方支持低、高、最高；其他模型只展示已核实或模型目录声明的档位。保存后可刷新模型列表，失败时保留原配置。真题和短句练习均可临时选择已保存配置，不改变全局默认。
 
-Go 使用独立订阅地址，兼容既有 Go 地址，不自动转到按量接口。连接测试和批改共用请求构造，携带平台自己的 `User-Agent` 和每次独立练习的 `x-opencode-session`，同次练习的修改、重试沿用标识。在线目录只显示支持本平台 Chat Completions 接口的模型。[Go 官方说明](https://opencode.ai/v2/docs/console/go/)规定主要面向编码代理；翻译用途、账户权限、额度和超额设置需按服务规定核对，请求头通过不代表订阅必然可用。[DeepSeek 推理说明](https://api-docs.deepseek.com/guides/thinking_mode/)可查看具体参数。
+Go 使用独立订阅地址，兼容既有 Go 地址，不自动转到按量接口。连接测试和批改共用请求构造，携带平台自己的 `User-Agent` 和每次独立练习的 `x-opencode-session`，同次练习的修改、重试沿用标识。在线目录显示支持 Chat Completions 或 Messages 的模型；选择 Claude 时自动使用 Go 的 Messages 接口，原订阅密钥和会话保持不变，无需重新创建已有配置。暂不支持仅提供 Responses 或 Google 专用接口的模型。[Go 官方说明](https://opencode.ai/v2/docs/console/go/)规定主要面向编码代理；翻译用途、账户权限、额度和超额设置需按服务规定核对，请求头通过不代表订阅必然可用。[DeepSeek 推理说明](https://api-docs.deepseek.com/guides/thinking_mode/)可查看具体参数。
+
+「Anthropic 官方」是独立入口，使用官方地址和官方 API 密钥，与 Go 订阅分别保存。默认提供 Claude Haiku 5.5，可选择其他 Claude 或刷新可用模型；Haiku 5.5 支持推理开关及低、中、高、更高、最高五档强度。其他 Claude 根据已核对信息或官方模型目录显示能力，无法完全关闭的模型不提供关闭选项，关闭推理时不发送强度。新 Claude 使用自适应推理和 `output_config.effort`，旧模型使用其支持的传统思考预算。只提取正文用于批改，思考内容不会当作批改结果。[Claude 官方推理说明](https://platform.claude.com/docs/en/build-with-claude/thinking)和[强度说明](https://platform.claude.com/docs/en/build-with-claude/effort)可供核对。
 
 ## 短句翻译
 

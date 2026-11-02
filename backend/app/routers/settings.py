@@ -35,7 +35,7 @@ class ProviderBody(BaseModel):
     api_key: str = ""
     model: str = ""
     is_default: bool = False
-    service_type: Literal['custom', 'deepseek', 'opencode_go', 'zhipu'] | None = None
+    service_type: Literal['custom', 'deepseek', 'opencode_go', 'zhipu', 'anthropic'] | None = None
     reasoning_mode: Literal['auto', 'enabled', 'disabled'] | None = None
     reasoning_effort: str | None = Field(default=None, max_length=20)
 
@@ -63,7 +63,7 @@ def provider_options():
 
 class CapabilityBody(BaseModel):
     provider_id: int | None = None
-    service_type: Literal['custom', 'deepseek', 'opencode_go', 'zhipu'] = 'custom'
+    service_type: Literal['custom', 'deepseek', 'opencode_go', 'zhipu', 'anthropic'] = 'custom'
     base_url: str = Field(default='', max_length=200)
     model: str = Field(default='', max_length=100)
 

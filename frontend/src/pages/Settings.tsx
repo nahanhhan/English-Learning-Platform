@@ -214,14 +214,16 @@ export default function Settings() {
             </Space>
           </Space>
           <Form.Item name="name" label="名称" rules={[{ required: true, message: '请输入名称' }]}>
-            <Input placeholder="如 DeepSeek / 智谱 / OpenCode" />
+            <Input placeholder="如 Anthropic / DeepSeek / 智谱 / OpenCode" />
           </Form.Item>
           <Form.Item name="service_type" label="接入方式">
             <Select options={[...presets.map(p => ({ value: p.service_type, label: p.name })), { value: 'custom', label: '自定义兼容 API' }]}
               onChange={value => { const p = presets.find(p => p.service_type === value); if (p) form.setFieldsValue({ base_url: p.base_url, model: p.model, reasoning_mode: 'auto', reasoning_effort: '' }) }} />
           </Form.Item>
           {formType === 'opencode_go' && <Alert type="info" showIcon style={{ marginBottom: 14 }} message="OpenCode Go 订阅独立接口"
-            description={<span>平台自动发送客户端身份与稳定会话请求头，模型列表仅列出兼容本平台批改接口的模型。Go 官方面向编码代理；翻译批改适用范围、额度和超额设置以账户服务为准。<a href="https://opencode.ai/v2/docs/console/go/" target="_blank" rel="noreferrer">查看官方说明</a></span>} />}
+            description={<span>使用 Go 订阅密钥，选择 Claude 后会自动匹配对应接口，无需改填官方密钥。平台自动发送客户端身份与稳定会话请求头。Go 官方面向编码代理；翻译批改适用范围、额度和超额设置以账户服务为准。<a href="https://opencode.ai/v2/docs/console/go/" target="_blank" rel="noreferrer">查看官方说明</a></span>} />}
+          {formType === 'anthropic' && <Alert type="info" showIcon style={{ marginBottom: 14 }} message="Anthropic 官方服务"
+            description={<span>填写 Anthropic 官方 API 密钥，此配置与 Go 订阅分别保存。选择 Claude 后，在下方设置该模型支持的推理模式和强度。<a href="https://platform.claude.com/docs/en/build-with-claude/thinking" target="_blank" rel="noreferrer">查看官方说明</a></span>} />}
           {formType === 'deepseek' && <div style={{ marginBottom: 12 }}><a href="https://api-docs.deepseek.com/guides/thinking_mode/" target="_blank" rel="noreferrer">DeepSeek 官方推理模式说明</a></div>}
           <Form.Item name="base_url" label="Base URL" rules={[{ required: true, message: '请输入 Base URL' }]}>
             <Input placeholder="https://api.deepseek.com" />
