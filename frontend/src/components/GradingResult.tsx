@@ -114,6 +114,10 @@ export default function GradingResult({
         <div style={{ marginTop: 14, color: 'rgba(0,0,0,0.75)', lineHeight: 1.8 }}>
           {r.overall_comment}
         </div>
+        {r.score_reason && <div style={{ marginTop: 10, lineHeight: 1.8 }}><b>评分依据：</b>{r.score_reason}</div>}
+        {r.rubric_version?.startsWith('cet6-translation') && <div style={{ marginTop: 10, fontSize: 12, color: '#8692a2' }}>
+          依据公开六级标准的训练估分；三个维度仅作学习诊断，不相加决定总分。
+        </div>}
       </Card>
 
       {/* 错误列表 */}

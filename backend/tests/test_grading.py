@@ -18,7 +18,7 @@ def test_build_translation_prompt_contains_rubric_and_source():
     assert msgs[0]["role"] == "system"
     assert "牡丹是中国的名花" in msgs[1]["content"]
     assert "Peony is a famous flower." in msgs[1]["content"]
-    assert "13-15分档" in msgs[1]["content"]  # 六级评分标准
+    assert "13-15分档" in msgs[0]["content"]  # 评分规则置于可信系统消息
     msgs2 = grading.build_translation_prompt(
         "ky2", "Peony is a flower.", "Translate into Chinese", "牡丹是一种花。", 15)
     assert "第四档" in msgs2[1]["content"]  # 考研评分标准

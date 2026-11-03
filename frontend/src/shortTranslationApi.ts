@@ -6,6 +6,7 @@ export interface ShortQuestion {
 }
 export interface ShortResult {
   score: number; overall_comment: string; dimensions: Record<string, number>; improved_version: string
+  band?: string; score_reason?: string; rubric_version?: string
   sentence_comments: { sentence_index: number; translation: string; comment: string; suggestion: string; errors: string[]; improvements: string[] }[]
   key_notes: { expr: string; translation: string; note: string; item_type: string }[]
   resolved_points: string[]; remaining_points: string[]

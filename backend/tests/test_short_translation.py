@@ -25,7 +25,7 @@ from scripts.seed_short_translation import DATA_PATH, seed_short_translation
 
 
 def answer_result(data, content, score=13):
-    return {'score': score, 'overall_comment': '信息基本完整，表达清楚。',
+    return {'score': score, 'overall_comment': '信息基本完整，表达清楚。', 'score_reason': '主要信息已传达，语言整体通顺。',
             'dimensions': {'accuracy': 4.5, 'language': 4, 'fluency': 4.5},
             'sentence_comments': [{'sentence_index': i, 'translation': content, 'comment': '本句信息与表达点评。',
                 'errors': [], 'improvements': ['可以使衔接更自然。'], 'suggestion': '保留正确表达。'} for i in range(1, len(data['sentences']) + 1)],
@@ -210,6 +210,7 @@ def test_failed_grade_preserves_answer_no_reference_and_manual_retry(context):
 @pytest.mark.parametrize('mutation', [
     lambda r: r.update(score=float('nan')), lambda r: r.update(score=100),
     lambda r: r.update(sentence_comments=[]), lambda r: r.update(improved_version=''),
+    lambda r: r.update(score_reason=''),
     lambda r: r['sentence_comments'][0].update(translation='fabricated student text'),
 ])
 def test_invalid_grade_is_rejected(context, monkeypatch, mutation):

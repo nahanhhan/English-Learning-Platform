@@ -16,6 +16,7 @@ def _grade_with_score(score_value, full=15):
             "score": score_value, "band": "10-12分档",
             "dimensions": {"accuracy": 3, "language": 3, "fluency": 3},
             "overall_comment": "ok", "errors": [], "good_points": [],
+            "score_reason": "测试整体评分依据。",
             "improved_version": "x", "key_notes": [],
         }, ensure_ascii=False)
 

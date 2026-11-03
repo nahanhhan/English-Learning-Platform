@@ -4,6 +4,7 @@ import math
 import re
 
 from . import ai_client
+from .cet6_translation import CET6_TRANSLATION_RUBRIC, RUBRIC_VERSION, band_for_score, system_prompt, require_score_reason
 
 FULL_SCORES = {
     ('cet6', 'translation'): 15, ('cet6', 'writing'): 15,
@@ -11,11 +12,6 @@ FULL_SCORES = {
 }
 
 # 档位沿用项目规格；描述为概括表述，详见 openspec/specs/practice-grading/spec.md。
-CET6_TRANSLATION_RUBRIC = '''13-15分档：准确完整表达原文，措辞恰当、行文流畅，基本无语言错误。
-10-12分档：基本表达原文，文字通顺连贯，有少量语言错误。
-7-9分档：勉强表达原意，措辞不够准确，有相当多语言错误。
-4-6分档：只能表达少部分原意，严重语言错误较多。
-1-3分档：译文支离破碎，大部分内容未表达；未作答或完全无关为0分。'''
 CET6_WRITING_RUBRIC = '''13-15分档：切题、思想清楚，文字通顺连贯，基本无语言错误。
 10-12分档：切题，表达清楚，文字连贯，有少量语言错误。
 7-9分档：基本切题，部分表达不清，语言错误较多。
@@ -76,6 +72,11 @@ def _messages(rubric, body, q_type):
 
 
 def build_translation_prompt(exam_type, source_text, prompt, content, full_score=15):
+    if exam_type == 'cet6':
+        shape = {**_shape('translation'), 'score_reason': '用实际译意、语言和逻辑证据说明整体定档，必须非空'}
+        return [{'role': 'system', 'content': system_prompt(shape)},
+                {'role': 'user', 'content': json.dumps({'满分': full_score, '题目': prompt, '原文': source_text,
+                  '考生作答': content}, ensure_ascii=False)}]
     rubric = KY2_TRANSLATION_RUBRIC if exam_type == 'ky2' else CET6_TRANSLATION_RUBRIC
     return _messages(rubric, json.dumps({'满分': full_score, '题目': prompt, '原文': source_text,
                       '考生作答': content, '要求': '逐处核对忠实度、漏译、语言和流畅度，给出优化译文与关键表达点拨。'},
@@ -161,11 +162,18 @@ def grade(exam_type, q_type, prompt, source_text, content, word_count, provider,
                 if q_type == 'translation' else
                 build_writing_prompt(exam_type, q_type, prompt, source_text, content, full, word_count))
     budget = 32000 if provider.get('model', '').lower().startswith('glm-5') else 8000
-    result = _validate(ai_client.extract_json(ai_client.chat(provider, messages, max_tokens=budget)), q_type)
+    raw = ai_client.extract_json(ai_client.chat(provider, messages, max_tokens=budget))
+    if exam_type == 'cet6' and q_type == 'translation':
+        require_score_reason(raw)
+    result = _validate(raw, q_type)
     score = result['score']
     if full < score <= 100:
         score = score / 100 * full
     result['score'] = round(max(0, min(full, score)), 1)
+    if exam_type == 'cet6' and q_type == 'translation':
+        result['band'] = band_for_score(result['score'])
+        result['rubric_version'] = RUBRIC_VERSION
+        result['score_reason'] = str(result.get('score_reason') or '')
     _ensure_word_count(result, exam_type, q_type, prompt, provider)
     return result
 

@@ -23,6 +23,8 @@ function Feedback({ attempt, run, collect }: { attempt: ShortAttempt; run: Short
           {{ accuracy: '忠实准确', language: '语言质量', fluency: '表达流畅' }[key] || key} {value}/5
         </Tag>)}</Space></div>
       <p className="short-prose">{result.overall_comment}</p>
+      {result.score_reason && <div className="short-prose"><b>评分依据：</b>{result.band && <Tag>{result.band}</Tag>}{result.score_reason}</div>}
+      <p className="short-profile-note">本题为训练估分；三个维度仅作学习诊断，不是官方分项分数，也不相加决定总分。</p>
       {attempt.is_revision && <div className="short-comparison">
         <div><b>已解决的问题</b>{result.resolved_points.length ? <ul>{result.resolved_points.map((p, i) => <li key={i}>{p}</li>)}</ul> : <p>未报告新的已解决问题。</p>}</div>
         <div><b>仍需改进</b>{result.remaining_points.length ? <ul>{result.remaining_points.map((p, i) => <li key={i}>{p}</li>)}</ul> : <p>以逐句点评为准。</p>}</div>
@@ -34,7 +36,7 @@ function Feedback({ attempt, run, collect }: { attempt: ShortAttempt; run: Short
         <div className="short-quote">{item.translation || '未定位到单独译文片段，请结合整段作答与点评查看。'}</div>
         <p>{item.comment}</p>
         {item.errors.map((text, i) => <p key={i}><Tag color="red">错误</Tag>{text}</p>)}
-        {item.improvements.map((text, i) => <p key={i}><Tag color="blue">可优化</Tag>{text}</p>)}
+        {item.improvements.map((text, i) => <p key={i}><Tag color="blue">可选，不扣分</Tag>{text}</p>)}
         {item.suggestion && <p><b>修改建议：</b>{item.suggestion}</p>}
       </section>)}
     </Card>
