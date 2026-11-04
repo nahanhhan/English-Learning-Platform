@@ -10,10 +10,11 @@ INITIAL_PATH = Path(__file__).resolve().parent.parent / "data" / "accumulation_i
 
 UPDATE_PATH = INITIAL_PATH.with_name("accumulation_notes_20261101.json")
 LATEST_PATH = INITIAL_PATH.with_name("accumulation_notes_20261102.json")
+NOVEMBER_FOURTH_PATH = INITIAL_PATH.with_name("accumulation_notes_20261104.json")
 
 
 def seed_accumulation(db):
-    for path in (INITIAL_PATH, UPDATE_PATH, LATEST_PATH):
+    for path in (INITIAL_PATH, UPDATE_PATH, LATEST_PATH, NOVEMBER_FOURTH_PATH):
         _seed_batch(db, json.loads(path.read_text(encoding="utf-8")))
 
 
