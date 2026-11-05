@@ -15,7 +15,7 @@ from sqlalchemy.orm import sessionmaker
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from app.database import Base, get_db
 from app.models import (AccumulationEntry, AccumulationGroup, ClassroomEntry, ClassroomGroup,
-                        ClassroomSession, UserSetting)
+                        ClassroomSession, AccumulationSessionItem, UserSetting)
 from app.routers.classroom import accumulation_router, router
 from app.services import classroom as service
 from app.services.parts_of_speech import parts_of_speech
@@ -166,9 +166,138 @@ def test_old_classroom_session_survives_adding_new_library(client_db):
     old_rows = [(e.id, e.english, e.translation) for e in db.query(ClassroomEntry).order_by(ClassroomEntry.id)]
     seed_accumulation(db)
     accumulated = client.post("/api/accumulation/sessions", json={}).json()
-    assert accumulated["total"] == 86
+    assert accumulated["total"] == 50
     assert client.get(f"/api/classroom/sessions/current?group_id={group}").json() == session
     assert [(e.id, e.english, e.translation) for e in db.query(ClassroomEntry).order_by(ClassroomEntry.id)] == old_rows
+
+
+@pytest.mark.parametrize("count", [1, 49, 50, 51, 75])
+def test_accumulation_round_size_boundaries_and_classroom_unchanged(client_db, count):
+    client, db, _ = client_db
+    for library in ("accumulation", "classroom"):
+        Entry, Group, _, Question = service.library_models(library)
+        group = Group(name=f"边界{count}")
+        db.add(group)
+        db.flush()
+        for i in range(count):
+            service.save_entry(db, {"group_id": group.id, "item_type": "word",
+                "english": f"boundary{i}", "translation": f"n. 边界释义{i}"},
+                commit=False, library=library)
+        # 单条范围也能从同库其他分组获取干扰项，不能补成额外题目。
+        other = Group(name=f"干扰来源{count}")
+        db.add(other)
+        db.flush()
+        service.save_entry(db, {"group_id": other.id, "item_type": "word",
+            "english": "distractor", "translation": "n. 不参与本轮"},
+            commit=False, library=library)
+        db.commit()
+        response = client.post(f"/api/{library}/sessions", json={"group_id": group.id})
+        assert response.status_code == 200, response.text
+        session = response.json()
+        expected = min(count, 50) if library == "accumulation" else count
+        assert session["total"] == expected
+        rows = db.query(Question).filter_by(session_id=session["id"]).all()
+        assert len(rows) == len({q.entry_id for q in rows}) == expected
+        assert all(db.get(Entry, q.entry_id).group_id == group.id for q in rows)
+
+
+@pytest.mark.parametrize("kind", ["all", "word", "phrase"])
+@pytest.mark.parametrize("source", ["normal", "mistake"])
+def test_accumulation_samples_whole_filtered_pool_on_each_new_round(client_db, monkeypatch, kind, source):
+    client, db, _ = client_db
+    group = AccumulationGroup(name="抽样范围")
+    db.add(group)
+    db.flush()
+    for item_type in ("word", "phrase"):
+        for i in range(70):
+            entry = service.save_entry(db, {"group_id": group.id, "item_type": item_type,
+                "english": f"sample {item_type} {i}", "translation": f"{item_type}释义{i}"},
+                commit=False, library="accumulation")
+            entry.in_mistake_book = i < 60
+    db.commit()
+    expected = [e.id for e in service.filtered(db, group.id, kind,
+        mistakes=source == "mistake", library="accumulation")]
+    round_number = 0
+
+    def controlled_shuffle(values):
+        nonlocal round_number
+        if values and isinstance(values[0], AccumulationEntry):
+            round_number += 1
+            # 两轮取候选尾部和头部，验证不会先截取最早的 50 个再打乱。
+            if round_number == 1:
+                values.reverse()
+        elif values and isinstance(values[0], str):
+            shift = round_number % len(values)
+            values[:] = values[shift:] + values[:shift]
+
+    monkeypatch.setattr(service.random, "shuffle", controlled_shuffle)
+    body = {"group_id": group.id, "item_type": kind, "source": source}
+    orders, answer_positions = [], []
+    for restart in (False, True):
+        response = client.post("/api/accumulation/sessions", json={**body, "restart": restart})
+        assert response.status_code == 200, response.text
+        session = response.json()
+        assert session["total"] == 50
+        rows = db.query(AccumulationSessionItem).filter_by(session_id=session["id"]).order_by(
+            AccumulationSessionItem.position).all()
+        orders.append([q.entry_id for q in rows])
+        assert len(set(orders[-1])) == 50
+        positions = {}
+        for q in rows:
+            options = json.loads(q.options)
+            correct = json.loads(q.snapshot)["translation"]
+            assert len(options) == len(set(options)) == 4
+            assert options.count(correct) == 1
+            positions[q.entry_id] = options.index(correct)
+        answer_positions.append(positions)
+    assert orders == [list(reversed(expected))[:50], expected[:50]]
+    assert set(answer_positions[0].values()) == {3}
+    assert set(answer_positions[1].values()) == {2}
+    overlap = set(orders[0]) & set(orders[1])
+    assert all(answer_positions[0][i] != answer_positions[1][i] for i in overlap)
+    assert [e.id for e in service.filtered(db, group.id, kind,
+        mistakes=source == "mistake", library="accumulation")] == expected
+
+
+@pytest.mark.parametrize("legacy", [False, True])
+def test_accumulation_resume_preserves_sample_and_legacy_large_round(client_db, monkeypatch, legacy):
+    client, db, factory = client_db
+    session = client.post("/api/accumulation/sessions", json={}).json()
+    if legacy:
+        # 模拟上线前已经保存的 86 题快照；升级不截断旧轮次。
+        selected = {q.entry_id for q in db.query(AccumulationSessionItem).filter_by(session_id=session["id"])}
+        for position, entry in enumerate(db.query(AccumulationEntry).filter(
+                AccumulationEntry.id.notin_(selected)).all(), start=50):
+            db.add(AccumulationSessionItem(session_id=session["id"], entry_id=entry.id,
+                position=position, snapshot=json.dumps(service.entry_payload(db, entry, library="accumulation")),
+                options=json.dumps([entry.translation, "干扰释义"])))
+        db.commit()
+    first = session["current"]
+    wrong = next(o for o in first["options"] if o != first["translation"])
+    session = action(client, session, "choice", wrong)
+    session = action(client, session, "spell", "incorrect")
+    assert session["total"] == (86 if legacy else 50)
+
+    def snapshot(connection):
+        return [(q.id, q.entry_id, q.position, q.snapshot, q.options, q.stage, q.picked, q.spell_wrong)
+            for q in connection.query(AccumulationSessionItem).filter_by(session_id=session["id"]).order_by(
+                AccumulationSessionItem.position)]
+
+    before = snapshot(db)
+    with monkeypatch.context() as patch:
+        def must_not_shuffle(values):
+            raise AssertionError("续练不能重新抽题或打乱选项")
+        patch.setattr(service.random, "shuffle", must_not_shuffle)
+        with factory() as reopened:
+            assert service.start(reopened, library="accumulation") == session
+            assert snapshot(reopened) == before
+        assert client.get("/api/accumulation/sessions/current").json() == session
+        assert client.post("/api/accumulation/sessions", json={}).json() == session
+    restarted = client.post("/api/accumulation/sessions", json={"restart": True}).json()
+    assert restarted["total"] == 50 and restarted["id"] != session["id"]
+    db.expire_all()
+    entry = db.get(AccumulationEntry, first["id"])
+    assert entry.in_mistake_book and entry.mistake_consec == 0 and entry.completed == 0
 
 
 def test_incremental_notes_preserve_existing_data_and_skip_other_group_duplicates(client_db):
