@@ -247,6 +247,19 @@ class AccumulationSessionItem(Base):
     rating: Mapped[str] = mapped_column(String(10), default="")
 
 
+class AccumulationReviewLog(Base):
+    """独立完成记录；重开会删除轮次题目，但不删除这些学习统计。"""
+    __tablename__ = "accumulation_review_logs"
+    __table_args__ = {"sqlite_autoincrement": True}
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    entry_id: Mapped[int] = mapped_column(ForeignKey("accumulation_entries.id"), index=True)
+    session_id: Mapped[int] = mapped_column(Integer)
+    question_id: Mapped[int] = mapped_column(Integer, unique=True)
+    choice_correct: Mapped[bool] = mapped_column(Boolean)
+    spelling_correct: Mapped[bool] = mapped_column(Boolean)
+    completed_at: Mapped[datetime] = mapped_column(DateTime, index=True)  # UTC
+
+
 # ---- 短句翻译：独立题库、练习版本和跨日复习 ----
 
 class ShortQuestion(Base):

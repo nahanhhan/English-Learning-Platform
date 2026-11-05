@@ -203,7 +203,7 @@ def test_accumulation_round_size_boundaries_and_classroom_unchanged(client_db, c
 
 @pytest.mark.parametrize("kind", ["all", "word", "phrase"])
 @pytest.mark.parametrize("source", ["normal", "mistake"])
-def test_accumulation_samples_whole_filtered_pool_on_each_new_round(client_db, monkeypatch, kind, source):
+def test_accumulation_selects_scoped_candidates_then_shuffles_display(client_db, monkeypatch, kind, source):
     client, db, _ = client_db
     group = AccumulationGroup(name="抽样范围")
     db.add(group)
@@ -223,7 +223,7 @@ def test_accumulation_samples_whole_filtered_pool_on_each_new_round(client_db, m
         nonlocal round_number
         if values and isinstance(values[0], AccumulationEntry):
             round_number += 1
-            # 两轮取候选尾部和头部，验证不会先截取最早的 50 个再打乱。
+            # 选定相同优先级的前 50 条后，两轮展示顺序仍可不同。
             if round_number == 1:
                 values.reverse()
         elif values and isinstance(values[0], str):
@@ -250,7 +250,7 @@ def test_accumulation_samples_whole_filtered_pool_on_each_new_round(client_db, m
             assert options.count(correct) == 1
             positions[q.entry_id] = options.index(correct)
         answer_positions.append(positions)
-    assert orders == [list(reversed(expected))[:50], expected[:50]]
+    assert orders == [list(reversed(expected[:50])), expected[:50]]
     assert set(answer_positions[0].values()) == {3}
     assert set(answer_positions[1].values()) == {2}
     overlap = set(orders[0]) & set(orders[1])

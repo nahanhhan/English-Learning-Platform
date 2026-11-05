@@ -316,9 +316,12 @@ export default function Classroom({ library = 'classroom' }: { library?: Vocabul
       <h2>{source === 'mistake' ? '错题专项练习' : isAccumulation ? '把平时积累的词记牢' : '从课堂学过的词开始'}</h2>
       <p>{source === 'mistake' ? '只练当前范围的错题，连续 3 次全部答对后移出错题本。' : '每个单词和短语先选意思，再练拼写。进度自动保存，随时回来继续。'}</p>
       <p>{isAccumulation
-        ? '每轮从当前范围随机抽取 50 个单词或短语，不足 50 个则全部练习；同一轮不重复，选项位置随机。'
+        ? '每轮按学习情况选取 50 个单词或短语，不足 50 个则全部练习；同一轮不重复，题序和选项位置随机。'
         : '每轮随机排列词汇和选项；继续上次复习时保留原顺序。'}</p>
-      {isAccumulation && <p>继续上次复习保留原题量和进度；重新开始或再练一轮会重新抽题。</p>}
+      {isAccumulation && <>
+        <p>选题依据：正确率 60% · 复习间隔 20% · 练习次数 20%。越易错、越久没练、练习越少，越优先安排。</p>
+        <p>继续上次复习保留原题量和进度；重新开始或再练一轮会按最新学习情况选题。</p>
+      </>}
       {round && !round.finished && <Alert style={{ textAlign: 'left', marginBottom: 20 }} type="info" showIcon
         message={`上次已完成 ${round.completed} / ${round.total} 题，${round.current?.stage === 'spell' ? '正在拼写' : round.current?.stage === 'done' ? '已保存当前题结果' : '正在选择释义'}`}
         description={`保存于 ${round.updated_at.replace('T', ' ').slice(0, 16)}`} />}
@@ -327,7 +330,7 @@ export default function Classroom({ library = 'classroom' }: { library?: Vocabul
           {round && !round.finished ? '继续上次复习' : round?.finished ? '开始新一轮' : '开始复习'}
         </Button>
         {round && !round.finished && <Popconfirm title={isAccumulation
-          ? '重新开始会从当前范围重新随机抽取最多 50 条，替换当前未完成轮次，错题记录保留。'
+          ? '重新开始会按最新学习情况选取最多 50 条，替换当前未完成轮次，练习记录和错题保留。'
           : '重新开始会重新打乱词汇和选项，替换当前未完成轮次，错题记录保留。'} onConfirm={() => begin(true)}>
           <Button size="large" disabled={busy}>重新开始</Button>
         </Popconfirm>}
@@ -431,7 +434,7 @@ export default function Classroom({ library = 'classroom' }: { library?: Vocabul
         {tab === 'mistakes' && <Button type="primary" disabled={!total} onClick={() => { setSource('mistake'); setTab('review'); setRunning(false) }}>错题专项练习</Button>}
       </div>
       {tab === 'mistakes' && <Alert type="info" showIcon message="选错意思或首次拼写出错会入本；连续 3 次选择、拼写全部正确后移出。" style={{ marginBottom: 16 }} />}
-      <Table<ClassroomEntry> rowKey="id" loading={listLoading} dataSource={entries} pagination={false} scroll={{ x: 780 }}
+      <Table<ClassroomEntry> rowKey="id" loading={listLoading} dataSource={entries} pagination={false} scroll={{ x: isAccumulation ? 1100 : 780 }}
         locale={{ emptyText: <Empty description={tab === 'mistakes' ? '当前范围没有错题，继续保持！' : '还没有词汇，添加或导入你的课堂笔记吧'} /> }}
         columns={[
           { title: '英文', dataIndex: 'english', width: 200, render: (value, entry) => <><b>{value}</b>
@@ -444,6 +447,15 @@ export default function Classroom({ library = 'classroom' }: { library?: Vocabul
           { title: '中文释义', dataIndex: 'translation', render: value => <span style={{ whiteSpace: 'pre-wrap' }}>{value}</span> },
           { title: '分组', dataIndex: 'group_name', width: 160 },
           { title: '状态', width: 110, render: (_, entry) => entry.in_mistake_book ? <Tag color="volcano">连对 {entry.mistake_consec}/3</Tag> : <Tag color={entry.completed ? 'green' : 'default'}>{entry.completed ? '已练习' : '未练习'}</Tag> },
+          ...(isAccumulation ? [{ title: '学习记录', width: 200, render: (_: unknown, entry: ClassroomEntry) => <>
+            <div><Tooltip title={`更新后最近 ${entry.recent_attempts || 0} 次完整作答；释义选择和首次拼写均正确才算全对。`}>
+              <span>近期全对率：{entry.recent_accuracy == null ? '暂无记录' : `${Math.round(entry.recent_accuracy * 100)}%`}</span>
+            </Tooltip></div>
+            <div>累计练习：{entry.completed} 次</div>
+            <div>上次练习：{entry.last_practiced_at ? new Date(entry.last_practiced_at).toLocaleString('zh-CN', {
+              timeZone: 'Asia/Shanghai', hour12: false,
+            }) : '暂无记录'}</div>
+          </> }] : []),
           { title: '操作', width: 180, render: (_, entry) => <Space wrap size={4}>
             <Button size="small" icon={<SoundOutlined />} aria-label={`播放 ${entry.english} 美式发音`} onClick={() => speak(entry.english, 'us')} />
             <Button size="small" icon={<EditOutlined />} aria-label={`编辑 ${entry.english}`} onClick={() => openEntry(entry)} />

@@ -14,6 +14,7 @@ from ..models import (ClassroomEntry as Entry, ClassroomGroup as Group,
 from .study import MISTAKE_EXIT_STREAK
 from .phonetics import american_ipa
 from .parts_of_speech import parts_of_speech
+from . import accumulation_learning as learning
 
 
 class ClassroomError(ValueError):
@@ -34,16 +35,27 @@ def normalize(value: str) -> str:
     return re.sub(r"\s+", " ", value.strip()).casefold()
 
 
-def entry_payload(db, entry, *, library="classroom"):
+def entry_payload(db, entry, *, library="classroom", learning_stats=None):
     _, Group, _, _ = library_models(library)
     group = db.get(Group, entry.group_id)
-    return {"id": entry.id, "group_id": entry.group_id,
+    payload = {"id": entry.id, "group_id": entry.group_id,
             "group_name": group.name if group else "已删除分组", "item_type": entry.item_type,
             "english": entry.english, "translation": entry.translation, "source": entry.source,
             "part_of_speech": parts_of_speech(entry.english, entry.translation) if entry.item_type == "word" else "",
             "phonetic_us": american_ipa(entry.english) if entry.item_type == "word" else "",
             "in_mistake_book": entry.in_mistake_book,
             "mistake_consec": entry.mistake_consec, "completed": entry.completed}
+    if library == "accumulation":
+        if learning_stats is None:
+            learning_stats = learning.statistics(db, [entry.id]).get(entry.id, learning.LearningStats())
+        payload.update(learning_stats.payload())
+    return payload
+
+
+def entries_payload(db, entries, *, library="classroom"):
+    stats = learning.statistics(db, [e.id for e in entries]) if library == "accumulation" else {}
+    return [entry_payload(db, e, library=library, learning_stats=stats.get(e.id, learning.LearningStats()))
+            for e in entries]
 
 
 def filtered(db, group_id=None, item_type="all", search="", mistakes=False, *, library="classroom"):
@@ -128,11 +140,12 @@ def start(db, group_id=None, item_type="all", source="normal", restart=False, *,
     entries = filtered(db, group_id, item_type, mistakes=source == "mistake", library=library).all()
     if not entries:
         raise ClassroomError("当前范围没有错题" if source == "mistake" else "当前范围还没有词汇，请先添加或导入")
-    # 只在创建新轮次时打乱；题序和选项均保存，恢复进度时保持不变。
-    random.shuffle(entries)
+    stats = {}
     if library == "accumulation":
-        # 全部候选等概率打乱后截取；不从其他范围补题，续练不经过这里。
-        entries = entries[:50]
+        stats = learning.statistics(db, [e.id for e in entries])
+        entries = learning.select_entries(entries, stats)
+    # 先按学习情况选定入选词条，再打乱展示顺序；续练不经过这里。
+    random.shuffle(entries)
     pools = {}
     for kind in {e.item_type for e in entries}:
         local = [(e.english, e.translation) for e in db.query(Entry).filter_by(item_type=kind).all()]
@@ -154,7 +167,8 @@ def start(db, group_id=None, item_type="all", source="normal", restart=False, *,
     db.flush()
     for position, (entry, options) in enumerate(snapshots):
         db.add(Question(session_id=session.id, entry_id=entry.id, position=position,
-                        snapshot=json.dumps(entry_payload(db, entry, library=library), ensure_ascii=False),
+                        snapshot=json.dumps(entry_payload(db, entry, library=library,
+                            learning_stats=stats.get(entry.id, learning.LearningStats())), ensure_ascii=False),
                         options=json.dumps(options, ensure_ascii=False)))
     db.commit()
     return session_payload(db, session, library=library)
@@ -250,6 +264,8 @@ def act(db: Session, session_id: int, question_id: int, version: int,
                 elif question.rating != "good":
                     mark_wrong(entry)
                 entry.completed += 1
+                if library == "accumulation":
+                    learning.record_completion(db, session, question, snapshot["translation"])
         elif action == "next" and question.stage == "done":
             session.cursor += 1
         else:

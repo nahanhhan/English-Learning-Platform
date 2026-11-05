@@ -13,6 +13,7 @@ export interface ClassroomEntry {
   phonetic_us?: string
   part_of_speech?: string
   in_mistake_book: boolean; mistake_consec: number; completed: number
+  recent_accuracy?: number | null; recent_attempts?: number; last_practiced_at?: string | null
 }
 export interface PracticeQuestion extends ClassroomEntry {
   question_id: number; stage: 'choice' | 'spell' | 'done'; options: string[]

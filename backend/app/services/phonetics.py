@@ -3,7 +3,8 @@ import re
 from functools import lru_cache
 
 # 教材的英式拼写与美式等价词；复合词按词组查询。
-ALIASES = {"omelette": "omelet", "wilful": "willful", "back-burner": "back burner"}
+ALIASES = {"omelette": "omelet", "wilful": "willful", "back-burner": "back burner",
+           "ill-reputed": "ill reputed"}  # 复合词，沿用 CMU 两个组成词的美式读音。
 # 少量词典缺词的补充，来源留在代码中以便核对。
 SUPPLEMENTS = {
     # https://dictionary.cambridge.org/us/dictionary/english/knackered
@@ -11,6 +12,12 @@ SUPPLEMENTS = {
     # Collins toboggan 的美式词干及其 -ist 派生词：
     # https://www.collinsdictionary.com/us/dictionary/english/toboggan
     "tobogganist": "təˈbɑɡənɪst",
+    # https://dictionary.cambridge.org/us/dictionary/english/benefaction
+    "benefaction": "ˌben.əˈfæk.ʃən",
+    # https://dictionary.cambridge.org/us/dictionary/english/lamentation
+    "lamentation": "ˌlæm.enˈteɪ.ʃən",
+    # https://dictionary.cambridge.org/pronunciation/english/would-be
+    "would-be": "ˈwʊd.bi",
 }
 
 

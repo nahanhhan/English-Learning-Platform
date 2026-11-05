@@ -24,3 +24,18 @@ def test_all_initial_classroom_words_have_american_phonetics():
 def test_british_spelling_keeps_same_american_pronunciation():
     assert american_ipa("omelette") == american_ipa("omelet")
     assert american_ipa("wilful") == american_ipa("willful")
+
+
+def test_accumulation_missing_american_pronunciations_are_offline_available():
+    assert american_ipa('benefaction') == 'ˌben.əˈfæk.ʃən'
+    assert american_ipa('lamentation') == 'ˌlæm.enˈteɪ.ʃən'
+    assert american_ipa('would-be') == 'ˈwʊd.bi'
+    assert american_ipa('ill-reputed') == american_ipa('ill reputed')
+    assert american_ipa('ill-reputed')
+    paths = (Path(__file__).resolve().parent.parent / 'data').glob('accumulation*.json')
+    missing = []
+    for path in paths:
+        for group in json.loads(path.read_text(encoding='utf-8'))['groups']:
+            missing.extend(e['english'] for e in group['entries']
+                if e['item_type'] == 'word' and not american_ipa(e['english']))
+    assert missing == []

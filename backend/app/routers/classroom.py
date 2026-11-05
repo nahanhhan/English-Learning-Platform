@@ -7,6 +7,7 @@ from sqlalchemy.orm import Session
 from ..database import get_db
 from ..services import classroom as service
 from ..services.classroom_import import extract_file, parse_text
+from ..models import AccumulationReviewLog
 Kind = Literal['all', 'word', 'phrase']
 Source = Literal['normal', 'mistake']
 
@@ -111,6 +112,9 @@ def create_router(library='classroom'):
         group = db.get(Group, group_id)
         if not group:
             raise service.ClassroomError('分组不存在', 404)
+        if library == 'accumulation':
+            db.query(AccumulationReviewLog).filter(AccumulationReviewLog.entry_id.in_(
+                db.query(Entry.id).filter_by(group_id=group_id))).delete(synchronize_session=False)
         db.query(Entry).filter_by(group_id=group_id).delete()
         db.delete(group)
         db.commit()
@@ -120,7 +124,8 @@ def create_router(library='classroom'):
     def entries(group_id: int | None=None, item_type: Kind='all', search: str='', mistakes: bool=False, page: int=1, page_size: int=30, db: Session=Depends(get_db)):
         q = service.filtered(db, group_id, item_type, search, mistakes, library=library)
         page, page_size = (max(1, page), max(1, min(100, page_size)))
-        return {'total': q.count(), 'page': page, 'items': [service.entry_payload(db, e, library=library) for e in q.offset((page - 1) * page_size).limit(page_size)]}
+        return {'total': q.count(), 'page': page, 'items': service.entries_payload(
+            db, q.offset((page - 1) * page_size).limit(page_size).all(), library=library)}
 
     @router.post('/entries')
     def create_entry(body: EntryBody, db: Session=Depends(get_db)):
@@ -135,6 +140,8 @@ def create_router(library='classroom'):
         entry = db.get(Entry, entry_id)
         if entry is None:
             raise service.ClassroomError('词条不存在', 404)
+        if library == 'accumulation':
+            db.query(AccumulationReviewLog).filter_by(entry_id=entry_id).delete()
         db.delete(entry)
         db.commit()
         return {'ok': True}
