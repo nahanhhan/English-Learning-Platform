@@ -3,11 +3,18 @@ import json
 from pathlib import Path
 
 from app.models import ClassroomGroup, UserSetting
-from app.services.classroom import save_entry
+from app.services.classroom import ClassroomError, save_entry
+
+DATA_DIR = Path(__file__).resolve().parent.parent / "data"
+BATCHES = ("classroom_initial.json", "classroom_how_we_listen.json")
 
 
 def seed_classroom(db):
-    path = Path(__file__).resolve().parent.parent / "data" / "classroom_initial.json"
+    for filename in BATCHES:
+        _seed_batch(db, DATA_DIR / filename)
+
+
+def _seed_batch(db, path):
     if not path.exists():
         return
     data = json.loads(path.read_text(encoding="utf-8"))
@@ -22,7 +29,6 @@ def seed_classroom(db):
                 db.flush()
             for key, kind in (("words", "word"), ("phrases", "phrase")):
                 for english, translation in source_group[key]:
-                    from app.services.classroom import ClassroomError
                     try:
                         save_entry(db, {"group_id": group.id, "item_type": kind,
                                         "english": english, "translation": translation,

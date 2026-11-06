@@ -20,7 +20,7 @@ from app.models import (ClassroomEntry as Entry, ClassroomGroup as Group,
 from app.routers.classroom import ImportBody, confirm_import, router
 from app.services import classroom as c
 from app.services.classroom_import import extract_file, parse_text
-from scripts.seed_classroom import seed_classroom
+from scripts.seed_classroom import DATA_DIR, _seed_batch, seed_classroom
 
 
 @pytest.fixture
@@ -269,18 +269,31 @@ def test_pdf_text_and_scanned_preview(monkeypatch):
     doc.close(); blank.close()
 
 
-def test_photo_seed_only_two_articles_is_idempotent(database):
+def test_photo_seed_adds_how_we_listen_once_and_preserves_existing_progress(database):
     db, _ = database
+    _seed_batch(db, DATA_DIR / "classroom_initial.json")
+    existing = db.query(Entry).first()
+    existing.translation, existing.completed = "用户释义", 7
+    db.commit()
     seed_classroom(db)
     names = {g.name for g in db.query(Group)}
-    assert names == {"We are all dying", "Cultural childhoods"}
+    assert names == {"We are all dying", "Cultural childhoods", "How we listen"}
+    assert (existing.translation, existing.completed) == ("用户释义", 7)
+    new_group = db.query(Group).filter_by(name="How we listen").one()
+    words = db.query(Entry).filter_by(group_id=new_group.id, item_type="word").all()
+    phrases = db.query(Entry).filter_by(group_id=new_group.id, item_type="phrase").all()
+    assert (len(words), len(phrases)) == (55, 10)
+    assert all(c.american_ipa(e.english) and c.parts_of_speech(e.english, e.translation) for e in words)
+    assert {"work of art", "to sb's satisfaction", "aside from"} <= {e.english for e in phrases}
+    assert {"Stravinsky", "Bach", "Well-Tempered Clavichord"}.isdisjoint(e.english for e in words + phrases)
+    assert c.start(db, new_group.id)["total"] == 65
     count = db.query(Entry).count()
     assert count > 100
     english = {e.english for e in db.query(Entry)}
     assert {"what the hell", "end up", "Grand Canyon", "Santa Claus"}.isdisjoint(english)
     seed_classroom(db)
     assert db.query(Entry).count() == count
-    removed = db.query(Entry).first()
+    removed = phrases[0]
     db.delete(removed); db.commit()
     seed_classroom(db)
     assert db.query(Entry).count() == count - 1

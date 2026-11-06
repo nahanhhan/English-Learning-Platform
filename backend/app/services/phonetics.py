@@ -4,7 +4,7 @@ from functools import lru_cache
 
 # 教材的英式拼写与美式等价词；复合词按词组查询。
 ALIASES = {"omelette": "omelet", "wilful": "willful", "back-burner": "back burner",
-           "ill-reputed": "ill reputed"}  # 复合词，沿用 CMU 两个组成词的美式读音。
+           "ill-reputed": "ill reputed", "-tempered": "tempered"}
 # 少量词典缺词的补充，来源留在代码中以便核对。
 SUPPLEMENTS = {
     # https://dictionary.cambridge.org/us/dictionary/english/knackered
@@ -18,6 +18,16 @@ SUPPLEMENTS = {
     "lamentation": "ˌlæm.enˈteɪ.ʃən",
     # https://dictionary.cambridge.org/pronunciation/english/would-be
     "would-be": "ˈwʊd.bi",
+    # 剑桥词典的美式词干 sheer、pessimistic、fateful，加副词后缀 -ly。
+    "sheerly": "ˈʃɪrli",
+    "pessimistically": "ˌpɛsəˈmɪstɪkli",
+    "fatefully": "ˈfeɪtfəli",
+    # https://dictionary.cambridge.org/dictionary/english/absent-mindedly
+    "absent-mindedly": "ˌæbsəntˈmaɪndɪdli",
+    # https://www.oxfordlearnersdictionaries.com/us/definition/english/resignedly
+    "resignedly": "rɪˈzaɪnɪdli",
+    # https://www.collinsdictionary.com/us/dictionary/english-pronunciations/gaiety
+    "gaiety": "ˈɡeɪɪti",
 }
 
 
@@ -27,10 +37,11 @@ def american_ipa(english: str) -> str:
 
 @lru_cache(maxsize=8192)
 def _lookup(word: str) -> str:
+    word = ALIASES.get(word, word)
     if not word or not re.fullmatch(r"[a-z]+(?:[-' ][a-z]+)*", word):
         return ""
     if word in SUPPLEMENTS:
         return SUPPLEMENTS[word]
     from eng_to_ipa import convert
-    result = convert(ALIASES.get(word, word), keep_punct=False)
+    result = convert(word, keep_punct=False)
     return result.strip() if result and "*" not in result else ""
