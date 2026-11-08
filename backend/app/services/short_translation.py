@@ -3,6 +3,7 @@ import json
 import math
 import random
 import uuid
+import time
 from datetime import datetime, timedelta, timezone
 
 from sqlalchemy import update
@@ -238,6 +239,8 @@ def grade_attempt(db: Session, attempt_id: int):
     run = db.get(ShortRun, attempt.run_id)
     data = json.loads(run.snapshot)
     try:
+        if attempt.mock and json.loads(attempt.profile_json).get('service_type') == 'codex':
+            raise ai_client.AiError('已开启模拟批改，请在设置中关闭后使用 Codex')
         if attempt.mock:
             result = {'score': 12, 'overall_comment': '模拟批改示例，不代表真实评分，也不计入完成或巩固。',
                       'dimensions': {'accuracy': 4, 'language': 4, 'fluency': 4},
@@ -246,10 +249,12 @@ def grade_attempt(db: Session, attempt_id: int):
                       'improved_version': data['reference'], 'key_notes': [], 'resolved_points': [], 'remaining_points': []}
         else:
             provider = db.get(AiProvider, attempt.provider_id) if attempt.provider_id else None
-            if provider is None or not provider.api_key:
+            if provider is None or (not provider.api_key and ai_profiles.service_type(ai_profiles.config(provider)) != 'codex'):
                 raise ai_client.AiError('尚未配置有效AI密钥，请在设置页添加后重试；作答已保留')
             profile = {**json.loads(attempt.profile_json), 'api_key': provider.api_key,
                        'session_id': f'short-{run.id}'}
+            if ai_profiles.service_type(profile) == 'codex':
+                profile['deadline'] = time.monotonic() + 180
             prior = db.query(ShortAttempt).filter(ShortAttempt.run_id == run.id,
                     ShortAttempt.id < attempt.id, ShortAttempt.status == 'done').order_by(ShortAttempt.id.desc()).first()
             previous = {'content': prior.content, 'result': json.loads(prior.result_json)} if prior else None

@@ -24,6 +24,8 @@ export default function Settings() {
   const [presets, setPresets] = useState<Preset[]>([])
   const [caps, setCaps] = useState<ModelCapability>({ modes: ['auto'], levels: [], control: 'none', note: '使用模型默认设置' })
   const [refreshing, setRefreshing] = useState(false)
+  const [codexStatus, setCodexStatus] = useState<{ ok: boolean; message: string } | null>(null)
+  const [codexConnection, setCodexConnection] = useState<{ ok: boolean; message: string } | null>(null)
   const formModel = Form.useWatch('model', form)
   const formType = Form.useWatch('service_type', form)
   const formBase = Form.useWatch('base_url', form)
@@ -37,7 +39,7 @@ export default function Settings() {
     setPresets(options.profiles)
   }, [])
 
-  useEffect(() => { load().catch((e) => message.error(e.message)) }, [load])
+  useEffect(() => { load().catch((e) => message.error(e.message)); get('/api/settings/codex/status').then(setCodexStatus).catch(() => setCodexStatus({ ok: false, message: '无法读取本机 Codex 状态' })) }, [load])
   useEffect(() => () => stopSpeaking(), [])
 
   useEffect(() => {
@@ -85,6 +87,7 @@ export default function Settings() {
     setTesting(p.id)
     try {
       const r = await post(`/api/settings/providers/${p.id}/test`)
+      if (p.service_type === 'codex') setCodexConnection(r)
       if (r.ok) message.success(r.message)
       else message.error(r.message)
     } catch (e: any) {
@@ -123,6 +126,9 @@ export default function Settings() {
             style={{ marginBottom: 12 }}
           />
         )}
+        {!providers.some(p => p.service_type === 'codex') && <Button style={{ marginBottom: 12 }} onClick={async () => {
+          try { await post('/api/settings/providers/codex'); await load(); message.success('已添加本机 Codex') } catch (e: any) { message.error(e.message) }
+        }}>添加本机 Codex</Button>}
         {providers.map((p) => (
           <div
             key={p.id}
@@ -135,15 +141,17 @@ export default function Settings() {
               <b>{p.name}</b> {p.is_default && <Tag color="blue">默认</Tag>}
             </div>
             <div style={{ flex: 1, minWidth: 200, color: '#777', fontSize: 13 }}>
-              <ApiOutlined /> {p.base_url} · 模型 <Tag>{p.model || '未设置'}</Tag> · Key {p.api_key_masked || '未设置'}
-              <div style={{ marginTop: 4 }}>{MODE_LABELS[p.reasoning_mode]}{p.reasoning_effort && ` · 强度 ${EFFORT_LABELS[p.reasoning_effort] || p.reasoning_effort}`}</div>
+              {p.service_type === 'codex' ? <><ApiOutlined /> 本机默认模型 · ChatGPT 登录
+                <div style={{ marginTop: 4 }}>{codexStatus?.message || '正在检查登录状态…'}</div>
+                <div style={{ marginTop: 4 }}>连接测试：{codexConnection ? codexConnection.message : '尚未测试'}</div></> : <><ApiOutlined /> {p.base_url} · 模型 <Tag>{p.model || '未设置'}</Tag> · Key {p.api_key_masked || '未设置'}
+                <div style={{ marginTop: 4 }}>{MODE_LABELS[p.reasoning_mode]}{p.reasoning_effort && ` · 强度 ${EFFORT_LABELS[p.reasoning_effort] || p.reasoning_effort}`}</div></>}
             </div>
             <Space size={4}>
               <Button size="small" loading={testing === p.id} onClick={() => testProvider(p)}>测试</Button>
               {!p.is_default && (
                 <Button size="small" icon={<CheckOutlined />} onClick={async () => { await post(`/api/settings/providers/${p.id}/default`); load() }} title="设为默认" />
               )}
-              <Button size="small" icon={<EditOutlined />} onClick={() => openModal(p)} />
+              {p.service_type !== 'codex' && <Button size="small" icon={<EditOutlined />} onClick={() => openModal(p)} />}
               <Popconfirm title="确定删除该服务商？" onConfirm={() => removeProvider(p.id)}>
                 <Button size="small" danger icon={<DeleteOutlined />} />
               </Popconfirm>

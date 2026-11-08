@@ -2,6 +2,7 @@ import { BookOutlined, ReloadOutlined, SendOutlined, StarOutlined } from '@ant-d
 import { Alert, Button, Card, Empty, Form, Input, Modal, Pagination, Select, Segmented, Space, Spin, Statistic, Table, Tag, message } from 'antd'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import ProviderSelect, { MODE_LABELS, EFFORT_LABELS } from '../components/ProviderSelect'
+import GradingProgress from '../components/GradingProgress'
 import { get } from '../api'
 import { shortApi, shortPost, type ShortAttempt, type ShortQuestion, type ShortRun, type ShortStats } from '../shortTranslationApi'
 
@@ -238,7 +239,7 @@ export default function ShortTranslation() {
             onKeyDown={e => { if (e.ctrlKey && e.key === 'Enter' && !e.nativeEvent.isComposing) { e.preventDefault(); void submit() } }} />
           <div className="short-answer-actions"><span>草稿自动保存；修改后再提交会保留原记录。</span>
             <Button type="primary" icon={<SendOutlined />} loading={busy || grading} onClick={submit}>{lastAttempt?.status === 'done' ? '提交修改版' : lastAttempt?.status === 'failed' ? '重新提交批改' : '提交批改'}</Button></div>
-          {grading && <Alert type="info" showIcon style={{ marginTop: 12 }} message="AI 正在逐句批改，作答已保存，可稍后回来查看。" />}
+          {grading && <GradingProgress key={lastAttempt?.id} startedAt={lastAttempt?.created_at} />}
           {pollError && <Alert type="warning" showIcon message={pollError} style={{ marginTop: 12 }} />}
           {lastAttempt?.status === 'failed' && <Alert type="error" showIcon style={{ marginTop: 12 }} message={lastAttempt.error} description="可在上方手动选择其他已配置服务，或保留原服务重新提交；不会自动切换。" />}
         </Card>

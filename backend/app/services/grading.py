@@ -2,6 +2,7 @@
 import json
 import math
 import re
+import time
 
 from . import ai_client
 from .cet6_translation import CET6_TRANSLATION_RUBRIC, RUBRIC_VERSION, band_for_score, system_prompt, require_score_reason
@@ -151,12 +152,16 @@ def _ensure_word_count(result, exam_type, q_type, prompt, provider):
             else:
                 warnings.append(f'{label}字数未达到{lower}-{upper}词要求，请检查后使用')
         except ai_client.AiError:
+            if provider.get('service_type') == 'codex' and time.monotonic() >= provider.get('deadline', 0):
+                raise ai_client.AiError('Codex 批改超过 3 分钟，作答已保留，请重试')
             warnings.append(f'{label}字数未达标，自动修复失败')
     if warnings:
         result['word_warnings'] = warnings
 
 
 def grade(exam_type, q_type, prompt, source_text, content, word_count, provider, full_score=None):
+    if provider.get("service_type") == "codex":
+        provider = {**provider, "deadline": time.monotonic() + 180}
     full = full_score if full_score is not None else FULL_SCORES.get((exam_type, q_type), 15)
     messages = (build_translation_prompt(exam_type, source_text, prompt, content, full)
                 if q_type == 'translation' else
@@ -165,6 +170,10 @@ def grade(exam_type, q_type, prompt, source_text, content, word_count, provider,
     raw = ai_client.extract_json(ai_client.chat(provider, messages, max_tokens=budget))
     if exam_type == 'cet6' and q_type == 'translation':
         require_score_reason(raw)
+    if provider.get("service_type") == "codex":
+        required = ("overall_comment", "improved_version") if q_type == "translation" else ("overall_comment", "polished_version", "model_essay")
+        if not isinstance(raw.get("score"), (int, float)) or isinstance(raw.get("score"), bool) or not math.isfinite(raw["score"]) or any(not isinstance(raw.get(key), str) or not raw[key].strip() for key in required):
+            raise ai_client.AiError("Codex 批改结果不完整，作答已保留，请重试")
     result = _validate(raw, q_type)
     score = result['score']
     if full < score <= 100:

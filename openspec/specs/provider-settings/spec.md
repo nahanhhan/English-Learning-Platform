@@ -95,3 +95,12 @@ OpenCode Go 的连接测试和正式调用 SHALL 发送真实平台 User-Agent �
 #### Scenario: 已保存的 Claude 配置可调节
 - **WHEN** 已有 Go 配置选择 claude-haiku-5-5
 - **THEN** 无需重新创建配置即可显示推理开关和五档强度，连接测试和批改均使用 Go 的 Messages 接口
+
+### Requirement: 本机 Codex 服务
+
+系统 SHALL 提供本机 Codex 服务和 ChatGPT 登录状态，沿用本机默认模型，不要求 API 密钥。服务 SHALL 仅读取用户配置中的默认模型而不启用外部工具配置，不将凭据写入项目，且 SHALL 支持与原有服务并存。
+
+#### Scenario: 使用已有登录
+
+- **WHEN** 用户选用已通过 ChatGPT 登录的本机 Codex
+- **THEN** 批改使用该登录和本机默认模型，不使用其他服务或 API 密钥

@@ -133,6 +133,10 @@ def capabilities(provider):
 
 
 def validate(provider):
+    if service_type(provider) == "codex":
+        if provider.get("reasoning_mode", "auto") != "auto" or provider.get("reasoning_effort"):
+            raise ValueError("Codex 使用本机默认模型与推理设置")
+        return
     url = urlsplit(provider.get("base_url", ""))
     if url.scheme not in ("http", "https") or not url.hostname or url.username or url.password or url.query or url.fragment:
         raise ValueError("请填写有效的 API 地址，不要把密钥放在地址中")

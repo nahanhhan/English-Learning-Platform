@@ -47,7 +47,10 @@ def _run_grading(submission_id: int, provider_id: int | None):
         full = FULL_SCORES.get((sub.exam_type, sub.q_type), 15)
         g = Grading(submission_id=sub.id, full_score=full)
         try:
-            if mock_mode or provider is None or not provider.api_key:
+            is_codex = provider is not None and ai_profiles.service_type(ai_profiles.config(provider)) == "codex"
+            if is_codex and mock_mode:
+                raise ai_client.AiError("已开启模拟批改，请在设置中关闭后使用 Codex")
+            if mock_mode or provider is None or (not provider.api_key and not is_codex):
                 if provider is None and not mock_mode:
                     raise ai_client.AiError("尚未配置 AI 服务商，请到「设置」页添加 API Key")
                 result = mock_grading(sub.exam_type, sub.q_type, full)
@@ -56,7 +59,7 @@ def _run_grading(submission_id: int, provider_id: int | None):
                 result = grade(sub.exam_type, sub.q_type, sub.prompt, sub.source_text,
                                sub.content, sub.word_count,
                                ai_profiles.config(provider, f'practice-{sub.id}'), full)
-                g.provider, g.model = provider.name, provider.model
+                g.provider, g.model = provider.name, provider.model or ("Codex 默认模型" if is_codex else "")
             g.score = float(result.get("score", 0))
             g.result_json = json.dumps(result, ensure_ascii=False)
             sub.status = "done"

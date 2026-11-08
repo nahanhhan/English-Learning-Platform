@@ -287,3 +287,35 @@ def test_http_flow_filters_history_errors_and_no_answer_leak(context):
         assert client.get('/api/short-translation/history').json()['total'] == 1
         assert client.get('/api/short-translation/stats').json()['first_average'] == 8
         assert client.post('/api/short-translation/runs', json={'question_id': 'missing'}).status_code == 404
+
+
+def test_codex_without_api_key_is_real_and_preserves_context(context):
+    db, _, calls = context
+    provider = db.query(AiProvider).one()
+    provider.service_type = 'codex'; provider.api_key = ''; provider.model = ''; db.commit()
+    run = s.begin(db, 'ST-C2E-001')
+    first = finish(db, run['id'], 'first answer')
+    second = finish(db, run['id'], 'second answer')
+    assert not first.mock and not second.mock and calls[-1]['profile']['service_type'] == 'codex'
+    assert calls[-1]['body']['上次作答及点评']['content'] == 'first answer'
+    assert calls[-1]['profile']['deadline'] > 0
+
+
+def test_codex_failure_preserves_attempt_and_allows_manual_service_switch(context, monkeypatch):
+    db, _, _ = context
+    original = db.query(AiProvider).one()
+    codex = AiProvider(name='Codex', base_url='', api_key='', model='', service_type='codex', is_default=False)
+    db.add(codex); db.commit()
+    run = s.begin(db, 'ST-C2E-001')
+    attempt, _ = s.submit(db, run['id'], 'saved answer', 'codex-failed', codex.id)
+    real_chat = s.ai_client.chat
+    def failing(profile, *args, **kwargs):
+        if profile.get('service_type') == 'codex': raise s.ai_client.AiError('Codex 额度不足')
+        return real_chat(profile, *args, **kwargs)
+    monkeypatch.setattr(s.ai_client, 'chat', failing)
+    s.grade_attempt(db, attempt.id); db.expire_all()
+    assert db.get(ShortAttempt, attempt.id).status == 'failed'
+    assert db.get(ShortAttempt, attempt.id).content == 'saved answer'
+    assert s.statistics(db)['completed'] == 0
+    success = finish(db, run['id'], 'saved answer', original.id)
+    assert success.status == 'done' and not success.mock

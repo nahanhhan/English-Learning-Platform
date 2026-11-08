@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 
 from ..database import get_db
 from ..models import AiProvider
-from ..services import ai_client, ai_profiles, study
+from ..services import ai_client, ai_profiles, codex_provider, study
 
 router = APIRouter(prefix="/api/settings", tags=["settings"])
 
@@ -87,6 +87,27 @@ def refresh_provider_models(pid: int, db: Session = Depends(get_db)):
         raise HTTPException(400, str(exc)) from exc
     provider.models_json = json.dumps(models, ensure_ascii=False)
     db.commit()
+    return _provider_payload(provider)
+
+
+@router.get("/codex/status")
+def codex_status():
+    ok, message = codex_provider.login_status()
+    return {"ok": ok, "message": message}
+
+
+@router.post("/providers/codex")
+def add_codex_provider(db: Session = Depends(get_db)):
+    provider = db.query(AiProvider).filter_by(service_type="codex").first()
+    if provider is None:
+        if db.query(AiProvider).filter_by(name="Codex（本机 ChatGPT）").first():
+            raise HTTPException(409, "已有同名服务，请先重命名再添加本机 Codex")
+        provider = AiProvider(name="Codex（本机 ChatGPT）", base_url="", api_key="", model="",
+                              service_type="codex", reasoning_mode="auto", reasoning_effort="",
+                              models_json="[]", is_default=False)
+        db.add(provider)
+        db.commit()
+        db.refresh(provider)
     return _provider_payload(provider)
 
 

@@ -7,6 +7,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { get, post, type Question, type Submission, type Grading } from '../api'
 import GradingResult from '../components/GradingResult'
 import ProviderSelect from '../components/ProviderSelect'
+import GradingProgress from '../components/GradingProgress'
 
 const Q_TYPE_LABEL: Record<string, string> = {
   translation: '翻译',
@@ -145,7 +146,6 @@ export default function Practice({ mode }: { mode: Mode }) {
           }
         : { question_id: current!.id, content }
       const resp = await post<{ submission_id: number }>('/api/practice/submit', { ...body, provider_id: providerId })
-      try { localStorage.removeItem(draftKey) } catch { /* ignore */ }
       message.success('已提交，AI 批改中…')
       pollResult(resp.submission_id)
     } catch (e: any) {
@@ -327,13 +327,7 @@ export default function Practice({ mode }: { mode: Mode }) {
                 提交批改
               </Button>
             </div>
-            {submitting && (
-              <Alert
-                style={{ marginTop: 12 }} type="info" showIcon
-                icon={<Spin size="small" />}
-                message="AI 正在逐句批改，通常需要 20–60 秒…"
-              />
-            )}
+            {submitting && <GradingProgress />}
           </div>
 
           {grading && (

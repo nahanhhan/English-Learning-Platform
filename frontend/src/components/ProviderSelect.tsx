@@ -25,8 +25,8 @@ export default function ProviderSelect({ value, onChange, disabled }: {
   return <Space direction="vertical" size={4} style={{ width: 320, maxWidth: '100%' }}>
     <Select aria-label="AI批改配置" style={{ width: '100%' }} value={value || 0}
       disabled={disabled} onChange={id => onChange(id || undefined)} options={[
-        { value: 0, label: defaultProvider ? `全局默认：${defaultProvider.name} · ${defaultProvider.model}` : '全局默认（尚未配置）' },
-        ...providers.map(p => ({ value: p.id, label: `${p.name} · ${p.model}` })),
+        { value: 0, label: defaultProvider ? `全局默认：${defaultProvider.name} · ${defaultProvider.service_type === 'codex' ? '本机默认模型' : defaultProvider.model}` : '全局默认（尚未配置）' },
+        ...providers.map(p => ({ value: p.id, label: `${p.name} · ${p.service_type === 'codex' ? '本机默认模型' : p.model}` })),
       ]} />
     {current && <span style={{ fontSize: 12, color: '#778396' }}>
       <Tag>{MODE_LABELS[current.reasoning_mode] || '模型默认'}</Tag>
