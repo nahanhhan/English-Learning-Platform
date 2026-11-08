@@ -96,6 +96,31 @@ def codex_status():
     return {"ok": ok, "message": message}
 
 
+@router.get("/codex/models")
+def codex_models():
+    return {"models": codex_provider.model_catalogue(), "default_model": codex_provider._default_model()}
+
+
+class CodexSettingsBody(BaseModel):
+    model: str = Field(default="", max_length=100)
+    reasoning_effort: str = Field(default="", max_length=20)
+
+
+@router.put("/providers/{pid}/codex")
+def update_codex_settings(pid: int, body: CodexSettingsBody, db: Session = Depends(get_db)):
+    provider = db.get(AiProvider, pid)
+    if provider is None or provider.service_type != "codex":
+        raise HTTPException(404, "本机 Codex 服务不存在")
+    model, effort = body.model.strip(), body.reasoning_effort.strip()
+    try:
+        codex_provider.validate_selection(model, effort)
+    except ValueError as exc:
+        raise HTTPException(400, str(exc)) from exc
+    provider.model, provider.reasoning_effort = model, effort
+    db.commit()
+    return _provider_payload(provider)
+
+
 @router.post("/providers/codex")
 def add_codex_provider(db: Session = Depends(get_db)):
     provider = db.query(AiProvider).filter_by(service_type="codex").first()

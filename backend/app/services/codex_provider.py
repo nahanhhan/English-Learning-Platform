@@ -1,5 +1,6 @@
 """通过本机 ChatGPT 登录的 Codex 进行一次受限批改。"""
 import os
+import json
 import shutil
 import subprocess
 import tempfile
@@ -9,6 +10,8 @@ import tomllib
 from pathlib import Path
 
 TIMEOUT = 180
+EFFORT_LEVELS = ("none", "minimal", "low", "medium", "high", "xhigh", "max", "ultra")
+MODEL_PATTERN = re.compile(r"[A-Za-z0-9._-]{1,100}")
 
 
 def _environment():
@@ -48,7 +51,9 @@ def _error(stderr):
         return "Codex 认证失败，请重新使用 ChatGPT 登录后重试"
     if any(word in text for word in ("403", "forbidden")):
         return "Codex 账号或模型没有访问权限，请检查账号设置"
-    return "Codex 批改失败，请检查网络、登录状态和默认模型后重试"
+    if any(word in text for word in ("model_not_found", "unsupported model", "model is not supported", "reasoning_effort")):
+        return "Codex 模型或推理强度不可用，请在设置中调整后重试"
+    return "Codex 批改失败，请检查网络、登录状态和模型设置后重试"
 
 
 def _default_model():
@@ -63,8 +68,50 @@ def _default_model():
         return ""
 
 
-def complete(messages, deadline=None):
+def model_catalogue():
+    """只读取本机 Codex 缓存的公开模型能力，不访问或返回账号信息。"""
+    cache = Path(os.environ.get("CODEX_HOME") or Path.home() / ".codex") / "models_cache.json"
+    try:
+        data = json.loads(cache.read_text(encoding="utf-8"))
+        items = data.get("models", [])
+        if not isinstance(items, list):
+            return []
+        result, seen = [], set()
+        for item in items:
+            if not isinstance(item, dict) or item.get("visibility") != "list":
+                continue
+            model = item.get("slug")
+            if not isinstance(model, str) or not MODEL_PATTERN.fullmatch(model) or model in seen:
+                continue
+            levels = item.get("supported_reasoning_levels", [])
+            levels = [level.get("effort") for level in levels if isinstance(level, dict)
+                      and level.get("effort") in EFFORT_LEVELS] if isinstance(levels, list) else []
+            name = item.get("display_name")
+            result.append({"id": model, "name": name if isinstance(name, str) else model,
+                           "levels": list(dict.fromkeys(levels))})
+            seen.add(model)
+        return result
+    except (OSError, ValueError, TypeError, AttributeError):
+        return []
+
+
+def validate_selection(model, effort):
+    if model and not MODEL_PATTERN.fullmatch(model):
+        raise ValueError("模型名格式无效，请选择或输入有效的 Codex 模型名")
+    if effort and effort not in EFFORT_LEVELS:
+        raise ValueError("推理强度无效，请从列表中选择")
+    selected = model or _default_model()
+    known = next((item for item in model_catalogue() if item["id"] == selected), None)
+    if effort and known and known["levels"] and effort not in known["levels"]:
+        raise ValueError("该模型不支持所选推理强度，请重新选择")
+
+
+def complete(messages, deadline=None, model="", reasoning_effort=""):
     from .ai_client import AiError
+    try:
+        validate_selection(model, reasoning_effort)
+    except ValueError as exc:
+        raise AiError(str(exc)) from exc
     deadline = deadline or time.monotonic() + TIMEOUT
     remaining = deadline - time.monotonic()
     if remaining <= 0:
@@ -86,9 +133,11 @@ def complete(messages, deadline=None):
                        "--disable", "apps", "--disable", "plugins", "--disable", "multi_agent",
                        "--disable", "view_image", "-c", "project_doc_max_bytes=0",
                        "-c", 'web_search="disabled"', "-c", 'model_provider="openai"']
-            model = _default_model()
-            if model:
-                command += ["--model", model]
+            selected_model = model or _default_model()
+            if selected_model:
+                command += ["--model", selected_model]
+            if reasoning_effort:
+                command += ["-c", f'model_reasoning_effort="{reasoning_effort}"']
             command.append("-")
             remaining = deadline - time.monotonic()
             if remaining <= 0:

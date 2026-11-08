@@ -12,6 +12,7 @@ import { type ProviderProfile, type ModelCapability, MODE_LABELS, EFFORT_LABELS 
 import { speak, stopSpeaking } from '../speak'
 
 type Provider = ProviderProfile
+interface CodexModel { id: string; name: string; levels: string[] }
 interface Preset { name: string; service_type: string; base_url: string; model: string; docs: string; models: { id: string; name?: string }[] }
 
 export default function Settings() {
@@ -26,6 +27,15 @@ export default function Settings() {
   const [refreshing, setRefreshing] = useState(false)
   const [codexStatus, setCodexStatus] = useState<{ ok: boolean; message: string } | null>(null)
   const [codexConnection, setCodexConnection] = useState<{ ok: boolean; message: string } | null>(null)
+  const [codexEditing, setCodexEditing] = useState<Provider | null>(null)
+  const [codexModels, setCodexModels] = useState<CodexModel[]>([])
+  const [codexDefaultModel, setCodexDefaultModel] = useState('')
+  const [codexModelsLoading, setCodexModelsLoading] = useState(false)
+  const [codexSaving, setCodexSaving] = useState(false)
+  const [codexForm] = Form.useForm()
+  const codexModel = Form.useWatch('model', codexForm) || ''
+  const selectedCodex = codexModels.find(m => m.id === (codexModel || codexDefaultModel))
+  const codexLevels = selectedCodex?.levels.length ? selectedCodex.levels : ['none', 'minimal', 'low', 'medium', 'high', 'xhigh', 'max', 'ultra']
   const formModel = Form.useWatch('model', form)
   const formType = Form.useWatch('service_type', form)
   const formBase = Form.useWatch('base_url', form)
@@ -97,6 +107,30 @@ export default function Settings() {
     }
   }
 
+  const loadCodexModels = async () => {
+    setCodexModelsLoading(true)
+    try {
+      const data = await get<{ models: CodexModel[]; default_model: string }>('/api/settings/codex/models')
+      setCodexModels(data.models); setCodexDefaultModel(data.default_model)
+    } catch (e: any) { message.error(e.message || '无法读取本机模型列表') }
+    finally { setCodexModelsLoading(false) }
+  }
+  const openCodexSettings = (provider: Provider) => {
+    setCodexEditing(provider)
+    codexForm.setFieldsValue({ model: provider.model || '', reasoning_effort: provider.reasoning_effort || '' })
+    void loadCodexModels()
+  }
+  const saveCodexSettings = async () => {
+    if (!codexEditing) return
+    const values = await codexForm.validateFields()
+    setCodexSaving(true)
+    try {
+      await put(`/api/settings/providers/${codexEditing.id}/codex`, { model: values.model || '', reasoning_effort: values.reasoning_effort || '' })
+      setCodexEditing(null); setCodexConnection(null); await load(); message.success('Codex 设置已保存')
+    } catch (e: any) { message.error(e.message) }
+    finally { setCodexSaving(false) }
+  }
+
   const removeProvider = async (id: number) => {
     await del(`/api/settings/providers/${id}`)
     message.success('已删除')
@@ -141,7 +175,7 @@ export default function Settings() {
               <b>{p.name}</b> {p.is_default && <Tag color="blue">默认</Tag>}
             </div>
             <div style={{ flex: 1, minWidth: 200, color: '#777', fontSize: 13 }}>
-              {p.service_type === 'codex' ? <><ApiOutlined /> 本机默认模型 · ChatGPT 登录
+              {p.service_type === 'codex' ? <><ApiOutlined /> 模型 <Tag>{p.model || '本机默认模型'}</Tag> · 推理强度 {EFFORT_LABELS[p.reasoning_effort] || '模型默认'} · ChatGPT 登录
                 <div style={{ marginTop: 4 }}>{codexStatus?.message || '正在检查登录状态…'}</div>
                 <div style={{ marginTop: 4 }}>连接测试：{codexConnection ? codexConnection.message : '尚未测试'}</div></> : <><ApiOutlined /> {p.base_url} · 模型 <Tag>{p.model || '未设置'}</Tag> · Key {p.api_key_masked || '未设置'}
                 <div style={{ marginTop: 4 }}>{MODE_LABELS[p.reasoning_mode]}{p.reasoning_effort && ` · 强度 ${EFFORT_LABELS[p.reasoning_effort] || p.reasoning_effort}`}</div></>}
@@ -151,7 +185,7 @@ export default function Settings() {
               {!p.is_default && (
                 <Button size="small" icon={<CheckOutlined />} onClick={async () => { await post(`/api/settings/providers/${p.id}/default`); load() }} title="设为默认" />
               )}
-              {p.service_type !== 'codex' && <Button size="small" icon={<EditOutlined />} onClick={() => openModal(p)} />}
+              <Button size="small" icon={<EditOutlined />} aria-label={`编辑${p.name}`} onClick={() => p.service_type === 'codex' ? openCodexSettings(p) : openModal(p)} />
               <Popconfirm title="确定删除该服务商？" onConfirm={() => removeProvider(p.id)}>
                 <Button size="small" danger icon={<DeleteOutlined />} />
               </Popconfirm>
@@ -206,6 +240,21 @@ export default function Settings() {
           数据库与配置全部保存在本地 backend/data 目录，删除该目录即彻底清空数据。
         </div>
       </Card>
+
+      <Modal title="Codex 模型与推理强度" open={!!codexEditing} onCancel={() => setCodexEditing(null)}
+        onOk={saveCodexSettings} confirmLoading={codexSaving} okText="保存" destroyOnClose>
+        <Form form={codexForm} layout="vertical" initialValues={{ model: '', reasoning_effort: '' }}>
+          <Form.Item name="model" label="模型" extra={codexDefaultModel ? `留空使用本机默认模型：${codexDefaultModel}` : '留空使用本机默认模型'}>
+            <AutoComplete allowClear placeholder="本机默认模型" options={codexModels.map(m => ({ value: m.id, label: `${m.name} (${m.id})` }))}
+              onChange={() => codexForm.setFieldValue('reasoning_effort', '')} />
+          </Form.Item>
+          <Button size="small" loading={codexModelsLoading} onClick={loadCodexModels} style={{ marginBottom: 14 }}>读取本机模型列表</Button>
+          <Form.Item name="reasoning_effort" label="推理强度" extra={selectedCodex?.levels.length ? '选项来自本机 Codex 模型目录；实际可用性以账号为准。' : '本机未提供该模型的强度信息，请通过连接测试确认可用。'}>
+            <Select options={[{ value: '', label: '模型默认' }, ...codexLevels.map(value => ({ value, label: EFFORT_LABELS[value] || value }))]} />
+          </Form.Item>
+        </Form>
+        <div style={{ color: '#778396', fontSize: 12 }}>设置仅用于本平台批改，不更改 Codex 自身的全局配置。模型列表来自本机缓存，账号权限和额度以实际测试为准。</div>
+      </Modal>
 
       <Modal
         title={editing ? '编辑服务商' : '添加服务商'} open={modalOpen}

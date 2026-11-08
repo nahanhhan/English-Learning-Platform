@@ -47,7 +47,7 @@ def test_codex_call_stdin_isolated_and_no_key_fallback(monkeypatch):
 
 
 @pytest.mark.parametrize('error,expected', [
-    ('HTTP 429 secret', '额度'), ('401 secret', '认证'), ('403 secret', '权限'), ('other secret', '失败')
+    ('HTTP 429 secret', '额度'), ('401 secret', '认证'), ('403 secret', '权限'), ('model_not_found secret', '模型'), ('other secret', '失败')
 ])
 def test_error_messages_are_safe(monkeypatch, error, expected):
     monkeypatch.setattr(codex_provider, '_executable', lambda: 'codex')
@@ -121,3 +121,69 @@ def test_practice_failure_preserves_answer_without_simulation(tmp_path, monkeypa
         result = db.query(Grading).filter_by(submission_id=sid).one()
         assert not result.mock and '额度' in result.error
     engine.dispose()
+
+
+def test_catalogue_filters_hidden_and_exposes_supported_effort_only(tmp_path, monkeypatch):
+    monkeypatch.setenv('CODEX_HOME', str(tmp_path))
+    (tmp_path / 'models_cache.json').write_text(json.dumps({
+        'identity': {'token': 'never-expose'},
+        'models': [
+            {'slug':'good-model', 'display_name':'Good', 'visibility':'list',
+             'supported_reasoning_levels':[{'effort':'low'}, {'effort':'high'}, {'effort':'bad'}]},
+            {'slug':'hidden', 'visibility':'hide'}, {'slug':'bad;command', 'visibility':'list'},
+        ]}), encoding='utf-8')
+    (tmp_path / 'config.toml').write_text('model = "good-model"', encoding='utf-8')
+    assert codex_provider.model_catalogue() == [{'id':'good-model', 'name':'Good', 'levels':['low', 'high']}]
+    codex_provider.validate_selection('', 'high')
+    with pytest.raises(ValueError, match='不支持'): codex_provider.validate_selection('good-model', 'medium')
+    with pytest.raises(ValueError, match='模型名'): codex_provider.validate_selection('bad;command', '')
+    with pytest.raises(ValueError, match='强度'): codex_provider.validate_selection('good-model', 'invalid')
+
+
+def test_selected_model_and_effort_reach_codex_cli(monkeypatch):
+    monkeypatch.setattr(codex_provider, '_executable', lambda: 'codex')
+    monkeypatch.setattr(codex_provider, 'login_status', lambda **kwargs: (True, 'ok'))
+    monkeypatch.setattr(codex_provider, 'model_catalogue', lambda: [{'id':'test-model', 'name':'Test', 'levels':['low','high']}])
+    calls = []
+    def run(command, **kwargs):
+        calls.append(command)
+        return SimpleNamespace(returncode=0, stdout='ok', stderr='')
+    monkeypatch.setattr(codex_provider.subprocess, 'run', run)
+    assert ai_client.chat({'service_type':'codex', 'model':'test-model', 'reasoning_effort':'high'}, [{'role':'user','content':'sample'}]) == 'ok'
+    assert calls[0][calls[0].index('--model') + 1] == 'test-model'
+    assert 'model_reasoning_effort="high"' in calls[0]
+    assert '--ignore-user-config' in calls[0] and 'read-only' in calls[0]
+
+
+def test_codex_settings_round_trip_preserves_provider_and_default(tmp_path, monkeypatch):
+    monkeypatch.setattr(codex_provider, 'model_catalogue', lambda: [{'id':'test-model', 'name':'Test', 'levels':['low','high']}])
+    monkeypatch.setattr(codex_provider, '_default_model', lambda: 'test-model')
+    engine = create_engine(f"sqlite:///{tmp_path / 'settings.db'}", connect_args={'check_same_thread':False})
+    Base.metadata.create_all(engine); factory = sessionmaker(bind=engine, expire_on_commit=False)
+    with factory() as db:
+        db.add(AiProvider(name='Codex', base_url='', api_key='', model='', service_type='codex', is_default=True))
+        db.add(AiProvider(name='Other', base_url='https://example.invalid', api_key='secret', model='other', is_default=False))
+        db.commit()
+    app = FastAPI(); app.include_router(settings.router)
+    def get_test_db():
+        with factory() as db: yield db
+    app.dependency_overrides[get_db] = get_test_db
+    with TestClient(app) as api:
+        models = api.get('/api/settings/codex/models').json()
+        assert models['default_model'] == 'test-model' and models['models'][0]['levels'] == ['low','high']
+        saved = api.put('/api/settings/providers/1/codex', json={'model':'test-model','reasoning_effort':'high'})
+        assert saved.status_code == 200 and saved.json()['model'] == 'test-model' and saved.json()['reasoning_effort'] == 'high'
+        assert saved.json()['is_default'] and not saved.json()['api_key_masked']
+        assert api.put('/api/settings/providers/1/codex', json={'model':'test-model','reasoning_effort':'medium'}).status_code == 400
+        assert api.put('/api/settings/providers/2/codex', json={'model':'test-model','reasoning_effort':'high'}).status_code == 404
+        restored = api.put('/api/settings/providers/1/codex', json={'model':'','reasoning_effort':''}).json()
+        assert restored['model'] == restored['reasoning_effort'] == '' and restored['is_default']
+        with factory() as db: assert db.get(AiProvider, 2).api_key == 'secret'
+    engine.dispose()
+
+
+def test_missing_catalogue_allows_valid_manual_model_without_modifying_defaults(tmp_path, monkeypatch):
+    monkeypatch.setenv('CODEX_HOME', str(tmp_path))
+    assert codex_provider.model_catalogue() == []
+    codex_provider.validate_selection('future-model', 'medium')
+    codex_provider.validate_selection('', '')

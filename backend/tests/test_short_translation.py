@@ -292,13 +292,15 @@ def test_http_flow_filters_history_errors_and_no_answer_leak(context):
 def test_codex_without_api_key_is_real_and_preserves_context(context):
     db, _, calls = context
     provider = db.query(AiProvider).one()
-    provider.service_type = 'codex'; provider.api_key = ''; provider.model = ''; db.commit()
+    provider.service_type = 'codex'; provider.api_key = ''; provider.model = 'selected-model'; provider.reasoning_effort = 'high'; db.commit()
     run = s.begin(db, 'ST-C2E-001')
     first = finish(db, run['id'], 'first answer')
     second = finish(db, run['id'], 'second answer')
     assert not first.mock and not second.mock and calls[-1]['profile']['service_type'] == 'codex'
     assert calls[-1]['body']['上次作答及点评']['content'] == 'first answer'
     assert calls[-1]['profile']['deadline'] > 0
+    assert calls[-1]['profile']['model'] == 'selected-model'
+    assert calls[-1]['profile']['reasoning_effort'] == 'high'
 
 
 def test_codex_failure_preserves_attempt_and_allows_manual_service_switch(context, monkeypatch):

@@ -135,7 +135,8 @@ def chat(provider: dict, messages: list, max_tokens: int = 8000,
          temperature: float = 0.3, **kwargs) -> str:
     if ai_profiles.service_type(provider) == "codex":
         from .codex_provider import complete
-        return complete(messages, provider.get("deadline"))
+        return complete(messages, provider.get("deadline"), provider.get("model", ""),
+                        provider.get("reasoning_effort", ""))
     session_id = kwargs.pop('session_id', None) or provider.get('session_id') or str(uuid.uuid4())
     try:
         extra = _extra_payload(provider)
