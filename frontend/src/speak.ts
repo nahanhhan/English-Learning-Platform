@@ -5,7 +5,7 @@ let currentAudio: HTMLAudioElement | null = null
 let currentUrl: string | null = null
 let currentRequest: AbortController | null = null
 let generation = 0
-let lastSpeech: { text: string; accent: Accent } | null = null
+let lastSpeech: { text: string; accent: Accent; sense?: 'purpose' } | null = null
 export type SpeechStatus = { state: 'idle' | 'loading' | 'playing' | 'error'; message: string }
 let status: SpeechStatus = { state: 'idle', message: '' }
 const statusListeners = new Set<() => void>()
@@ -90,7 +90,7 @@ export function stopSpeaking() {
 
 export function retrySpeaking() {
   const previous = lastSpeech
-  if (previous) return speak(previous.text, previous.accent)
+  if (previous) return speak(previous.text, previous.accent, previous.sense)
 }
 
 /** 同一题切换答题阶段时不让迟到的自动发音开始；已经开始的发音自然读完。 */
@@ -98,11 +98,11 @@ export function cancelPendingSpeech() {
   if (status.state === 'loading') stopSpeaking()
 }
 
-export async function speak(text: string, accent: Accent = 'us'): Promise<void> {
+export async function speak(text: string, accent: Accent = 'us', sense?: 'purpose'): Promise<void> {
   const word = (text || '').trim()
   stopSpeaking()
   if (!word || volume === 0) return
-  lastSpeech = { text: word, accent }
+  lastSpeech = { text: word, accent, sense }
   const token = generation
   const controller = new AbortController()
   currentRequest = controller
@@ -112,7 +112,7 @@ export async function speak(text: string, accent: Accent = 'us'): Promise<void> 
   try {
     const response = await fetch('/api/speech', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ text: word, accent }), signal: controller.signal,
+      body: JSON.stringify({ text: word, accent, ...(sense ? { sense } : {}) }), signal: controller.signal,
     })
     if (!response.ok) throw new Error('speech unavailable')
     if (!response.headers.get('content-type')?.startsWith('audio/')) throw new Error('invalid audio')
@@ -145,4 +145,11 @@ export async function speak(text: string, accent: Accent = 'us'): Promise<void> 
     clearTimeout(timeout)
     if (currentRequest === controller) currentRequest = null
   }
+}
+
+// 提前准备接下来的词，仅填充后端缓存，不触发播放或打断当前语音。
+export function prefetchSpeech(text: string, sense?: 'purpose') {
+  if (!text.trim()) return
+  void fetch('/api/speech', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ text, accent: 'us', ...(sense ? { sense } : {}) }) }).catch(() => {})
 }

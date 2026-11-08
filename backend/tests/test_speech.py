@@ -159,3 +159,16 @@ def test_http_audio_cache_validation_and_failure(tmp_path):
         service.synthesizer = unavailable
         failed = client.post("/api/speech", json={"text": "uncached"})
         assert failed.status_code == 503 and "重试" in failed.json()["detail"]
+
+
+def test_sake_purpose_uses_local_contextual_pronunciation(tmp_path):
+    async def offline(*args):
+        raise OSError("offline")
+    app = FastAPI()
+    app.include_router(router)
+    app.dependency_overrides[speech.get_speech_service] = lambda: speech.SpeechService(tmp_path, offline)
+    with TestClient(app) as client:
+        response = client.post("/api/speech", json={"text": "sake", "accent": "us", "sense": "purpose"})
+        assert response.status_code == 200 and speech.valid_mp3(response.content)
+        assert response.headers["X-Speech-Cache"] == "HIT"
+        assert client.post("/api/speech", json={"text": "sake", "accent": "uk", "sense": "purpose"}).status_code == 503

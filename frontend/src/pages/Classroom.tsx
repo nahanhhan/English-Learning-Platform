@@ -10,7 +10,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { vocabularyApis, type VocabularyLibrary, type ClassroomEntry, type ClassroomGroup, type ImportRow, type Kind,
   type PracticeRound, type PracticeSource } from '../classroomApi'
 import { get } from '../api'
-import { cancelPendingSpeech, speak, stopSpeaking } from '../speak'
+import { cancelPendingSpeech, prefetchSpeech, speak, stopSpeaking } from '../speak'
 import VolumeControl from '../components/VolumeControl'
 import AmericanPhonetic from '../components/AmericanPhonetic'
 import PartOfSpeech from '../components/PartOfSpeech'
@@ -21,8 +21,18 @@ function readLocal(key: string) { try { return localStorage.getItem(key) || '' }
 function writeLocal(key: string, value: string) { try { localStorage.setItem(key, value) } catch { /* 存储不可用不影响答题 */ } }
 function clearLocal(key: string) { try { localStorage.removeItem(key) } catch { /* 忽略 */ } }
 
-function AmericanAudio({ english }: { english: string }) {
-  return <Button icon={<SoundOutlined />} onClick={() => speak(english, 'us')}>美式发音</Button>
+function classroomSense(english: string, translation: string, isAccumulation: boolean) {
+  return !isAccumulation && english.trim().toLowerCase() === 'sake' && /目的|缘故|利益|好处|for the sake/i.test(translation) ? 'purpose' as const : undefined
+}
+function AmericanAudio({ english, sense }: { english: string; sense?: 'purpose' }) {
+  return <Button icon={<SoundOutlined />} onClick={() => speak(english, 'us', sense)}>美式发音</Button>
+}
+function EnglishDefinitions({ english, definitions, source }: { english: string; definitions?: string[]; source?: string }) {
+  const url = source || `https://www.merriam-webster.com/dictionary/${encodeURIComponent(english)}`
+  return <div className="classroom-english-definitions">
+    {definitions?.length ? <><small>英文释义 · {source ? <a href={source} target="_blank" rel="noreferrer">根据 Merriam-Webster 改写</a> : <><a href="https://wordnet.princeton.edu/" target="_blank" rel="noreferrer">WordNet</a>（可能包含其他义项）</>}</small><ul>{definitions.slice(0, 3).map((definition, i) => <li key={i}>{definition}</li>)}</ul>{definitions.length > 3 && <details><summary>更多释义</summary><ul>{definitions.slice(3).map((definition, i) => <li key={i}>{definition}</li>)}</ul></details>}</> : <small>WordNet 暂无此词释义</small>}
+    {' '}<a href={url} target="_blank" rel="noreferrer">查阅 Merriam-Webster 词典 ↗</a>
+  </div>
 }
 
 export default function Classroom({ library = 'classroom' }: { library?: VocabularyLibrary }) {
@@ -133,8 +143,16 @@ export default function Classroom({ library = 'classroom' }: { library?: Vocabul
     const key = `${round!.id}:${current.question_id}`
     if (spokenRef.current === key) return
     spokenRef.current = key
-    speak(current.english, 'us')
+    speak(current.english, 'us', classroomSense(current.english, current.translation, isAccumulation))
   }, [tab, running, autoSpeak, current, round?.id])
+
+  useEffect(() => {
+    if (!autoSpeak || tab !== 'review' || !round || round.finished) return
+    if (!running && current?.stage === 'choice') prefetchSpeech(current.english, classroomSense(current.english, current.translation, isAccumulation))
+    // 一次仅预取下一题，避免后台请求挤占当前发音。
+    const next = round.upcoming_speech?.[0]
+    if (next) prefetchSpeech(next.english, classroomSense(next.english, next.translation, isAccumulation))
+  }, [autoSpeak, tab, running, round?.id, current?.question_id])
 
   useEffect(() => {
     if (tab === 'review') return
@@ -350,10 +368,9 @@ export default function Classroom({ library = 'classroom' }: { library?: Vocabul
       <Progress percent={Math.round(round.completed / Math.max(round.total, 1) * 100)} showInfo={false} />
       <Card className="classroom-practice-card">
         {current.stage === 'choice' && <>
-          <div className="classroom-prompt"><h2>{current.english}
-            {current.item_type === 'word' && <PartOfSpeech value={current.part_of_speech} />}</h2>
+          <div className="classroom-prompt"><h2>{current.english}</h2>
             {current.item_type === 'word' && <AmericanPhonetic value={current.phonetic_us} />}
-            <AmericanAudio english={current.english} />
+            <AmericanAudio english={current.english} sense={classroomSense(current.english, current.translation, isAccumulation)} />
             <p>选择正确的中文意思 · 可按数字键 1–4</p></div>
           <div className="practice-options">
             {current.options.map((option, index) => {
@@ -363,7 +380,7 @@ export default function Classroom({ library = 'classroom' }: { library?: Vocabul
                 style={feedback ? { background: correct ? '#f6ffed' : selected ? '#fff1f0' : undefined,
                   borderColor: correct ? '#b7eb8f' : selected ? '#ffa39e' : undefined } : {}}
                 onClick={() => submit('choice', option)}>
-                <span className="classroom-option-number">{index + 1}</span>{option}
+                <span className="classroom-option-number">{index + 1}</span>{current.option_labels?.[index] || option}
                 {feedback && correct && <CheckCircleFilled style={{ color: '#52c41a', marginLeft: 8 }} />}
                 {feedback && selected && !correct && <CloseCircleFilled style={{ color: '#f5222d', marginLeft: 8 }} />}
               </Button>
@@ -371,8 +388,8 @@ export default function Classroom({ library = 'classroom' }: { library?: Vocabul
           </div>
         </>}
         {current.stage === 'spell' && <>
-          <div className="classroom-prompt"><div className="classroom-meaning">{current.translation}</div>
-            <AmericanAudio english={current.english} />
+          <div className="classroom-prompt"><div className="classroom-meaning">{current.translation_label || current.translation}</div>
+            <AmericanAudio english={current.english} sense={classroomSense(current.english, current.translation, isAccumulation)} />
             <p>{current.picked === current.translation ? `拼写这个${typeName(current.item_type)}` : '选择有误，继续拼写加深记忆'}</p>
             <div className="classroom-spell-hint">{current.spell_wrong ? current.english : spellHint}
               {current.item_type === 'word' && <PartOfSpeech value={current.part_of_speech} />}</div>
@@ -392,6 +409,7 @@ export default function Classroom({ library = 'classroom' }: { library?: Vocabul
           <h2>{current.rating === 'good' ? '选择和拼写全部正确' : current.rating === 'hard' ? '拼写已纠正，继续巩固' : '继续练习，加深记忆'}</h2>
           <div className="classroom-meaning">{current.english}
             {current.item_type === 'word' && <PartOfSpeech value={current.part_of_speech} />}</div><p>{current.translation}</p>
+          {!isAccumulation && current.item_type === 'word' && <EnglishDefinitions english={current.english} definitions={current.english_definitions} source={current.english_definition_source} />}
           <p>{current.in_mistake_book ? `已保存在错题本 · 连对 ${current.mistake_consec}/3` : '本题进度已保存'}</p>
           <Button size="large" type="primary" loading={busy} onClick={() => submit('next')}>
             {round.completed >= round.total ? '查看本轮结果' : '下一题'}
@@ -444,7 +462,7 @@ export default function Classroom({ library = 'classroom' }: { library?: Vocabul
             {isAccumulation && entry.source && <Tooltip title={<span style={{ whiteSpace: 'pre-wrap' }}>{entry.source}</span>}>
               <Button type="link" size="small">来源说明</Button>
             </Tooltip>}</> },
-          { title: '中文释义', dataIndex: 'translation', render: value => <span style={{ whiteSpace: 'pre-wrap' }}>{value}</span> },
+          { title: '中文释义', dataIndex: 'translation', render: (value, entry) => <><span style={{ whiteSpace: 'pre-wrap' }}>{value}</span>{!isAccumulation && entry.item_type === 'word' && <EnglishDefinitions english={entry.english} definitions={entry.english_definitions} source={entry.english_definition_source} />}</> },
           { title: '分组', dataIndex: 'group_name', width: 160 },
           { title: '状态', width: 110, render: (_, entry) => entry.in_mistake_book ? <Tag color="volcano">连对 {entry.mistake_consec}/3</Tag> : <Tag color={entry.completed ? 'green' : 'default'}>{entry.completed ? '已练习' : '未练习'}</Tag> },
           ...(isAccumulation ? [{ title: '学习记录', width: 200, render: (_: unknown, entry: ClassroomEntry) => <>
@@ -457,7 +475,7 @@ export default function Classroom({ library = 'classroom' }: { library?: Vocabul
             }) : '暂无记录'}</div>
           </> }] : []),
           { title: '操作', width: 180, render: (_, entry) => <Space wrap size={4}>
-            <Button size="small" icon={<SoundOutlined />} aria-label={`播放 ${entry.english} 美式发音`} onClick={() => speak(entry.english, 'us')} />
+            <Button size="small" icon={<SoundOutlined />} aria-label={`播放 ${entry.english} 美式发音`} onClick={() => speak(entry.english, 'us', classroomSense(entry.english, entry.translation, isAccumulation))} />
             <Button size="small" icon={<EditOutlined />} aria-label={`编辑 ${entry.english}`} onClick={() => openEntry(entry)} />
             <Popconfirm title="删除该词汇？未完成的练习将跳过它。" onConfirm={async () => {
               try { await classroom(`/entries/${entry.id}`, { method: 'DELETE' }); setRefresh(n => n + 1) } catch (e: any) { message.error(e.message) }

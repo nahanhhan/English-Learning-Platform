@@ -169,3 +169,16 @@ test('重载后取消静音恢复之前非零音量', async () => {
   reloaded.toggleSpeechMute()
   assert.equal(reloaded.getSpeechVolume(), 15)
 })
+
+
+test('预取下一题不播放、不打断当前语音', async () => {
+  await speech.speak('first')
+  const first = audios[0]
+  speech.prefetchSpeech('sake', 'purpose')
+  await new Promise(resolve => setTimeout(resolve, 0))
+  assert.equal(audios.length, 1)
+  assert.equal(first.paused, undefined)
+  assert.deepEqual(JSON.parse(requests.at(-1).body), { text: 'sake', accent: 'us', sense: 'purpose' })
+  await speech.speak('sake', 'us', 'purpose')
+  assert.equal(JSON.parse(requests.at(-1).body).sense, 'purpose')
+})

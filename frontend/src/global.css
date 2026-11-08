@@ -283,3 +283,7 @@ body {
   .classroom-filters .ant-select { min-width: 0 !important; width: 100%; }
   .study-practice-card .ant-card-body, .classroom-practice-card .ant-card-body { padding: 14px; }
 }
+
+.classroom-english-definitions { margin-top: 8px; font-size: 13px; line-height: 1.45; text-align: left; }
+.classroom-english-definitions small { color: #687386; }
+.classroom-english-definitions ul { margin: 4px 0; padding-left: 19px; }

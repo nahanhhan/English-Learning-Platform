@@ -15,6 +15,7 @@ from .study import MISTAKE_EXIT_STREAK
 from .phonetics import american_ipa
 from .parts_of_speech import parts_of_speech
 from . import accumulation_learning as learning
+from .english_definitions import definition_source, lookup_definitions
 
 
 class ClassroomError(ValueError):
@@ -43,6 +44,8 @@ def entry_payload(db, entry, *, library="classroom", learning_stats=None):
             "english": entry.english, "translation": entry.translation, "source": entry.source,
             "part_of_speech": parts_of_speech(entry.english, entry.translation) if entry.item_type == "word" else "",
             "phonetic_us": american_ipa(entry.english) if entry.item_type == "word" else "",
+            "english_definitions": lookup_definitions(entry.english) if library == "classroom" and entry.item_type == "word" else [],
+            "english_definition_source": definition_source(entry.english) if library == "classroom" and entry.item_type == "word" else "",
             "in_mistake_book": entry.in_mistake_book,
             "mistake_consec": entry.mistake_consec, "completed": entry.completed}
     if library == "accumulation":
@@ -105,9 +108,22 @@ def scope_key(group_id, item_type, source):
     return f"{group_id or 'all'}:{item_type}:{source}"
 
 
+def choice_label(meaning: str) -> str:
+    """选项只保留释义，去除词性、英文搭配和用法标签；原始答案不变。"""
+    text = meaning.replace("\\n", "\n")
+    text = re.sub(r"[（(]([^）)]*)[）)]", lambda m: "" if re.search(r"[A-Za-z]|正式|非正式|口语|旧式|用于|通常|尤指|此处|例如|如\s", m.group(1)) else m.group(0), text)
+    text = re.sub(r"(?<![A-Za-z])(?:adj|adv|prep|pron|conj|interj|modal|aux|det|num|v|vt|vi|n|pl|phr)\s*\.", "", text, flags=re.I)
+    text = re.sub(r"[A-Za-z][A-Za-z'’/-]*", "", text)
+    text = re.sub(r"[ \t]+", " ", text)
+    text = re.sub(r"\s*([；;，,、])\s*", r"\1", text)
+    return text.strip(" \n；;，,、:：/.-")
+
+
 def _options(entry, classroom_pool, fallback):
     correct = entry.translation.strip()
-    seen = {normalize(correct)}
+    if not choice_label(correct):
+        raise ClassroomError(f"“{entry.english}”缺少可显示的中文释义")
+    seen = {normalize(choice_label(correct))}
     options = [correct]
     for pool in (classroom_pool, fallback):
         candidates = list(pool)
@@ -116,8 +132,8 @@ def _options(entry, classroom_pool, fallback):
         excluded = {normalize(t) for en, t in classroom_pool + fallback if normalize(en) == entry.normalized}
         for english, meaning in candidates:
             meaning = meaning.strip().replace("\\n", "\n")
-            key = normalize(meaning)
-            if not meaning or key in seen or key in excluded or normalize(english) == entry.normalized:
+            key = normalize(choice_label(meaning))
+            if not key or key in seen or normalize(meaning) in excluded or normalize(english) == entry.normalized:
                 continue
             options.append(meaning)
             seen.add(key)
@@ -200,8 +216,29 @@ def session_payload(db, session, *, library="classroom"):
         if snapshot["item_type"] == "word" and not snapshot.get("phonetic_us"):
             snapshot["phonetic_us"] = american_ipa(snapshot["english"])
         entry = db.get(Entry, current.entry_id)
+        if library == "classroom" and snapshot["item_type"] == "word":
+            snapshot["english_definitions"] = lookup_definitions(snapshot["english"])
+            snapshot["english_definition_source"] = definition_source(snapshot["english"])
+        payload["upcoming_speech"] = [
+            {"english": item["english"], "translation": item["translation"]}
+            for item in (json.loads(q.snapshot) for q in questions[session.cursor + 1:]
+                         if q.stage == "choice" and q.entry_id in alive)
+        ][:2]
+        # 旧轮次可能有仅词性不同的重复选项，显示时保留正确项并去重，不修改已保存进度。
+        saved_options = json.loads(current.options)
+        correct = snapshot["translation"]
+        labels_seen = {normalize(choice_label(correct))}
+        visible_options = [option for option in saved_options if option == correct]
+        for option in saved_options:
+            label = choice_label(option)
+            key = normalize(label)
+            if option != correct and key and key not in labels_seen:
+                visible_options.append(option)
+                labels_seen.add(key)
+        visible_options.sort(key=saved_options.index)
         payload["current"] = {**snapshot, "question_id": current.id, "stage": current.stage,
-                              "options": json.loads(current.options), "picked": current.picked,
+                              "translation_label": choice_label(snapshot["translation"]) or snapshot["translation"],
+                              "options": visible_options, "option_labels": [choice_label(o) for o in visible_options], "picked": current.picked,
                               "spell_wrong": current.spell_wrong, "rating": current.rating,
                               "in_mistake_book": bool(entry and entry.in_mistake_book),
                               "mistake_consec": entry.mistake_consec if entry else 0}

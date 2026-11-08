@@ -1,6 +1,7 @@
 """课内复习的事务、恢复、导入与隔离测试，均使用临时数据库。"""
 import io
 import json
+import re
 import sys
 import uuid
 import zipfile
@@ -454,3 +455,51 @@ def test_randomized_round_resume_preserves_all_questions_and_spelling(database, 
         assert resumed["current"]["stage"] == "spell"
         assert resumed["current"]["spell_wrong"]
         assert saved_questions(reopened) == original
+
+
+def test_clean_choice_labels_preserve_original_answers_and_old_progress(database):
+    db, _ = database
+    group = seed(db)
+    entry = db.query(Entry).filter_by(group_id=group.id).first()
+    entry.translation = "n. 目的（for the sake of）；利益（for sb's sake）"
+    db.commit()
+    session = c.start(db, group.id)
+    question = db.get(Question, session["current"]["question_id"])
+    snapshot = json.loads(question.snapshot)
+    correct = snapshot["translation"]
+    question.options = json.dumps([correct, "adj. 同一个释义", "n. 同一个释义", "vt. （正式）篡夺（usurp）"], ensure_ascii=False)
+    db.commit()
+    before = question.options
+    current = c.start(db, group.id)["current"]
+    assert len(current["options"]) == 3
+    assert current["option_labels"] == [c.choice_label(option) for option in current["options"]]
+    assert all(not re.search(r"[A-Za-z]", label) for label in current["option_labels"])
+    assert question.options == before
+    updated = act(db, session, "choice", correct)
+    assert updated["current"]["stage"] == "spell"
+    assert updated["current"]["picked"] == correct
+    assert c.choice_label("n. 目的（for the sake of）；利益（for sb's sake）") == "目的；利益"
+    assert c.choice_label("v. （使）关联；（正式）构成") == "（使）关联；构成"
+
+
+def test_definitions_and_prefetch_for_resumed_round(database):
+    db, _ = database
+    seed_classroom(db)
+    group = db.query(Group).filter_by(name="How we listen").one()
+    sake = db.query(Entry).filter_by(group_id=group.id, english="sake").one()
+    payload = c.entry_payload(db, sake)
+    assert "a reason for wanting something done" in payload["english_definitions"]
+    session = c.start(db, group.id, "word")
+    assert session["upcoming_speech"] and session["current"]["english"] not in [item["english"] for item in session["upcoming_speech"]]
+    assert c.start(db, group.id, "word")["id"] == session["id"]
+
+
+def test_all_builtin_classroom_words_have_sourced_english_definitions():
+    from app.services.english_definitions import definition_source, lookup_definitions
+    for filename in ("classroom_initial.json", "classroom_how_we_listen.json"):
+        data = json.loads((DATA_DIR / filename).read_text(encoding="utf-8"))
+        for group in data["groups"]:
+            for english, _ in group["words"]:
+                assert lookup_definitions(english), english
+                if definition_source(english):
+                    assert definition_source(english).startswith("https://www.merriam-webster.com/")
