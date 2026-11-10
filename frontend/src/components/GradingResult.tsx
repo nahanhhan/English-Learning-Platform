@@ -15,6 +15,7 @@ const DIM_NAMES: Record<string, string> = {
   fluency: '表达流畅',
   task: '切题与要点',
   organization: '结构与衔接',
+  structure: '结构与衔接',
 }
 
 function scoreColor(pct: number) {
@@ -115,8 +116,8 @@ export default function GradingResult({
           {r.overall_comment}
         </div>
         {r.score_reason && <div style={{ marginTop: 10, lineHeight: 1.8 }}><b>评分依据：</b>{r.score_reason}</div>}
-        {r.rubric_version?.startsWith('cet6-translation') && <div style={{ marginTop: 10, fontSize: 12, color: '#8692a2' }}>
-          依据公开六级标准的训练估分；三个维度仅作学习诊断，不相加决定总分。
+        {(r.rubric_version?.startsWith('cet6-translation') || r.rubric_version?.startsWith('cet6-writing') || r.rubric_version?.startsWith('ky2-writing')) && <div style={{ marginTop: 10, fontSize: 12, color: '#8692a2' }}>
+          {r.rubric_version?.startsWith('ky2-writing') ? '依据考研英语（二）写作要求的训练估分；' : '依据公开六级标准的训练估分；'}三个维度仅作学习诊断，不相加决定总分。
         </div>}
       </Card>
 
@@ -180,6 +181,15 @@ export default function GradingResult({
                   <span style={{ fontSize: 13.5, lineHeight: 1.7 }}>{p.comment}</span>
                 </div>
               ))}
+            </Card>
+          )}
+          {r.optional_suggestions?.length > 0 && (
+            <Card title="可选表达建议（不作为错误扣分）" size="small">
+              {r.optional_suggestions.map((item: any, i: number) => <div key={i} style={{ marginBottom: 10, lineHeight: 1.7 }}>
+                {item.original && <Fragment text={item.original} />}
+                {item.suggestion && <span> → {item.suggestion}</span>}
+                {item.reason && <div>{item.reason}</div>}
+              </div>)}
             </Card>
           )}
           {r.vocab_upgrades?.length > 0 && (

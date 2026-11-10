@@ -35,7 +35,7 @@ setup.bat / start.bat # 一键安装 / 启动
 ## 关键约定
 
 - **语言**：界面与用户可见文案全部中文；代码注释用中文；Prompt 输出要求结构化 JSON 并用 Pydantic 式校验兜底。
-- **评分标准**：六级翻译/作文 15 分制、考研英译汉 15 分制、考研小作文 10 分制、考研大作文 15 分制。六级真题和短句共用 `backend/app/services/cet6_translation.py` 的公开考纲规则与五档描述，先整体定档，可选表达不扣分，维度仅为学习诊断；新真实结果须有非空评分依据并保存规则版本。写作和考研规则保留在 `grading.py`，修改须同步 `openspec/specs/`，不自动重评历史。
+- **评分标准**：六级翻译/作文 15 分制、考研英译汉 15 分制、考研小作文 10 分制、考研大作文 15 分制。六级真题和短句共用 `backend/app/services/cet6_translation.py` 的公开考纲规则与五档描述，先整体定档，可选表达不扣分，维度仅为学习诊断；新真实结果须有非空评分依据并保存规则版本。写作训练原则和六级写作分档位于 `backend/app/services/writing_policy.py`，考研题型规则位于 `grading.py`；依据及当次阅卷资料的限制见 `docs/writing-scoring-sources.md`。修改须同步 `openspec/specs/`，不自动重评历史。
 - **思考型模型适配**：glm-5.x 强制思考且思维链与正文共享 max_tokens 配额——不要对其发送 `thinking: disabled`（会 400），输出配额需放大（当前 32000）并依赖 `ai_client.chat` 的配额翻倍重试；百分制分数需折算回满分制。
 - **词库来源**：ECDICT（MIT License）。词书按 tag 筛选：cet6 → 六级书，ky → 考研书；短语 = 内置核心短语 + ECDICT 高频多词词条。
 - **数据重建**：`scripts/seed.py --force` 可重建题库与词库；`backend/data/` 删除即彻底清空用户数据。
