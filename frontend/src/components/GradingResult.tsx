@@ -19,10 +19,10 @@ const DIM_NAMES: Record<string, string> = {
 }
 
 function scoreColor(pct: number) {
-  if (pct >= 0.85) return '#52c41a'
-  if (pct >= 0.7) return '#3562a7'
-  if (pct >= 0.5) return '#e6a23c'
-  return '#f5222d'
+  if (pct >= 0.85) return 'var(--workspace-success)'
+  if (pct >= 0.7) return 'var(--workspace-accent)'
+  if (pct >= 0.5) return 'var(--workspace-warning)'
+  return 'var(--workspace-error)'
 }
 
 function ScoreHeader({ grading }: { grading: Grading }) {
@@ -41,7 +41,7 @@ function ScoreHeader({ grading }: { grading: Grading }) {
             <div>
               <div style={{ fontSize: 26, fontWeight: 700, lineHeight: 1.1 }}>
                 {grading.score}
-                <span style={{ fontSize: 13, color: '#999' }}> / {grading.full_score}</span>
+                <span style={{ fontSize: 13, color: 'var(--workspace-subtle)' }}> / {grading.full_score}</span>
               </div>
             </div>
           )}
@@ -50,7 +50,7 @@ function ScoreHeader({ grading }: { grading: Grading }) {
       <div style={{ flex: 1, minWidth: 260 }}>
         <Descriptions size="small" column={1}>
           <Descriptions.Item label="分数档">
-            <Tag color={scoreColor(pct) === '#f5222d' ? 'red' : 'blue'}>{String(result?.band || '—')}</Tag>
+            <Tag color={scoreColor(pct) === 'var(--workspace-error)' ? 'red' : 'blue'}>{String(result?.band || '—')}</Tag>
           </Descriptions.Item>
           <Descriptions.Item label="批改模型">
             {grading.mock ? <Tag color="orange">模拟批改</Tag> : <Tag>{grading.provider} · {grading.model}</Tag>}
@@ -60,7 +60,7 @@ function ScoreHeader({ grading }: { grading: Grading }) {
           {Object.entries(dims).map(([k, v]) => (
             <Tooltip key={k} title={`${DIM_NAMES[k] || k}（5 分制）`}>
               <div style={{ minWidth: 120 }}>
-                <div style={{ fontSize: 12, color: '#888', marginBottom: 2 }}>{DIM_NAMES[k] || k}</div>
+                <div style={{ fontSize: 12, color: 'var(--workspace-muted)', marginBottom: 2 }}>{DIM_NAMES[k] || k}</div>
                 <Progress percent={Number(v) * 20} size={['100%', 6]} showInfo={false} strokeColor={scoreColor(Number(v) / 5)} />
                 <span style={{ fontSize: 12 }}>{Number(v)} / 5</span>
               </div>
@@ -74,7 +74,7 @@ function ScoreHeader({ grading }: { grading: Grading }) {
 
 function Fragment({ text }: { text: string }) {
   return (
-    <span style={{ background: '#f0f2f5', borderRadius: 4, padding: '1px 6px', fontFamily: 'inherit' }}>
+    <span style={{ background: 'var(--workspace-raised)', borderRadius: 4, padding: '1px 6px', fontFamily: 'inherit' }}>
       {text}
     </span>
   )
@@ -112,11 +112,11 @@ export default function GradingResult({
       )}
       <Card>
         <ScoreHeader grading={grading} />
-        <div style={{ marginTop: 14, color: 'rgba(0,0,0,0.75)', lineHeight: 1.8 }}>
+        <div style={{ marginTop: 14, color: 'var(--workspace-ink)', lineHeight: 1.8 }}>
           {r.overall_comment}
         </div>
         {r.score_reason && <div style={{ marginTop: 10, lineHeight: 1.8 }}><b>评分依据：</b>{r.score_reason}</div>}
-        {(r.rubric_version?.startsWith('cet6-translation') || r.rubric_version?.startsWith('cet6-writing') || r.rubric_version?.startsWith('ky2-writing')) && <div style={{ marginTop: 10, fontSize: 12, color: '#8692a2' }}>
+        {(r.rubric_version?.startsWith('cet6-translation') || r.rubric_version?.startsWith('cet6-writing') || r.rubric_version?.startsWith('ky2-writing')) && <div style={{ marginTop: 10, fontSize: 12, color: 'var(--workspace-muted)' }}>
           {r.rubric_version?.startsWith('ky2-writing') ? '依据考研英语（二）写作要求的训练估分；' : '依据公开六级标准的训练估分；'}三个维度仅作学习诊断，不相加决定总分。
         </div>}
       </Card>
@@ -133,9 +133,9 @@ export default function GradingResult({
               <div style={{ fontSize: 13.5, lineHeight: 1.7 }}>{e.explanation}</div>
               {(e.suggestion || e.correction) && (
                 <div style={{ fontSize: 13.5, marginTop: 4 }}>
-                  <CheckCircleOutlined style={{ color: '#52c41a', marginRight: 6 }} />
+                  <CheckCircleOutlined style={{ color: 'var(--workspace-success)', marginRight: 6 }} />
                   <b>建议：</b>
-                  <span style={{ color: '#2b7a0b' }}>{e.suggestion || e.correction}</span>
+                  <span style={{ color: 'var(--workspace-success)' }}>{e.suggestion || e.correction}</span>
                 </div>
               )}
             </div>
@@ -197,8 +197,8 @@ export default function GradingResult({
               <Descriptions column={1} size="small">
                 {r.vocab_upgrades.map((v: any, i: number) => (
                   <Descriptions.Item key={i} label={<Space size={6}><Fragment text={v.original} />→</Space>}>
-                    <b style={{ color: '#2b7a0b' }}>{v.upgrade}</b>
-                    <span style={{ color: '#888' }}>　{v.note}</span>
+                    <b style={{ color: 'var(--workspace-success)' }}>{v.upgrade}</b>
+                    <span style={{ color: 'var(--workspace-muted)' }}>　{v.note}</span>
                   </Descriptions.Item>
                 ))}
               </Descriptions>

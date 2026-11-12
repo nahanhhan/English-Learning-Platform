@@ -330,7 +330,7 @@ export default function Classroom({ library = 'classroom' }: { library?: Vocabul
         setRound(data); setRoundError('')
       }).catch(e => message.error(e.message)) }}>重试</Button>} />
     if (!running) return <Card className="classroom-start">
-      <BookOutlined style={{ fontSize: 44, color: '#3562a7' }} />
+      <BookOutlined style={{ fontSize: 44, color: 'var(--workspace-accent)' }} />
       <h2>{source === 'mistake' ? '错题专项练习' : isAccumulation ? '把平时积累的词记牢' : '从课堂学过的词开始'}</h2>
       <p>{source === 'mistake' ? '只练当前范围的错题，连续 3 次全部答对后移出错题本。' : '每个单词和短语先选意思，再练拼写。进度自动保存，随时回来继续。'}</p>
       <p>{isAccumulation
@@ -377,12 +377,12 @@ export default function Classroom({ library = 'classroom' }: { library?: Vocabul
               const correct = option === current.translation
               const selected = feedback === option
               return <Button key={option} block disabled={busy} size="large" className="classroom-option"
-                style={feedback ? { background: correct ? '#f6ffed' : selected ? '#fff1f0' : undefined,
-                  borderColor: correct ? '#b7eb8f' : selected ? '#ffa39e' : undefined } : {}}
+                style={feedback ? { background: correct ? 'var(--workspace-success-bg)' : selected ? 'var(--workspace-error-bg)' : undefined,
+                  borderColor: correct ? 'var(--workspace-success-line)' : selected ? 'var(--workspace-error-line)' : undefined } : {}}
                 onClick={() => submit('choice', option)}>
                 <span className="classroom-option-number">{index + 1}</span>{current.option_labels?.[index] || option}
-                {feedback && correct && <CheckCircleFilled style={{ color: '#52c41a', marginLeft: 8 }} />}
-                {feedback && selected && !correct && <CloseCircleFilled style={{ color: '#f5222d', marginLeft: 8 }} />}
+                {feedback && correct && <CheckCircleFilled style={{ color: 'var(--workspace-success)', marginLeft: 8 }} />}
+                {feedback && selected && !correct && <CloseCircleFilled style={{ color: 'var(--workspace-error)', marginLeft: 8 }} />}
               </Button>
             })}
           </div>
@@ -405,7 +405,7 @@ export default function Classroom({ library = 'classroom' }: { library?: Vocabul
           <p className="classroom-note">按词条原样填写，sb / sth 等占位写法保留；大小写和多余空格不影响判断。</p>
         </div>}
         {current.stage === 'done' && <div className="classroom-prompt practice-stage" role="status">
-          {current.rating === 'good' ? <CheckCircleFilled style={{ color: '#52c41a', fontSize: 44 }} /> : <CloseCircleFilled style={{ color: '#e6a23c', fontSize: 44 }} />}
+          {current.rating === 'good' ? <CheckCircleFilled style={{ color: 'var(--workspace-success)', fontSize: 44 }} /> : <CloseCircleFilled style={{ color: 'var(--workspace-warning)', fontSize: 44 }} />}
           <h2>{current.rating === 'good' ? '选择和拼写全部正确' : current.rating === 'hard' ? '拼写已纠正，继续巩固' : '继续练习，加深记忆'}</h2>
           <div className="classroom-meaning">{current.english}
             {current.item_type === 'word' && <PartOfSpeech value={current.part_of_speech} />}</div><p>{current.translation}</p>
@@ -434,7 +434,7 @@ export default function Classroom({ library = 'classroom' }: { library?: Vocabul
     </div>
     <div className="classroom-stats">
       <Card size="small"><Statistic title="当前范围词汇" value={wordCount} suffix="条" /></Card>
-      <Card size="small"><Statistic title="错题本" value={mistakeCount} suffix="条" valueStyle={{ color: '#c96b3a' }} /></Card>
+      <Card size="small"><Statistic title="错题本" value={mistakeCount} suffix="条" valueStyle={{ color: 'var(--workspace-warning)' }} /></Card>
       <Card size="small"><Statistic title="当前轮次完成" value={round?.completed || 0} suffix={`/ ${round?.total || 0}`} /></Card>
     </div>
     <div className="classroom-navigation">

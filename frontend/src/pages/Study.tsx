@@ -27,9 +27,9 @@ type Stage = 'choice' | 'spell' | 'done'
 type Source = 'normal' | 'mistake'
 
 const RATING_LABEL: Record<string, { text: string; color: string }> = {
-  good: { text: '回答正确 · 认识', color: '#52c41a' },
-  hard: { text: '拼写有误 · 模糊', color: '#e6a23c' },
-  again: { text: '回答错误 · 不认识', color: '#f5222d' },
+  good: { text: '回答正确 · 认识', color: 'var(--workspace-success)' },
+  hard: { text: '拼写有误 · 模糊', color: 'var(--workspace-warning)' },
+  again: { text: '回答错误 · 不认识', color: 'var(--workspace-error)' },
 }
 
 function isWord(itemType: string) {
@@ -345,7 +345,7 @@ export default function Study({ itemType }: { itemType: 'word' | 'phrase' }) {
             {currentCard.status === 'new' ? <Tag color="geekblue">新词</Tag> : <Tag color="orange">复习</Tag>}
             {currentCard.in_mistake_book && <Tag color="volcano">错题连对 {currentCard.mistake_consec}/3</Tag>}
           </Space>
-          <span style={{ color: '#bbb', fontSize: 12.5 }}>{queueIdx + 1} / {cards.length} · 本轮完成 {sessionDone}</span>
+          <span style={{ color: 'var(--workspace-subtle)', fontSize: 12.5 }}>{queueIdx + 1} / {cards.length} · 本轮完成 {sessionDone}</span>
         </div>
         <Progress percent={Math.round((queueIdx / Math.max(cards.length, 1)) * 100)} size={['100%', 5]} showInfo={false} className="study-progress" />
 
@@ -360,17 +360,17 @@ export default function Study({ itemType }: { itemType: 'word' | 'phrase' }) {
               <div style={{ marginTop: 8, fontSize: 14, display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 4 }}>
                 <AccentButtons word={currentCard.headword || currentCard.text || ''} />
               </div>
-              <div style={{ color: '#bbb', fontSize: 12.5, marginTop: 10 }}>选择正确的{isW ? '中文释义' : '释义'}（快捷键 1-4）</div>
+              <div style={{ color: 'var(--workspace-subtle)', fontSize: 12.5, marginTop: 10 }}>选择正确的{isW ? '中文释义' : '释义'}（快捷键 1-4）</div>
             </div>
             <div className="practice-options">
               {(currentCard.options || []).map((opt, i) => {
                 const isPicked = picked === opt
                 const isAnswer = opt === currentCard.answer
-                let bg = '#fff', bd = '#d9dce1'
+                let bg = 'var(--workspace-surface)', bd = 'var(--workspace-strong-line)'
                 if (picked) {
-                  if (isAnswer) { bg = '#f6ffed'; bd = '#b7eb8f' }       // 正确答案：绿
-                  else if (isPicked) { bg = '#fff1f0'; bd = '#ffa39e' }   // 选错：红
-                  else bg = '#fafafa'
+                  if (isAnswer) { bg = 'var(--workspace-success-bg)'; bd = 'var(--workspace-success-line)' }       // 正确答案：绿
+                  else if (isPicked) { bg = 'var(--workspace-error-bg)'; bd = 'var(--workspace-error-line)' }   // 选错：红
+                  else bg = 'var(--workspace-raised)'
                 }
                 return (
                   <Button
@@ -378,10 +378,10 @@ export default function Study({ itemType }: { itemType: 'word' | 'phrase' }) {
                     style={{ background: bg, borderColor: bd }}
                     onClick={() => pick(opt)}
                   >
-                    <span style={{ color: '#999', marginRight: 10, fontSize: 12 }}>{i + 1}</span>
+                    <span style={{ color: 'var(--workspace-subtle)', marginRight: 10, fontSize: 12 }}>{i + 1}</span>
                     {opt}
-                    {picked && isAnswer && <CheckCircleFilled style={{ color: '#52c41a', float: 'right', marginTop: 4 }} />}
-                    {picked && isPicked && !isAnswer && <CloseCircleFilled style={{ color: '#f5222d', float: 'right', marginTop: 4 }} />}
+                    {picked && isAnswer && <CheckCircleFilled style={{ color: 'var(--workspace-success)', float: 'right', marginTop: 4 }} />}
+                    {picked && isPicked && !isAnswer && <CloseCircleFilled style={{ color: 'var(--workspace-error)', float: 'right', marginTop: 4 }} />}
                   </Button>
                 )
               })}
@@ -398,10 +398,10 @@ export default function Study({ itemType }: { itemType: 'word' | 'phrase' }) {
               <div style={{ marginTop: 6, display: 'flex', justifyContent: 'center' }}>
                 <AccentButtons word={currentCard.headword || ''} />
               </div>
-              <div style={{ color: '#999', fontSize: 13, marginTop: 6 }}>
+              <div style={{ color: 'var(--workspace-subtle)', fontSize: 13, marginTop: 6 }}>
                 {choiceRight ? '拼写这个单词' : '选择有误，拼写一下加深记忆'}
               </div>
-              <div style={{ marginTop: 10, fontSize: 18, letterSpacing: 4, color: '#3562a7', fontFamily: 'monospace' }}>
+              <div style={{ marginTop: 10, fontSize: 18, letterSpacing: 4, color: 'var(--workspace-accent)', fontFamily: 'monospace' }}>
                 {spellWrong ? currentCard.headword : spellHint}
                 <PartOfSpeech value={currentCard.part_of_speech} />
               </div>
@@ -437,10 +437,10 @@ export default function Study({ itemType }: { itemType: 'word' | 'phrase' }) {
                 {rating === 'good' ? '🎉' : rating === 'hard' ? '😅' : '💪'}
               </div>
               <div style={{ fontSize: 16, fontWeight: 700, color: meta.color, marginBottom: 6 }}>{meta.text}</div>
-              <div style={{ color: '#666', fontSize: 14 }}>
+              <div style={{ color: 'var(--workspace-muted)', fontSize: 14 }}>
                 <b>{currentCard.headword || currentCard.text}</b>
                 {isW && <PartOfSpeech value={currentCard.part_of_speech} />}
-                <span style={{ margin: '0 8px', color: '#ddd' }}>|</span>
+                <span style={{ margin: '0 8px', color: 'var(--workspace-strong-line)' }}>|</span>
                 {currentCard.answer}
               </div>
               <div style={{ marginTop: 10 }}>
@@ -456,7 +456,7 @@ export default function Study({ itemType }: { itemType: 'word' | 'phrase' }) {
           )
         })()}
 
-        <div style={{ textAlign: 'center', color: '#bbb', fontSize: 12.5, marginTop: 12 }}>
+        <div style={{ textAlign: 'center', color: 'var(--workspace-subtle)', fontSize: 12.5, marginTop: 12 }}>
           {isW ? '快捷键：1-4 选择 · Enter 提交拼写/下一张' : '快捷键：1-4 选择 · 答对自动进入下一张'}
         </div>
       </>
@@ -489,13 +489,13 @@ export default function Study({ itemType }: { itemType: 'word' | 'phrase' }) {
           <Statistic title="词库总量" value={bookInfo?.total_items ?? 0} valueStyle={{ fontSize: 22 }} />
         </div>
         <div className="panel">
-          <Statistic title="已开始学习" value={bookInfo?.started ?? 0} valueStyle={{ fontSize: 22, color: '#3562a7' }} />
+          <Statistic title="已开始学习" value={bookInfo?.started ?? 0} valueStyle={{ fontSize: 22, color: 'var(--workspace-accent)' }} />
         </div>
         <div className="panel">
-          <Statistic title="已掌握" value={bookInfo?.mastered ?? 0} valueStyle={{ fontSize: 22, color: '#52c41a' }} />
+          <Statistic title="已掌握" value={bookInfo?.mastered ?? 0} valueStyle={{ fontSize: 22, color: 'var(--workspace-success)' }} />
         </div>
         <div className="panel">
-          <Statistic title="错题本" value={mistakes.length} valueStyle={{ fontSize: 22, color: mistakes.length ? '#f5222d' : undefined }} />
+          <Statistic title="错题本" value={mistakes.length} valueStyle={{ fontSize: 22, color: mistakes.length ? 'var(--workspace-error)' : undefined }} />
         </div>
       </div>
 
@@ -503,7 +503,7 @@ export default function Study({ itemType }: { itemType: 'word' | 'phrase' }) {
         style={{ marginBottom: 10 }}
         options={[
           { label: <span>学习{totalQueue > 0 && source === 'normal' && <Badge count={totalQueue} size="small" style={{ marginLeft: 6 }} />}</span>, value: 'study' },
-          { label: <span>错题本{mistakes.length > 0 && <Badge count={mistakes.length} size="small" color="#f5222d" style={{ marginLeft: 6 }} />}</span>, value: 'mistake' },
+          { label: <span>错题本{mistakes.length > 0 && <Badge count={mistakes.length} size="small" color="var(--workspace-error)" style={{ marginLeft: 6 }} />}</span>, value: 'mistake' },
           { label: '测验', value: 'quiz' },
           { label: '词表', value: 'browse' },
         ]}
@@ -534,7 +534,7 @@ export default function Study({ itemType }: { itemType: 'word' | 'phrase' }) {
         <div style={{ maxWidth: 720, margin: '0 auto' }}>
           <Card size="small" style={{ marginBottom: 12 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 10 }}>
-              <span style={{ color: '#777', fontSize: 13.5 }}>
+              <span style={{ color: 'var(--workspace-muted)', fontSize: 13.5 }}>
                 答错即进入错题本；连对 <b>3</b> 次（单词需选择与拼写都正确）自动移出。
               </span>
               <Button type="primary" danger disabled={mistakes.length === 0}
@@ -548,19 +548,19 @@ export default function Study({ itemType }: { itemType: 'word' | 'phrase' }) {
             {mistakes.length === 0 ? (
               <Empty description="错题本已清空 🎉" style={{ margin: '24px 0' }} />
             ) : mistakes.map((m) => (
-              <div key={m.card_id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 4px', borderBottom: '1px solid #f4f5f7' }}>
+              <div key={m.card_id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 4px', borderBottom: '1px solid var(--workspace-raised)' }}>
                 <span style={{ minWidth: 140, fontWeight: 600 }}>{m.headword || m.text}
                   {isW && <PartOfSpeech value={m.part_of_speech} />}
                 </span>
-                <span style={{ flex: 1, color: '#666', fontSize: 13.5 }}>{m.translation?.split('\n')[0]}</span>
+                <span style={{ flex: 1, color: 'var(--workspace-muted)', fontSize: 13.5 }}>{m.translation?.split('\n')[0]}</span>
                 <span style={{ fontSize: 12.5 }}>
                   {[0, 1, 2].map((i) => (
                     <span key={i} style={{
                       display: 'inline-block', width: 10, height: 10, borderRadius: '50%',
-                      marginRight: 4, background: (m.mistake_consec || 0) > i ? '#52c41a' : '#e8e8e8',
+                      marginRight: 4, background: (m.mistake_consec || 0) > i ? 'var(--workspace-success)' : 'var(--workspace-raised)',
                     }} />
                   ))}
-                  <span style={{ color: '#999', marginLeft: 6 }}>连对 {m.mistake_consec}/3</span>
+                  <span style={{ color: 'var(--workspace-subtle)', marginLeft: 6 }}>连对 {m.mistake_consec}/3</span>
                 </span>
               </div>
             ))}
@@ -575,7 +575,7 @@ export default function Study({ itemType }: { itemType: 'word' | 'phrase' }) {
             <Empty description="先去学习几个词再来测验吧" style={{ marginTop: 60 }} />
           ) : quizIdx >= quiz.length ? (
             <Card style={{ textAlign: 'center', padding: 30 }}>
-              <ThunderboltOutlined style={{ fontSize: 40, color: '#3562a7' }} />
+              <ThunderboltOutlined style={{ fontSize: 40, color: 'var(--workspace-accent)' }} />
               <Statistic title="本轮正确率" value={quizRight} suffix={`/ ${quiz.length}`} style={{ margin: '12px 0' }} />
               <Space>
                 <Button type="primary" onClick={loadQuiz}>再来一轮</Button>
@@ -584,7 +584,7 @@ export default function Study({ itemType }: { itemType: 'word' | 'phrase' }) {
             </Card>
           ) : (
             <Card>
-              <div style={{ color: '#999', fontSize: 12.5, marginBottom: 8 }}>
+              <div style={{ color: 'var(--workspace-subtle)', fontSize: 12.5, marginBottom: 8 }}>
                 {quizIdx + 1} / {quiz.length} · 已对 {quizRight}
               </div>
               <div style={{ fontSize: 28, fontWeight: 700, textAlign: 'center', margin: '18px 0 24px' }}>
@@ -599,9 +599,9 @@ export default function Study({ itemType }: { itemType: 'word' | 'phrase' }) {
                 {quiz[quizIdx].options.map((opt: string) => {
                   const picked = quizPicked === opt
                   const correct = opt === quiz[quizIdx].answer
-                  let bg = '#fff'
-                  if (quizPicked && correct) bg = '#f6ffed'
-                  else if (picked && !correct) bg = '#fff1f0'
+                  let bg = 'var(--workspace-surface)'
+                  if (quizPicked && correct) bg = 'var(--workspace-success-bg)'
+                  else if (picked && !correct) bg = 'var(--workspace-error-bg)'
                   return (
                     <Button
                       key={opt} block size="large"
@@ -619,7 +619,7 @@ export default function Study({ itemType }: { itemType: 'word' | 'phrase' }) {
               </Space>
               {quizPicked && (
                 <div style={{ marginTop: 16, textAlign: 'center' }}>
-                  <div style={{ color: '#666', fontSize: 13, marginBottom: 10, whiteSpace: 'pre-wrap' }}>
+                  <div style={{ color: 'var(--workspace-muted)', fontSize: 13, marginBottom: 10, whiteSpace: 'pre-wrap' }}>
                     {quiz[quizIdx].full_translation}
                   </div>
                   <Button type="primary" onClick={() => { setQuizIdx((i) => i + 1); setQuizPicked(null) }}>
@@ -649,14 +649,14 @@ export default function Study({ itemType }: { itemType: 'word' | 'phrase' }) {
               value={statusFilter}
               onChange={(v) => { setStatusFilter(v as string); setPage(1) }}
             />
-            <span style={{ color: '#bbb', fontSize: 13, lineHeight: '32px' }}>共 {browseData?.total ?? 0} 张卡片</span>
+            <span style={{ color: 'var(--workspace-subtle)', fontSize: 13, lineHeight: '32px' }}>共 {browseData?.total ?? 0} 张卡片</span>
           </div>
           {(browseData?.items || []).map((c: StudyCard) => (
             <div
               key={c.card_id}
               style={{
                 display: 'flex', alignItems: 'center', gap: 12, padding: '10px 8px',
-                borderBottom: '1px solid #f4f5f7',
+                borderBottom: '1px solid var(--workspace-raised)',
               }}
             >
               <span style={{ minWidth: 150, fontWeight: 600 }}>{c.headword || c.text}
@@ -664,7 +664,7 @@ export default function Study({ itemType }: { itemType: 'word' | 'phrase' }) {
                 {isW && <AmericanPhonetic value={c.phonetic_us} />}
               </span>
               <AccentButtons word={c.headword || c.text || ''} />
-              <span style={{ flex: 1, color: '#555', fontSize: 13.5 }}>{c.translation?.split('\n')[0]}</span>
+              <span style={{ flex: 1, color: 'var(--workspace-muted)', fontSize: 13.5 }}>{c.translation?.split('\n')[0]}</span>
               {c.in_mistake_book && <Tag color="volcano">错题</Tag>}
               <Tag color={c.status === 'new' ? 'blue' : c.status === 'learning' ? 'orange' : 'green'}>
                 {c.status === 'new' ? '新词' : c.status === 'learning' ? '学习中' : '复习中'}
@@ -672,7 +672,7 @@ export default function Study({ itemType }: { itemType: 'word' | 'phrase' }) {
               <Tooltip title="收藏">
                 <Button
                   type="text" size="small"
-                  icon={c.starred ? <StarFilled style={{ color: '#faad14' }} /> : <StarOutlined />}
+                  icon={c.starred ? <StarFilled style={{ color: 'var(--workspace-warning)' }} /> : <StarOutlined />}
                   onClick={() => toggleStar(c.card_id)}
                 />
               </Tooltip>

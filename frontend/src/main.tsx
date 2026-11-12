@@ -1,11 +1,13 @@
-import React, { useSyncExternalStore } from 'react'
+import React, { useLayoutEffect, useMemo, useState, useSyncExternalStore } from 'react'
 import ReactDOM from 'react-dom/client'
 import { ConfigProvider } from 'antd'
 import zhCN from 'antd/locale/zh_CN'
 import { BrowserRouter } from 'react-router-dom'
 import App from './App'
+import { appearanceKey, readAppearance, workspaceTheme } from './appearance'
 import ErrorBoundary from './ErrorBoundary'
 import './global.css'
+import './workspace.css'
 
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)')
 
@@ -16,23 +18,26 @@ function subscribeToMotion(onChange: () => void) {
 
 function Root() {
   const motion = useSyncExternalStore(subscribeToMotion, () => !reducedMotion.matches)
+  const [appearance, setAppearance] = useState(readAppearance)
+  const config = useMemo(() => workspaceTheme(appearance, motion), [appearance, motion])
+
+  useLayoutEffect(() => {
+    document.documentElement.dataset.appearance = appearance
+    ConfigProvider.config({ holderRender: children => <ConfigProvider theme={config}>{children}</ConfigProvider> })
+    try {
+      localStorage.setItem(appearanceKey, appearance)
+    } catch {
+      // 本地存储不可用时，当前页面仍可切换外观。
+    }
+  }, [appearance, config])
 
   return (
-    <ConfigProvider
-      locale={zhCN}
-      theme={{
-        token: {
-          colorPrimary: '#285a96',
-          colorText: '#192d42',
-          borderRadius: 8,
-          fontSize: 14,
-          motion,
-        },
-      }}
-    >
+    <ConfigProvider locale={zhCN} theme={config}>
       <BrowserRouter>
         <ErrorBoundary>
-          <App />
+          <App appearance={appearance} onAppearanceChange={() => {
+            setAppearance(current => current === 'dark' ? 'light' : 'dark')
+          }} />
         </ErrorBoundary>
       </BrowserRouter>
     </ConfigProvider>

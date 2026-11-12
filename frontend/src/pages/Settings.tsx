@@ -182,13 +182,13 @@ export default function Settings() {
               key={p.id}
               style={{
                 display: 'flex', alignItems: 'center', gap: 12, padding: '12px 4px',
-                borderBottom: '1px solid #f4f5f7', flexWrap: 'wrap',
+                borderBottom: '1px solid var(--workspace-raised)', flexWrap: 'wrap',
               }}
             >
               <div style={{ minWidth: 130 }}>
                 <b>{p.name}</b> {p.is_default && <Tag color="blue">默认</Tag>}
               </div>
-              <div style={{ flex: 1, minWidth: 200, color: '#777', fontSize: 13 }}>
+              <div style={{ flex: 1, minWidth: 200, color: 'var(--workspace-muted)', fontSize: 13 }}>
                 {p.service_type === 'codex' ? <><ApiOutlined /> 模型 <Tag>{p.model || '本机默认模型'}</Tag> · 推理强度 {EFFORT_LABELS[p.reasoning_effort] || '模型默认'} · ChatGPT 登录
                   <div style={{ marginTop: 4 }}>{codexStatus?.message || '正在检查登录状态…'}</div>
                   <div style={{ marginTop: 4 }}>连接测试：{codexConnection ? codexConnection.message : '尚未测试'}</div></> : <><ApiOutlined /> {p.base_url} · 模型 <Tag>{p.model || '未设置'}</Tag> · Key {p.api_key_masked || '未设置'}
@@ -216,7 +216,7 @@ export default function Settings() {
                   <span style={{ width: 170 }}>每日新学单词上限</span>
                   <InputNumber aria-label="每日新学单词上限" min={5} max={200} value={Number(prefs.daily_new_words)}
                     onChange={(v) => v && savePrefs({ daily_new_words: v })} />
-                  <span style={{ color: '#999', fontSize: 12.5 }}>每天最多安排多少个新词进入学习队列</span>
+                  <span style={{ color: 'var(--workspace-subtle)', fontSize: 12.5 }}>每天最多安排多少个新词进入学习队列</span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
                   <span style={{ width: 170 }}>每日新学短语上限</span>
@@ -226,7 +226,7 @@ export default function Settings() {
                 <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
                   <span style={{ width: 170 }}>模拟批改（调试用）</span>
                   <Switch aria-label="模拟批改" checked={prefs.mock_mode === '1'} onChange={(v) => savePrefs({ mock_mode: v })} />
-                  <span style={{ color: '#999', fontSize: 12.5 }}>开启后提交练习不调用 AI，立即返回示例批改</span>
+                  <span style={{ color: 'var(--workspace-subtle)', fontSize: 12.5 }}>开启后提交练习不调用 AI，立即返回示例批改</span>
                 </div>
               </Space>
             )}
@@ -237,16 +237,16 @@ export default function Settings() {
                 <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
                   <span style={{ width: 170 }}>自动发音</span>
                   <Switch aria-label="自动发音" checked={prefs.auto_speak !== '0'} onChange={(v) => savePrefs({ auto_speak: v })} />
-                  <span style={{ color: '#999', fontSize: 12.5 }}>背单词/背短语换到下一张卡时自动朗读美式发音</span>
+                  <span style={{ color: 'var(--workspace-subtle)', fontSize: 12.5 }}>背单词/背短语换到下一张卡时自动朗读美式发音</span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
                   <span style={{ width: 170 }}>发音音量</span>
                   <VolumeControl />
-                  <span style={{ color: '#999', fontSize: 12.5 }}>适用于所有词汇发音，自动记住本浏览器的设置</span>
+                  <span style={{ color: 'var(--workspace-subtle)', fontSize: 12.5 }}>适用于所有词汇发音，自动记住本浏览器的设置</span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
                   <span style={{ width: 170 }}>自然发音</span>
-                  <span style={{ color: '#777', fontSize: 13 }}>统一美式女声 · 缩写按全称朗读</span>
+                  <span style={{ color: 'var(--workspace-muted)', fontSize: 13 }}>统一美式女声 · 缩写按全称朗读</span>
                   <Button onClick={() => speak('have / get a shot at (doing) sth', 'us')}>试听</Button>
                 </div>
               </Space>
@@ -257,7 +257,7 @@ export default function Settings() {
 
       <details className="panel settings-about">
         <summary>关于平台与本地数据</summary>
-        <div style={{ color: '#777', fontSize: 13, lineHeight: 2 }}>
+        <div style={{ color: 'var(--workspace-muted)', fontSize: 13, lineHeight: 2 }}>
           英语学习平台 · 本地个人使用版<br />
           真题库：2019.12–2025.12 六级 38 套 + 2020–2026 考研英语二 7 年（翻译与写作题）<br />
           词库：ECDICT 开源词典（MIT License）筛选 · 六级 5407 词 / 考研 4801 词 / 考试短语 442 条<br />
@@ -277,7 +277,7 @@ export default function Settings() {
             <Select options={[{ value: '', label: '模型默认' }, ...codexLevels.map(value => ({ value, label: EFFORT_LABELS[value] || value }))]} />
           </Form.Item>
         </Form>
-        <div style={{ color: '#778396', fontSize: 12 }}>设置仅用于本平台批改，不更改 Codex 自身的全局配置。模型列表来自本机缓存，账号权限和额度以实际测试为准。</div>
+        <div style={{ color: 'var(--workspace-muted)', fontSize: 12 }}>设置仅用于本平台批改，不更改 Codex 自身的全局配置。模型列表来自本机缓存，账号权限和额度以实际测试为准。</div>
       </Modal>
 
       <Modal
@@ -286,7 +286,7 @@ export default function Settings() {
       >
         <Form form={form} layout="vertical" initialValues={{ is_default: false, service_type: 'custom', reasoning_mode: 'auto', reasoning_effort: '' }}>
           <Space direction="vertical" size={4} style={{ width: '100%', marginBottom: 8 }}>
-            <span style={{ fontSize: 12.5, color: '#999' }}>快速填充：</span>
+            <span style={{ fontSize: 12.5, color: 'var(--workspace-subtle)' }}>快速填充：</span>
             <Space wrap>
               {presets.map((ps) => (
                 <Button key={ps.name} size="small" onClick={() => form.setFieldsValue({ name: ps.name, service_type: ps.service_type,
@@ -323,7 +323,7 @@ export default function Settings() {
             catch (e: any) { message.error(e.message) }
             finally { setRefreshing(false) }
           }}>刷新已保存服务的模型列表</Button>
-          {!editing && <div style={{ color: '#999', fontSize: 12, marginBottom: 12 }}>保存配置后可在线刷新模型列表。</div>}
+          {!editing && <div style={{ color: 'var(--workspace-subtle)', fontSize: 12, marginBottom: 12 }}>保存配置后可在线刷新模型列表。</div>}
           <Form.Item name="reasoning_mode" label="推理模式" extra={caps.note}>
             <Select options={caps.modes.map(value => ({ value, label: MODE_LABELS[value] || value }))}
               onChange={value => { if (value === 'disabled') form.setFieldValue('reasoning_effort', '') }} />

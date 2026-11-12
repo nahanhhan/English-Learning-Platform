@@ -28,7 +28,7 @@ export default function ProviderSelect({ value, onChange, disabled }: {
         { value: 0, label: defaultProvider ? `全局默认：${defaultProvider.name} · ${defaultProvider.service_type === 'codex' ? (defaultProvider.model || '本机默认模型') : defaultProvider.model}` : '全局默认（尚未配置）' },
         ...providers.map(p => ({ value: p.id, label: `${p.name} · ${p.service_type === 'codex' ? (p.model || '本机默认模型') : p.model}` })),
       ]} />
-    {current && <span style={{ fontSize: 12, color: '#778396' }}>
+    {current && <span style={{ fontSize: 12, color: 'var(--workspace-muted)' }}>
       <Tag>{MODE_LABELS[current.reasoning_mode] || '模型默认'}</Tag>
       {current.reasoning_effort && `强度：${EFFORT_LABELS[current.reasoning_effort] || current.reasoning_effort}`}
     </span>}

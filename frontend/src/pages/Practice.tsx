@@ -228,7 +228,7 @@ export default function Practice({ mode }: { mode: Mode }) {
           </div>
         </div>
         <Space wrap>
-          <span style={{ fontSize: 13, color: '#888' }}>自由练习</span>
+          <span style={{ fontSize: 13, color: 'var(--workspace-muted)' }}>自由练习</span>
           <Switch aria-label="自由练习" checked={freeMode} disabled={submitting} onChange={value => {
             setFreeMode(value)
             setSubmission(null)
@@ -330,7 +330,7 @@ export default function Practice({ mode }: { mode: Mode }) {
                         {running ? '暂停' : seconds ? '继续' : '开始'} {mmss}
                       </Button>
                     )}
-                    <span style={{ fontSize: 12, color: '#888' }}>计时</span>
+                    <span style={{ fontSize: 12, color: 'var(--workspace-muted)' }}>计时</span>
                     <Switch size="small" checked={countdownOn} onChange={(v) => { setCountdownOn(v); if (!v) { setRunning(false); setSeconds(0) } }} />
                   </Space>
                 </div>
@@ -359,8 +359,8 @@ export default function Practice({ mode }: { mode: Mode }) {
               <div className="practice-question-heading">
                 <h2>我的作答</h2>
                 <Space size={14}>
-                  {isWriting && <span style={{ fontSize: 12.5, color: wordCount >= 150 && wordCount <= 200 ? '#52c41a' : '#999' }}>字数 {wordCount}（建议 {wordRange}）</span>}
-                  {!isWriting && <span style={{ fontSize: 12.5, color: '#999' }}>字数 {wordCount}</span>}
+                  {isWriting && <span style={{ fontSize: 12.5, color: wordCount >= 150 && wordCount <= 200 ? 'var(--workspace-success)' : 'var(--workspace-subtle)' }}>字数 {wordCount}（建议 {wordRange}）</span>}
+                  {!isWriting && <span style={{ fontSize: 12.5, color: 'var(--workspace-subtle)' }}>字数 {wordCount}</span>}
                 </Space>
               </div>
               <Input.TextArea
@@ -412,10 +412,10 @@ export default function Practice({ mode }: { mode: Mode }) {
         <div style={{ maxHeight: '56vh', overflow: 'auto' }}>
           {history.length === 0 && <Empty description="暂无记录" />}
           {history.map((h) => (
-            <div key={h.id} style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 4px', borderBottom: '1px solid #f0f0f0' }}>
+            <div key={h.id} style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 4px', borderBottom: '1px solid var(--workspace-line)' }}>
               <div>
                 <div style={{ fontWeight: 500, fontSize: 13.5 }}>{h.title || '自由练习'}</div>
-                <div style={{ fontSize: 12, color: '#999' }}>
+                <div style={{ fontSize: 12, color: 'var(--workspace-subtle)' }}>
                   {Q_TYPE_LABEL[h.q_type] || h.q_type} · {h.word_count} 词 · {h.created_at?.slice(5, 16)}
                 </div>
               </div>

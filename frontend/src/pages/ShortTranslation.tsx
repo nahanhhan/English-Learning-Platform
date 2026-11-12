@@ -44,11 +44,11 @@ function Feedback({ attempt, run, collect }: { attempt: ShortAttempt; run: Short
     <div className="short-versions">
       <Card size="small" title="在你的译文上修改"><p className="short-prose short-english">{result.improved_version}</p></Card>
       <Card size="small" title="题库参考译文"><p className="short-prose short-english">{run.reference}</p>
-        <div style={{ color: '#8c96a7', fontSize: 12 }}>参考译文不是唯一正确答案，准确自然的不同译法同样认可。</div></Card>
+        <div style={{ color: 'var(--workspace-subtle)', fontSize: 12 }}>参考译文不是唯一正确答案，准确自然的不同译法同样认可。</div></Card>
     </div>
     {run.training_points.length > 0 && <Card title="本题训练重点" size="small"><Space wrap>{run.training_points.map(p => <Tag key={p}>{p}</Tag>)}</Space></Card>}
     {result.key_notes.length > 0 && <Card title="关键表达与用法" size="small">{result.key_notes.map((note, i) => <div className="short-expression" key={i}>
-      <div><b>{note.expr}</b><p>{note.translation}</p><p style={{ color: '#778396' }}>{note.note}</p></div>
+      <div><b>{note.expr}</b><p>{note.translation}</p><p style={{ color: 'var(--workspace-muted)' }}>{note.note}</p></div>
       <Button size="small" icon={<StarOutlined />} onClick={() => collect(note)}>加入平时积累</Button>
     </div>)}</Card>}
   </div>
@@ -230,7 +230,7 @@ export default function ShortTranslation() {
       options={[{ value: '', label: '全部主题' }, ...(stats?.topics || []).map(value => ({ value, label: value }))]} /></div>
 
     {tab === 'practice' && (restoring ? <div style={{ textAlign: 'center', padding: 50 }}><Spin /></div> : !run ?
-      <Card className="short-start"><BookOutlined style={{ fontSize: 36, color: '#3562a7' }} /><h2>从一段短句开始</h2>
+      <Card className="short-start"><BookOutlined style={{ fontSize: 36, color: 'var(--workspace-accent)' }} /><h2>从一段短句开始</h2>
         <p>每题 1–3 句。整段提交后，查看逐句点评、修改版与参考译文。</p>
         <p>不计时，不限时；答前不展示提示，草稿自动保存。</p>
         <Button type="primary" size="large" onClick={() => begin()} loading={busy}>开始随机练习</Button></Card> : <div className="short-workspace">
@@ -271,7 +271,7 @@ export default function ShortTranslation() {
       {tab === 'review' && <Alert type="info" showIcon style={{ marginBottom: 16 }} message="独立首答低于 12 分自动收录，也可手动管理。三个不同日期连续独立复习达标后移出；即时修改、模拟批改不计次，同日最多累计一次达标。" />}
       <Input.Search aria-label="搜索短句题目" placeholder="搜索题号、标题或原文" allowClear value={search} onChange={e => setSearch(e.target.value)} style={{ width: 320, maxWidth: '100%', marginBottom: 16 }} />
       <Table<ShortQuestion> rowKey="id" dataSource={visibleQuestions} scroll={{ x: 730 }} pagination={{ pageSize: 10 }} locale={{ emptyText: <Empty description={tab === 'review' ? '当前没有待复习题目' : '当前筛选没有题目'} /> }} columns={[
-        { title: '题目', key: 'question', render: (_, q) => <><b>{q.id} · {q.title}</b><div style={{ marginTop: 6, color: '#778396' }}>{q.sentences.join('')}</div></> },
+        { title: '题目', key: 'question', render: (_, q) => <><b>{q.id} · {q.title}</b><div style={{ marginTop: 6, color: 'var(--workspace-muted)' }}>{q.sentences.join('')}</div></> },
         { title: '主题', dataIndex: 'topic', width: 100 },
         { title: '首答', width: 85, render: (_, q) => q.first_score == null ? '未完成' : `${q.first_score}/15` },
         { title: '状态', width: 95, render: (_, q) => q.in_review ? <Tag color="orange">复习 {q.streak}/3</Tag> : <Tag color={q.completed ? 'green' : 'default'}>{q.completed ? q.streak >= 3 ? '已巩固' : '已练习' : '未做'}</Tag> },
@@ -297,7 +297,7 @@ export default function ShortTranslation() {
         <Form.Item name="translation" label="中文释义" rules={[{ required: true, whitespace: true, message: '请输入简明中文释义' }]}><Input.TextArea rows={2} maxLength={5000} /></Form.Item>
         <Form.Item name="item_type" label="类型"><Select options={[{ value: 'word', label: '单词' }, { value: 'phrase', label: '短语 / 表达' }]} /></Form.Item>
         <Form.Item name="group_id" label="分组"><Select options={[{ value: 0, label: '短句翻译积累（默认分组）' }, ...groups.filter(g => g.name !== '短句翻译积累').map(g => ({ value: g.id, label: g.name }))]} /></Form.Item>
-      </Form><p style={{ color: '#778396' }}>保留原题来源；积累库中同类型的重复词条跳过，不覆盖已有内容和学习进度。</p>
+      </Form><p style={{ color: 'var(--workspace-muted)' }}>保留原题来源；积累库中同类型的重复词条跳过，不覆盖已有内容和学习进度。</p>
     </Modal>
   </div>
 }
