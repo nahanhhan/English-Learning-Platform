@@ -3,7 +3,7 @@
 :root {
   color-scheme: dark;
   --workspace-bg: #131316;
-  --workspace-sidebar: #0e0e10;
+  --workspace-sidebar: #0b0b0d;
   --workspace-surface: #19191d;
   --workspace-raised: #222227;
   --workspace-line: #2a2a30;
@@ -31,7 +31,7 @@
 :root[data-appearance='light'] {
   color-scheme: light;
   --workspace-bg: #fafafb;
-  --workspace-sidebar: #f3f3f6;
+  --workspace-sidebar: #f0f0f3;
   --workspace-surface: #fff;
   --workspace-raised: #f0f0f3;
   --workspace-line: #e4e4eb;
