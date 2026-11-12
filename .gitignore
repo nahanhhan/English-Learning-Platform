@@ -28,6 +28,7 @@ Thumbs.db
 backend/.recovery-smoke-*/
 shots/
 frontend/*.tsbuildinfo
+backend/target/
 .env
 .env.*
 !.env.example
