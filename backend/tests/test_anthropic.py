@@ -41,7 +41,7 @@ def wire(monkeypatch):
             return value
         def post(self, url, **kwargs): return self._send('post', url, **kwargs)
         def get(self, url, **kwargs): return self._send('get', url, **kwargs)
-    monkeypatch.setattr(client.httpx, 'Client', Client)
+    monkeypatch.setattr(httpx, 'Client', Client)
     return calls, replies
 
 

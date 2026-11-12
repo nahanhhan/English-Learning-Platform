@@ -1,10 +1,6 @@
-import {
-  CalendarOutlined, CheckSquareOutlined, FireOutlined, ReadOutlined,
-} from '@ant-design/icons'
-import { Card, Col, Empty, Progress, Row, Spin, Statistic, Table, Tag } from 'antd'
-import { Suspense, lazy, useEffect, useState } from 'react'
+import { Suspense, lazy, useEffect, useState, type ComponentProps } from 'react'
 import { Link } from 'react-router-dom'
-import { get } from '../api'
+import { get, type BookProgress } from '../api'
 
 const TrendChart = lazy(() => import('../components/TrendChart'))
 
@@ -15,109 +11,119 @@ const BOOK_NAME: Record<string, string> = {
   cet6: '六级核心词', kaoyan: '考研核心词', exam: '考试短语', custom: '我的收藏',
 }
 
+interface RecentPractice {
+  id: number
+  title: string
+  q_type: string
+  score: number | null
+  full_score: number | null
+  status: string
+  created_at: string
+}
+
+interface Overview {
+  streak: number
+  today: { reviews: number; practices: number }
+  due: { words: number; phrases: number }
+  trend: ComponentProps<typeof TrendChart>['trend']
+  word_books: BookProgress[]
+  phrase_books: BookProgress[]
+  recent: RecentPractice[]
+}
+
 export default function Dashboard() {
-  const [data, setData] = useState<any>(null)
+  const [data, setData] = useState<Overview | null>(null)
   const [error, setError] = useState('')
+  const [attempt, setAttempt] = useState(0)
 
   useEffect(() => {
-    get('/api/stats/dashboard').then(setData).catch((e) => setError(e.message))
-  }, [])
+    let active = true
+    get<Overview>('/api/stats/dashboard')
+      .then(result => { if (active) setData(result) })
+      .catch(err => { if (active) setError(err.message) })
+    return () => { active = false }
+  }, [attempt])
 
-  if (error) return <div className="page"><Card>{error}</Card></div>
-  if (!data) return <div className="page" style={{ padding: 100, textAlign: 'center' }}><Spin size="large" /></div>
-
-  const dueTotal = (data.due?.words || 0) + (data.due?.phrases || 0)
+  const dueTotal = data ? data.due.words + data.due.phrases : undefined
+  const metrics = [
+    { label: '连续打卡', value: data?.streak, unit: '天' },
+    { label: '今日复习', value: data?.today.reviews, unit: '次' },
+    { label: '今日练习', value: data?.today.practices, unit: '篇' },
+    { label: '待复习', value: dueTotal, unit: '项' },
+  ]
 
   return (
-    <div className="page">
-      <h1 className="page-title">学习概览</h1>
-      <div className="page-subtitle">坚持就是胜利，今天也要加油 💪</div>
-
-      {/* 顶部统计卡 */}
-      <Row gutter={[14, 14]}>
-        <Col xs={12} md={6}>
-          <Card>
-            <Statistic title="连续打卡" value={data.streak} suffix="天" prefix={<FireOutlined style={{ color: '#fa541c' }} />} />
-          </Card>
-        </Col>
-        <Col xs={12} md={6}>
-          <Card>
-            <Statistic title="今日复习" value={data.today.reviews} suffix="次" prefix={<CheckSquareOutlined style={{ color: '#3562a7' }} />} />
-          </Card>
-        </Col>
-        <Col xs={12} md={6}>
-          <Card>
-            <Statistic title="今日练习" value={data.today.practices} suffix="篇" prefix={<CalendarOutlined style={{ color: '#52c41a' }} />} />
-          </Card>
-        </Col>
-        <Col xs={12} md={6}>
-          <Card>
-            <Statistic title="待复习" value={dueTotal} suffix="项" prefix={<ReadOutlined style={{ color: '#e6a23c' }} />} />
-          </Card>
-        </Col>
-      </Row>
-
-      {/* 快捷入口 */}
-      <div style={{ margin: '14px 0', display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-        <Link to="/practice/translation"><Tag.CheckableTag checked style={{ fontSize: 13 }}>✍️ 练一篇翻译</Tag.CheckableTag></Link>
-        <Link to="/practice/writing"><Tag.CheckableTag checked style={{ fontSize: 13 }}>📝 写一篇作文</Tag.CheckableTag></Link>
-        <Link to="/vocab"><Tag.CheckableTag checked style={{ fontSize: 13 }}>📖 背单词（{data.due.words} 待复习）</Tag.CheckableTag></Link>
-        <Link to="/phrases"><Tag.CheckableTag checked style={{ fontSize: 13 }}>🔗 背短语（{data.due.phrases} 待复习）</Tag.CheckableTag></Link>
+    <div className="page dashboard-page">
+      <header className="page-heading">
+        <h1 className="page-title">学习概览</h1>
+        <time className="dashboard-date">
+          {new Intl.DateTimeFormat('zh-CN', { month: 'long', day: 'numeric', weekday: 'long' }).format(new Date())}
+        </time>
+      </header>
+      <section className="dashboard-summary" aria-label="学习统计" aria-busy={!data && !error}>
+        {metrics.map(({ label, value, unit }) => (
+          <div className="dashboard-metric" key={label}>
+            <span>{label}</span>
+            <div><strong className="dashboard-value">{value ?? '—'}</strong>{value !== undefined && <small>{unit}</small>}</div>
+          </div>
+        ))}
+      </section>
+      {error && (
+        <div className="panel dashboard-error" role="alert">
+          <div><strong>学习统计加载失败</strong><p>{error}</p></div>
+          <button type="button" className="workspace-menu-button" onClick={() => {
+            setError('')
+            setAttempt(current => current + 1)
+          }}>重试</button>
+        </div>
+      )}
+      <nav className="dashboard-actions" aria-label="开始练习">
+        <Link to="/practice/translation">练真题翻译</Link>
+        <Link to="/short-translation">练短句翻译</Link>
+        <Link to="/practice/writing">写一篇作文</Link>
+        <Link to="/vocab">复习单词{data && <span>{data.due.words}</span>}</Link>
+        <Link to="/phrases">复习短语{data && <span>{data.due.phrases}</span>}</Link>
+      </nav>
+      <div className="dashboard-details">
+        <section className="panel dashboard-trend" aria-labelledby="dashboard-trend-title">
+          <h2 id="dashboard-trend-title">成绩趋势</h2>
+          {!data ? <p className="dashboard-placeholder" role="status">{error ? '暂时无法读取成绩' : '正在读取成绩…'}</p>
+            : data.trend.length ? <Suspense fallback={<p className="dashboard-placeholder" role="status">正在绘制趋势…</p>}>
+              <TrendChart trend={data.trend} />
+            </Suspense> : <p className="dashboard-placeholder">完成第一次批改后显示成绩趋势</p>}
+        </section>
+        <section className="panel dashboard-books" aria-labelledby="dashboard-books-title">
+          <h2 id="dashboard-books-title">词书进度</h2>
+          {!data ? <p className="dashboard-placeholder" role="status">{error ? '暂时无法读取进度' : '正在读取进度…'}</p>
+            : [...data.word_books, ...data.phrase_books].map((book, index) => (
+              <div className="dashboard-book" key={`${index < data.word_books.length ? 'word' : 'phrase'}:${book.book}`}>
+                <div><strong>{BOOK_NAME[book.book] || book.book}</strong><span>{book.started} / {book.total_items} 已学</span></div>
+                <progress value={book.started} max={book.total_items || 1} aria-label={`${BOOK_NAME[book.book] || book.book}学习进度`} />
+                <small>已掌握 {book.mastered} · 待复习 {book.due_now}</small>
+              </div>
+            ))}
+        </section>
+        <section className="panel dashboard-recent" aria-labelledby="dashboard-recent-title">
+          <h2 id="dashboard-recent-title">最近练习</h2>
+          {!data ? <p role="status">{error ? '暂时无法读取记录' : '正在读取记录…'}</p> : data.recent.length === 0 ? (
+            <p className="dashboard-placeholder">还没有练习记录</p>
+          ) : (
+            <div className="dashboard-table-scroll">
+              <table className="dashboard-table" aria-labelledby="dashboard-recent-title">
+                <thead><tr><th scope="col">题目</th><th scope="col">类型</th><th scope="col">得分</th><th scope="col">时间</th></tr></thead>
+                <tbody>{data.recent.map(row => (
+                  <tr key={row.id}>
+                    <td>{row.title || '自由练习'}</td>
+                    <td>{Q_TYPE_LABEL[row.q_type] || row.q_type}</td>
+                    <td>{row.score != null ? <strong>{row.score} / {row.full_score}</strong> : row.status === 'failed' ? '失败' : '批改中'}</td>
+                    <td><time dateTime={row.created_at.replace(' ', 'T')}>{row.created_at.slice(5, 16)}</time></td>
+                  </tr>
+                ))}</tbody>
+              </table>
+            </div>
+          )}
+        </section>
       </div>
-
-      <Row gutter={[14, 14]}>
-        {/* 成绩趋势 */}
-        <Col xs={24} lg={14}>
-          <Card title="翻译 / 作文成绩趋势" size="small">
-            {data.trend.length === 0
-              ? <Empty description="完成第一次批改后这里会显示你的分数曲线" style={{ padding: '40px 0' }} />
-              : <Suspense fallback={<div style={{ height: 300, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Spin /></div>}>
-                  <TrendChart trend={data.trend} />
-                </Suspense>}
-          </Card>
-        </Col>
-
-        {/* 词书进度 */}
-        <Col xs={24} lg={10}>
-          <Card title="词书进度" size="small">
-            {[...data.word_books, ...data.phrase_books].map((b: any) => {
-              const pct = b.total_items ? Math.round((b.started / b.total_items) * 100) : 0
-              return (
-                <div key={b.book} style={{ marginBottom: 14 }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, marginBottom: 4 }}>
-                    <span style={{ fontWeight: 600 }}>{BOOK_NAME[b.book] || b.book}</span>
-                    <span style={{ color: '#888' }}>
-                      已学 {b.started} / {b.total_items} · 掌握 {b.mastered} · 待复习 {b.due_now}
-                    </span>
-                  </div>
-                  <Progress percent={pct} size={['100%', 8]} strokeColor={pct >= 80 ? '#52c41a' : '#3562a7'} />
-                </div>
-              )
-            })}
-          </Card>
-        </Col>
-
-        {/* 最近练习 */}
-        <Col span={24}>
-          <Card title="最近练习" size="small">
-            <Table
-              size="small" rowKey="id"
-              dataSource={data.recent}
-              pagination={false}
-              columns={[
-                { title: '题目', dataIndex: 'title', render: (v: string) => v || '自由练习' },
-                { title: '类型', dataIndex: 'q_type', width: 100, render: (v: string) => Q_TYPE_LABEL[v] || v },
-                {
-                  title: '得分', dataIndex: 'score', width: 110,
-                  render: (v: number | null, r: any) =>
-                    v != null ? <b style={{ color: '#3562a7' }}>{v} / {r.full_score}</b> : <Tag>{r.status === 'failed' ? '失败' : '批改中'}</Tag>,
-                },
-                { title: '时间', dataIndex: 'created_at', width: 150, render: (v: string) => v?.slice(5, 16) },
-              ]}
-            />
-          </Card>
-        </Col>
-      </Row>
     </div>
   )
 }

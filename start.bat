@@ -2,6 +2,15 @@
 chcp 65001 >nul
 cd /d "%~dp0"
 echo 正在启动英语学习平台...
-start "" http://127.0.0.1:8930
-backend\.venv\Scripts\python.exe backend\main.py
+if not exist backend\.venv\Scripts\python.exe (
+    echo 尚未安装运行环境，请先运行 setup.bat。
+    pause
+    exit /b 1
+)
+if not exist frontend\dist\index.html (
+    echo 尚未构建网页，请先运行 setup.bat。
+    pause
+    exit /b 1
+)
+backend\.venv\Scripts\python.exe backend\main.py --open-browser
 pause

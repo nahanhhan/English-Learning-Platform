@@ -4,7 +4,6 @@ import re
 import uuid
 from urllib.parse import urlencode
 
-import httpx
 from . import ai_profiles
 
 
@@ -137,6 +136,8 @@ def chat(provider: dict, messages: list, max_tokens: int = 8000,
         from .codex_provider import complete
         return complete(messages, provider.get("deadline"), provider.get("model", ""),
                         provider.get("reasoning_effort", ""))
+    import httpx
+
     session_id = kwargs.pop('session_id', None) or provider.get('session_id') or str(uuid.uuid4())
     try:
         extra = _extra_payload(provider)
@@ -201,6 +202,8 @@ def test_connection(provider: dict) -> tuple[bool, str]:
 
 
 def refresh_models(provider: dict) -> list[dict]:
+    import httpx
+
     kind = ai_profiles.service_type(provider)
     if kind == 'opencode_go':
         url = 'https://opencode.ai/inference/go/v1/models'

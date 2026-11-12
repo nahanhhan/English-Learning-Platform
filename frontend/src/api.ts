@@ -37,6 +37,7 @@ export interface Question {
   chart_display_image?: string
   chart_original_image?: string
   notes: string
+  practice_count?: number
 }
 
 export interface Submission {

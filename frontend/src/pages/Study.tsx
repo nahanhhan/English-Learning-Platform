@@ -350,7 +350,7 @@ export default function Study({ itemType }: { itemType: 'word' | 'phrase' }) {
         <Progress percent={Math.round((queueIdx / Math.max(cards.length, 1)) * 100)} size={['100%', 5]} showInfo={false} className="study-progress" />
 
         {stage === 'choice' && (
-          <Card className="study-practice-card">
+          <Card className="study-practice-card practice-stage">
             <div className="study-prompt">
               <div className="study-headword">
                 {currentCard.headword || currentCard.text}
@@ -390,7 +390,7 @@ export default function Study({ itemType }: { itemType: 'word' | 'phrase' }) {
         )}
 
         {stage === 'spell' && (
-          <Card className="study-practice-card">
+          <Card className="study-practice-card practice-stage">
             <div style={{ textAlign: 'center', marginBottom: 16 }}>
               <div style={{ fontSize: 17, fontWeight: 600, lineHeight: 1.7, whiteSpace: 'pre-wrap' }}>
                 {currentCard.answer}
@@ -409,7 +409,7 @@ export default function Study({ itemType }: { itemType: 'word' | 'phrase' }) {
             <Space.Compact style={{ width: '100%', maxWidth: 420, display: 'flex', margin: '0 auto' }}>
               <Input
                 ref={spellInputRef}
-                size="large" placeholder={spellWrong ? `正确拼写：${currentCard.headword}（重打一遍）` : '输入拼写后回车'}
+                size="large" aria-label="英文拼写" placeholder={spellWrong ? `正确拼写：${currentCard.headword}（重打一遍）` : '输入拼写后回车'}
                 value={spellInput} autoFocus
                 onChange={(e) => setSpellInput(e.target.value)}
                 onPressEnter={submitSpell}
@@ -432,7 +432,7 @@ export default function Study({ itemType }: { itemType: 'word' | 'phrase' }) {
           const enteredBook = cardResult.in_mistake_book && !currentCard.in_mistake_book
           const removedBook = !cardResult.in_mistake_book && currentCard.in_mistake_book
           return (
-            <Card className="study-practice-card" style={{ textAlign: 'center' }}>
+            <Card className="study-practice-card practice-stage" style={{ textAlign: 'center' }}>
               <div style={{ fontSize: 42, marginBottom: 8 }}>
                 {rating === 'good' ? '🎉' : rating === 'hard' ? '😅' : '💪'}
               </div>
@@ -465,7 +465,7 @@ export default function Study({ itemType }: { itemType: 'word' | 'phrase' }) {
 
   return (
     <div className="page study-page">
-      <div className="study-toolbar">
+      <header className="page-heading study-toolbar">
         <div>
           <h1 className="page-title">{isW ? '背单词' : '背短语'}</h1>
           <div className="page-subtitle">
@@ -475,13 +475,13 @@ export default function Study({ itemType }: { itemType: 'word' | 'phrase' }) {
         <Space wrap>
           <VolumeControl />
           <Select
-            style={{ minWidth: 160 }} value={book}
+            aria-label={isW ? '单词词书' : '短语词书'} style={{ minWidth: 160 }} value={book}
             options={books.map((b) => ({ label: nameOf(b.book), value: b.book }))}
             onChange={setBook}
           />
           <Button icon={<PlusOutlined />} onClick={() => setCustomOpen(true)}>添加{isW ? '单词' : '短语'}</Button>
         </Space>
-      </div>
+      </header>
 
       {/* 进度概览 */}
       <div className="study-stats">

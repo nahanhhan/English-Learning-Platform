@@ -120,7 +120,13 @@ export default function ShortTranslation() {
         setRun(data); setPollError('')
         const last = data.attempts[data.attempts.length - 1]
         if (last?.status === 'pending' || last?.status === 'grading') timer = setTimeout(poll, 1500)
-        else { loadData().catch(() => {}); if (last?.status === 'done') resultRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }) }
+        else {
+          loadData().catch(() => {})
+          if (last?.status === 'done') resultRef.current?.scrollIntoView({
+            behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth',
+            block: 'start',
+          })
+        }
       } catch (e: any) {
         if (alive) { setPollError(`读取批改状态失败，作答已保留：${e.message}`); timer = setTimeout(poll, 4000) }
       }
@@ -208,9 +214,9 @@ export default function ShortTranslation() {
     (!search || (q.id + q.title + q.sentences.join('')).toLowerCase().includes(search.toLowerCase())) && (tab !== 'review' || q.in_review))
 
   return <div className="page short-page">
-    <div className="short-toolbar"><div><h1 className="page-title">短句翻译</h1>
+    <header className="page-heading short-toolbar"><div><h1 className="page-title">短句翻译</h1>
       <div className="page-subtitle">中译英强化练习 · 先独立表达，再逐句打磨</div></div>
-      <Button type="primary" icon={<ReloadOutlined />} loading={busy} disabled={grading} onClick={() => begin()}>随机未做题</Button></div>
+      {(run || tab !== 'practice') && <Button type="primary" icon={<ReloadOutlined />} loading={busy} disabled={grading} onClick={() => begin()}>随机未做题</Button>}</header>
     <div className="short-stats">
       <Statistic title="已完成题目" value={stats?.completed || 0} suffix={`/ ${stats?.total || 0}`} />
       <Statistic title="待复习" value={stats?.review || 0} />
@@ -233,17 +239,18 @@ export default function ShortTranslation() {
           <div className="short-question-meta">{run.question.id} · {run.question.sentences.length} 句{run.is_review ? ` · 独立复习 ${run.streak}/3` : ''}</div>
           <p className="short-source">{run.question.sentences.join('')}</p><div className="short-source-note">{run.question.source}</div>
         </Card>
-        <Card title="我的译文" size="small"><div style={{ marginBottom: 12 }}><ProviderSelect value={providerId} onChange={setProviderId} disabled={grading || busy} /></div>
+        <Card className="short-answer" title="我的译文" size="small">
           <Input.TextArea aria-label="短句英文译文" rows={6} maxLength={15000} value={answer} disabled={grading || busy}
             placeholder="在这里完成整段英文译文。Ctrl+Enter 提交批改。" onChange={e => updateAnswer(e.target.value)}
             onKeyDown={e => { if (e.ctrlKey && e.key === 'Enter' && !e.nativeEvent.isComposing) { e.preventDefault(); void submit() } }} />
+          <div className="practice-provider"><ProviderSelect value={providerId} onChange={setProviderId} disabled={grading || busy} /></div>
           <div className="short-answer-actions"><span>草稿自动保存；修改后再提交会保留原记录。</span>
             <Button type="primary" icon={<SendOutlined />} loading={busy || grading} onClick={submit}>{lastAttempt?.status === 'done' ? '提交修改版' : lastAttempt?.status === 'failed' ? '重新提交批改' : '提交批改'}</Button></div>
           {grading && <GradingProgress key={lastAttempt?.id} startedAt={lastAttempt?.created_at} />}
           {pollError && <Alert type="warning" showIcon message={pollError} style={{ marginTop: 12 }} />}
           {lastAttempt?.status === 'failed' && <Alert type="error" showIcon style={{ marginTop: 12 }} message={lastAttempt.error} description="可在上方手动选择其他已配置服务，或保留原服务重新提交；不会自动切换。" />}
         </Card>
-        {run.attempts.length > 0 && <div ref={resultRef}>
+        {run.attempts.length > 0 && <div className="short-results" ref={resultRef}>
           <div className="short-version-toolbar"><Select aria-label="短句作答版本" style={{ width: 300, maxWidth: '100%' }}
             value={currentAttempt?.id} onChange={setSelectedAttempt} options={run.attempts.map((a, index) => ({ value: a.id,
               label: `${index + 1}. ${a.is_revision ? '修改' : '独立首答'} · ${STATUS[a.status]}${a.score != null ? ` ${a.score}/15` : ''}${a.mock ? '（模拟）' : ''}` }))} />

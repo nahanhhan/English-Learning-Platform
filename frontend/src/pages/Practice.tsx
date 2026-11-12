@@ -1,10 +1,10 @@
 import { ReloadOutlined, SendOutlined } from '@ant-design/icons'
 import {
   Alert, Badge, Button, Empty, Input, Modal, Radio, Segmented, Select, Space,
-  Spin, Statistic, Switch, Tag, message,
+  Statistic, Switch, Tag, message,
 } from 'antd'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { get, post, type Question, type Submission, type Grading } from '../api'
+import { api, get, post, type Question, type Submission, type Grading } from '../api'
 import GradingResult from '../components/GradingResult'
 import ProviderSelect from '../components/ProviderSelect'
 import GradingProgress from '../components/GradingProgress'
@@ -26,6 +26,8 @@ export default function Practice({ mode }: { mode: Mode }) {
   const [year, setYear] = useState<number | null>(null)
   const [meta, setMeta] = useState<any>(null)
   const [questions, setQuestions] = useState<Question[]>([])
+  const [questionsLoading, setQuestionsLoading] = useState(true)
+  const [questionError, setQuestionError] = useState('')
   const [current, setCurrent] = useState<Question | null>(null)
   const [answer, setAnswer] = useState('')
   const [providerId, setProviderId] = useState<number>()
@@ -33,6 +35,8 @@ export default function Practice({ mode }: { mode: Mode }) {
   const [freeSource, setFreeSource] = useState('')
   const [freeTitle, setFreeTitle] = useState('')
   const [submitting, setSubmitting] = useState(false)
+  const [pending, setPending] = useState<{ id: number; draft: string; content: string }>()
+  const [pollError, setPollError] = useState(false)
   const [submission, setSubmission] = useState<Submission | null>(null)
   const [grading, setGrading] = useState<Grading | null>(null)
   const [history, setHistory] = useState<any[]>([])
@@ -47,6 +51,7 @@ export default function Practice({ mode }: { mode: Mode }) {
   const wordCount = useMemo(() => answer.trim().split(/\s+/).filter(Boolean).length, [answer])
   const resultRef = useRef<HTMLDivElement>(null)
   const questionRequest = useRef(0)
+  const submissionLock = useRef(false)
 
   // 草稿自动保存：按题目区分，自由练习独立保存
   const draftKey = freeMode ? 'elp:draft:free' : `elp:draft:q${current?.id ?? 0}`
@@ -55,12 +60,20 @@ export default function Practice({ mode }: { mode: Mode }) {
     const request = ++questionRequest.current
     const params = new URLSearchParams({ exam_type: examType, q_type: qType })
     if (year) params.set('year', String(year))
-    const data = await get<Question[]>(`/api/questions?${params}`)
-    if (request !== questionRequest.current) return
-    setQuestions(data)
-    setCurrent((c) => (c && data.find((d) => d.id === c.id)) || data[0] || null)
-    setSubmission(null)
-    setGrading(null)
+    setQuestionsLoading(true)
+    setQuestionError('')
+    try {
+      const data = await get<Question[]>(`/api/questions?${params}`)
+      if (request !== questionRequest.current) return
+      setQuestions(data)
+      setCurrent((c) => (c && data.find((d) => d.id === c.id)) || data[0] || null)
+      setSubmission(null)
+      setGrading(null)
+    } catch (error) {
+      if (request === questionRequest.current) setQuestionError(error instanceof Error ? error.message : '请稍后重试')
+    } finally {
+      if (request === questionRequest.current) setQuestionsLoading(false)
+    }
   }, [examType, qType, year])
 
   useEffect(() => {
@@ -68,7 +81,7 @@ export default function Practice({ mode }: { mode: Mode }) {
   }, [])
 
   useEffect(() => {
-    loadQuestions().catch((e) => message.error(String(e.message || e)))
+    void loadQuestions()
     return () => { questionRequest.current += 1 }
   }, [loadQuestions])
 
@@ -111,28 +124,58 @@ export default function Practice({ mode }: { mode: Mode }) {
     setHistory(data.items || [])
   }, [qType])
 
-  const pollResult = useCallback(async (sid: number, delay = 1500) => {
-    const data = await get<{ submission: Submission; grading: Grading | null }>(`/api/practice/${sid}`)
-    if (data.submission.status === 'done' || data.submission.status === 'failed') {
-      setSubmission(data.submission)
-      setGrading(data.grading)
-      setSubmitting(false)
-      setRunning(false)
-      loadHistory().catch(() => {})
-      if (data.submission.status === 'done') {
-        try { localStorage.removeItem(draftKey) } catch { /* ignore */ }
-        setTimeout(() => resultRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 150)
+  useEffect(() => {
+    if (!pending) return
+    const controller = new AbortController()
+    let timer: ReturnType<typeof setTimeout>
+    const poll = async () => {
+      try {
+        const data = await api<{ submission: Submission; grading: Grading | null }>(`/api/practice/${pending.id}`, {
+          signal: controller.signal,
+        })
+        if (controller.signal.aborted) return
+        setPollError(false)
+        setSubmission(data.submission)
+        if (data.submission.status === 'pending' || data.submission.status === 'grading') {
+          timer = setTimeout(poll, 1500)
+          return
+        }
+        setGrading(data.grading)
+        setPending(undefined)
+        submissionLock.current = false
+        setSubmitting(false)
+        setRunning(false)
+        void loadHistory().catch(() => {})
+        if (data.submission.status === 'done') {
+          try {
+            if (localStorage.getItem(pending.draft)?.trim() === pending.content) localStorage.removeItem(pending.draft)
+          } catch { /* 浏览器不允许访问草稿时仍展示结果。 */ }
+        }
+      } catch {
+        if (controller.signal.aborted) return
+        setPollError(true)
+        timer = setTimeout(poll, 4000)
       }
-      return
     }
-    setSubmission(data.submission)
-    setTimeout(() => pollResult(sid, delay), delay)
-  }, [loadHistory, draftKey])
+    void poll()
+    return () => { controller.abort(); clearTimeout(timer) }
+  }, [pending, loadHistory])
+
+  useEffect(() => {
+    if (submission?.status === 'done' && grading) {
+      resultRef.current?.scrollIntoView({
+        behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth',
+        block: 'start',
+      })
+    }
+  }, [submission?.status, grading])
 
   const onSubmit = async () => {
+    if (submissionLock.current || (!freeMode && (!current || questionsLoading || questionError))) return
     const content = answer.trim()
     if (!content) return message.warning('请先输入你的作答')
     if (freeMode && !freeSource.trim()) return message.warning('自由练习请在左侧粘贴原文段落')
+    submissionLock.current = true
     setSubmitting(true)
     setGrading(null)
     setSubmission(null)
@@ -146,22 +189,24 @@ export default function Practice({ mode }: { mode: Mode }) {
           }
         : { question_id: current!.id, content }
       const resp = await post<{ submission_id: number }>('/api/practice/submit', { ...body, provider_id: providerId })
-      message.success('已提交，AI 批改中…')
-      pollResult(resp.submission_id)
+      setPending({ id: resp.submission_id, draft: draftKey, content })
     } catch (e: any) {
+      submissionLock.current = false
       setSubmitting(false)
       message.error(e.message || '提交失败')
     }
   }
 
   const regrade = async () => {
-    if (!submission) return
+    if (!submission || submissionLock.current) return
+    submissionLock.current = true
     setSubmitting(true)
     setGrading(null)
     try {
       await post(`/api/practice/${submission.id}/regrade`, { provider_id: providerId })
-      pollResult(submission.id)
+      setPending({ id: submission.id, draft: draftKey, content: submission.content.trim() })
     } catch (e: any) {
+      submissionLock.current = false
       setSubmitting(false)
       message.error(e.message || '重新批改失败')
     }
@@ -173,9 +218,9 @@ export default function Practice({ mode }: { mode: Mode }) {
 
   return (
     <div className="page practice-page">
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
+      <header className="page-heading">
         <div>
-          <h1 className="page-title">{isWriting ? '写作练习 · AI 批改' : '翻译练习 · AI 批改'}</h1>
+          <h1 className="page-title">{isWriting ? '写作练习' : '真题翻译'}</h1>
           <div className="page-subtitle">
             {isWriting
               ? '六级短文写作 / 考研英语二应用文与图表作文 · 满分 15/10/15 分制'
@@ -184,19 +229,24 @@ export default function Practice({ mode }: { mode: Mode }) {
         </div>
         <Space wrap>
           <span style={{ fontSize: 13, color: '#888' }}>自由练习</span>
-          <Switch checked={freeMode} onChange={setFreeMode} />
+          <Switch aria-label="自由练习" checked={freeMode} disabled={submitting} onChange={value => {
+            setFreeMode(value)
+            setSubmission(null)
+            setGrading(null)
+          }} />
           <Button icon={<Badge count={history.length} size="small" offset={[-2, 2]}><ReloadOutlined /></Badge>}
                   onClick={() => { loadHistory().catch(() => {}); setHistoryOpen(true) }}>
             历史记录
           </Button>
         </Space>
-      </div>
+      </header>
 
       {/* 筛选条 */}
-      <div className="panel" style={{ marginBottom: 16, display: 'flex', gap: 14, alignItems: 'center', flexWrap: 'wrap' }}>
+      <div className="panel practice-filters">
         <Segmented
           options={[{ label: '六级', value: 'cet6' }, { label: '考研英语二', value: 'ky2' }]}
           value={examType}
+          disabled={submitting}
           onChange={(v) => {
             setExamType(v as string); setYear(null)
             if (isWriting) setQType(v === 'cet6' ? 'writing' : 'small_writing')
@@ -206,21 +256,24 @@ export default function Practice({ mode }: { mode: Mode }) {
           <Segmented
             options={[{ label: '应用文', value: 'small_writing' }, { label: '图表作文', value: 'big_writing' }]}
             value={qType}
+            disabled={submitting}
             onChange={(v) => setQType(v as string)}
           />
         )}
         <Select
-          allowClear placeholder="全部年份" style={{ minWidth: 130 }}
+          aria-label="真题年份" allowClear placeholder="全部年份" style={{ minWidth: 130 }}
           value={year}
+          disabled={submitting || freeMode}
           options={(meta?.[examType]?.years || []).map((y: number) => ({ label: `${y} 年`, value: y }))}
           onChange={setYear}
         />
-        <span style={{ color: '#bbb', fontSize: 13 }}>{questions.length} 套题目</span>
+        {!freeMode && <span className="practice-count" role="status">{questionsLoading ? '正在筛选题目…' : questionError ? '题目暂不可用' : `${questions.length} 套题目`}</span>}
       </div>
 
       <div className="practice-layout">
         {/* 题目列表 / 自由练习 */}
-        <div className="panel practice-list">
+        <section className="panel practice-list" aria-label={freeMode ? '自由练习题面' : '题目列表'}>
+          <h2>{freeMode ? '自选题面' : '题目列表'}</h2>
           {freeMode ? (
             <Space direction="vertical" style={{ width: '100%' }} size={10}>
               <Alert type="info" showIcon message="自由练习模式" description="粘贴任意段落/题目进行练习，批改按所选考试类型的评分标准执行。" />
@@ -230,108 +283,115 @@ export default function Practice({ mode }: { mode: Mode }) {
                 rows={12} value={freeSource} onChange={(e) => setFreeSource(e.target.value)}
               />
             </Space>
+          ) : questionError ? (
+            <Alert type="error" message="题目加载失败" description={questionError}
+              action={<Button size="small" onClick={() => void loadQuestions()}>重试</Button>} />
+          ) : questionsLoading ? (
+            <p className="practice-count" role="status">正在读取题目…</p>
           ) : questions.length === 0 ? (
             <Empty description="没有符合条件的题目" />
           ) : (
             questions.map((q) => (
-              <div
+              <button type="button"
                 key={q.id}
+                className="practice-item"
+                aria-pressed={current?.id === q.id}
+                disabled={submitting}
                 onClick={() => { setCurrent(q); setSubmission(null); setGrading(null); setSeconds(0); setRunning(false) }}
-                style={{
-                  padding: '10px 12px', borderRadius: 8, cursor: 'pointer', marginBottom: 6,
-                  background: current?.id === q.id ? '#eef3fb' : 'transparent',
-                  border: current?.id === q.id ? '1px solid #c9d9f2' : '1px solid transparent',
-                  transition: 'background .15s',
-                }}
               >
-                <div style={{ fontWeight: 600, fontSize: 13.5 }}>{q.title}</div>
-                <div style={{ fontSize: 12, color: '#888', marginTop: 2, display: 'flex', gap: 6, alignItems: 'center' }}>
+                <span className="practice-item-title">{q.title}</span>
+                <span className="practice-item-meta">
                   <span>{Q_TYPE_LABEL[q.q_type]}</span>
                   {q.chart_image ? <span>· 含图表</span> : null}
                   {q.notes ? <span>· 补录</span> : null}
-                  {(q as any).practice_count > 0 && <Tag color="green" style={{ marginRight: 0 }}>已练 {(q as any).practice_count}</Tag>}
-                </div>
-              </div>
+                  {!!q.practice_count && <Tag color="green" style={{ marginRight: 0 }}>已练 {q.practice_count}</Tag>}
+                </span>
+              </button>
             ))
           )}
-        </div>
+        </section>
 
         {/* 题面 + 作答 */}
         <div className="practice-detail">
-          {freeMode ? null : !current ? (
-            <Empty description="请选择一套题目" style={{ marginTop: 80 }} />
-          ) : (
-            <div className="panel practice-question" style={{ marginBottom: 16 }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
-                <Space wrap>
-                  <Tag color="blue">{current.title}</Tag>
-                  <Tag>{Q_TYPE_LABEL[current.q_type]}</Tag>
-                  {current.chart_image && <Tag color="purple">图表题</Tag>}
-                </Space>
-                <Space size={12}>
-                  {countdownOn && (
-                    <Button size="small" type={running ? 'primary' : 'default'} onClick={() => setRunning(!running)} danger={running && seconds > 30 * 60}>
-                      {running ? '暂停' : seconds ? '继续' : '开始'} {mmss}
-                    </Button>
-                  )}
-                  <span style={{ fontSize: 12, color: '#888' }}>计时</span>
-                  <Switch size="small" checked={countdownOn} onChange={(v) => { setCountdownOn(v); if (!v) { setRunning(false); setSeconds(0) } }} />
-                </Space>
-              </div>
-              {current.notes && <Alert type="info" showIcon message={current.notes} style={{ marginBottom: 12 }} />}
-              {isWriting ? (
-                <div className="source-text" style={{ marginBottom: 10 }}>{current.prompt}</div>
-              ) : (
-                <div className="source-text" style={{ marginBottom: 10 }}>{current.source_text}</div>
-              )}
-              {current.chart_image && (
-                <div className="question-chart">
-                  <img
-                    src={`/data-static/${current.chart_display_image || current.chart_image}`}
-                    alt={`${current.title} 图表原题`}
-                  />
-                  <Space style={{ display: 'flex', justifyContent: 'center', marginTop: 6 }} wrap>
-                    <Button type="link" size="small" onClick={() => setChartPreview('clear')}>放大图表</Button>
-                    {current.chart_original_image && <Button type="link" size="small" onClick={() => setChartPreview('original')}>查看原卷图表</Button>}
+          <div className={freeMode ? 'practice-workspace practice-workspace-single' : 'practice-workspace'}>
+            {freeMode ? null : questionsLoading || questionError || !current ? (
+              <div className="panel practice-count">{questionsLoading ? '正在读取题面…' : questionError ? '题面将在重试后显示' : '请选择一套题目'}</div>
+            ) : (
+              <div className="panel practice-question" key={current.id}>
+                <h2>{current.title}</h2>
+                <div className="practice-question-heading">
+                  <Space wrap>
+                    <Tag>{Q_TYPE_LABEL[current.q_type]}</Tag>
+                    {current.chart_image && <Tag color="purple">图表题</Tag>}
+                  </Space>
+                  <Space size={12}>
+                    {countdownOn && (
+                      <Button size="small" type={running ? 'primary' : 'default'} onClick={() => setRunning(!running)} danger={running && seconds > 30 * 60}>
+                        {running ? '暂停' : seconds ? '继续' : '开始'} {mmss}
+                      </Button>
+                    )}
+                    <span style={{ fontSize: 12, color: '#888' }}>计时</span>
+                    <Switch size="small" checked={countdownOn} onChange={(v) => { setCountdownOn(v); if (!v) { setRunning(false); setSeconds(0) } }} />
                   </Space>
                 </div>
-              )}
-            </div>
-          )}
+                {current.notes && <Alert type="info" showIcon message={current.notes} style={{ marginBottom: 12 }} />}
+                {isWriting ? (
+                  <div className="source-text" style={{ marginBottom: 10 }}>{current.prompt}</div>
+                ) : (
+                  <div className="source-text" style={{ marginBottom: 10 }}>{current.source_text}</div>
+                )}
+                {current.chart_image && (
+                  <div className="question-chart">
+                    <img
+                      src={`/data-static/${current.chart_display_image || current.chart_image}`}
+                      alt={`${current.title} 图表原题`}
+                    />
+                    <Space style={{ display: 'flex', justifyContent: 'center', marginTop: 6 }} wrap>
+                      <Button type="link" size="small" onClick={() => setChartPreview('clear')}>放大图表</Button>
+                      {current.chart_original_image && <Button type="link" size="small" onClick={() => setChartPreview('original')}>查看原卷图表</Button>}
+                    </Space>
+                  </div>
+                )}
+              </div>
+            )}
 
-          <div className="panel">
-            <div style={{ marginBottom: 12 }}><ProviderSelect value={providerId} onChange={setProviderId} disabled={submitting} /></div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
-              <span style={{ fontWeight: 600 }}>我的作答</span>
-              <Space size={14}>
-                {isWriting && <span style={{ fontSize: 12.5, color: wordCount >= 150 && wordCount <= 200 ? '#52c41a' : '#999' }}>字数 {wordCount}（建议 {wordRange}）</span>}
-                {!isWriting && <span style={{ fontSize: 12.5, color: '#999' }}>字数 {wordCount}</span>}
-              </Space>
+            <div className="panel practice-answer">
+              <div className="practice-question-heading">
+                <h2>我的作答</h2>
+                <Space size={14}>
+                  {isWriting && <span style={{ fontSize: 12.5, color: wordCount >= 150 && wordCount <= 200 ? '#52c41a' : '#999' }}>字数 {wordCount}（建议 {wordRange}）</span>}
+                  {!isWriting && <span style={{ fontSize: 12.5, color: '#999' }}>字数 {wordCount}</span>}
+                </Space>
+              </div>
+              <Input.TextArea
+                className="answer-area"
+                aria-label="我的作答"
+                rows={isWriting ? 12 : 8}
+                placeholder={isWriting ? 'Write your essay here…（Ctrl+Enter 提交）' : examType === 'cet6' ? '在此输入英文译文…（Ctrl+Enter 提交）' : '在此输入中文译文…（Ctrl+Enter 提交）'}
+                value={answer}
+                onChange={(e) => updateAnswer(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.ctrlKey && e.key === 'Enter' && !e.nativeEvent.isComposing) { e.preventDefault(); void onSubmit() }
+                }}
+                disabled={submitting || (!freeMode && (!current || questionsLoading || !!questionError))}
+              />
+              <div className="practice-provider"><ProviderSelect value={providerId} onChange={setProviderId} disabled={submitting} /></div>
+              <div className="practice-submit">
+                {(grading || submission?.status === 'failed') && !submitting && (
+                  <Button onClick={regrade} icon={<ReloadOutlined />}>重新批改</Button>
+                )}
+                <Button type="primary" icon={<SendOutlined />} loading={submitting} onClick={onSubmit}
+                  disabled={!answer.trim() || (!freeMode && (!current || questionsLoading || !!questionError))}>
+                  提交批改
+                </Button>
+              </div>
+              {submitting && <GradingProgress />}
+              {pollError && <Alert type="warning" showIcon message="暂时无法读取批改进度，正在重试。作答已保存。" />}
             </div>
-            <Input.TextArea
-              className="answer-area"
-              rows={isWriting ? 12 : 8}
-              placeholder={isWriting ? 'Write your essay here…（Ctrl+Enter 提交）' : examType === 'cet6' ? '在此输入英文译文…（Ctrl+Enter 提交）' : '在此输入中文译文…（Ctrl+Enter 提交）'}
-              value={answer}
-              onChange={(e) => updateAnswer(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.ctrlKey && e.key === 'Enter') { e.preventDefault(); onSubmit() }
-              }}
-              disabled={submitting}
-            />
-            <div style={{ marginTop: 12, display: 'flex', justifyContent: 'flex-end', gap: 10 }}>
-              {grading && !submitting && (
-                <Button onClick={regrade} icon={<ReloadOutlined />}>重新批改</Button>
-              )}
-              <Button type="primary" icon={<SendOutlined />} loading={submitting} onClick={onSubmit}>
-                提交批改
-              </Button>
-            </div>
-            {submitting && <GradingProgress />}
           </div>
 
-          {grading && (
-            <div ref={resultRef} style={{ marginTop: 16 }}>
+          {grading && submission?.status === 'done' && (
+            <div ref={resultRef} className="practice-feedback">
               <GradingResult grading={grading} />
             </div>
           )}

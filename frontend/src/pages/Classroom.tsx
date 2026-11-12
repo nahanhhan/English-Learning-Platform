@@ -367,7 +367,7 @@ export default function Classroom({ library = 'classroom' }: { library?: Vocabul
       </Space><span>已完成 {round.completed} / {round.total}</span></div>
       <Progress percent={Math.round(round.completed / Math.max(round.total, 1) * 100)} showInfo={false} />
       <Card className="classroom-practice-card">
-        {current.stage === 'choice' && <>
+        {current.stage === 'choice' && <div className="practice-stage" key={current.question_id}>
           <div className="classroom-prompt"><h2>{current.english}</h2>
             {current.item_type === 'word' && <AmericanPhonetic value={current.phonetic_us} />}
             <AmericanAudio english={current.english} sense={classroomSense(current.english, current.translation, isAccumulation)} />
@@ -386,8 +386,8 @@ export default function Classroom({ library = 'classroom' }: { library?: Vocabul
               </Button>
             })}
           </div>
-        </>}
-        {current.stage === 'spell' && <>
+        </div>}
+        {current.stage === 'spell' && <div className="practice-stage">
           <div className="classroom-prompt"><div className="classroom-meaning">{current.translation_label || current.translation}</div>
             <AmericanAudio english={current.english} sense={classroomSense(current.english, current.translation, isAccumulation)} />
             <p>{current.picked === current.translation ? `拼写这个${typeName(current.item_type)}` : '选择有误，继续拼写加深记忆'}</p>
@@ -403,8 +403,8 @@ export default function Classroom({ library = 'classroom' }: { library?: Vocabul
             <Button size="large" type="primary" loading={busy} onClick={() => submit('spell', spell)}>提交拼写</Button>
           </Space.Compact>
           <p className="classroom-note">按词条原样填写，sb / sth 等占位写法保留；大小写和多余空格不影响判断。</p>
-        </>}
-        {current.stage === 'done' && <div className="classroom-prompt">
+        </div>}
+        {current.stage === 'done' && <div className="classroom-prompt practice-stage" role="status">
           {current.rating === 'good' ? <CheckCircleFilled style={{ color: '#52c41a', fontSize: 44 }} /> : <CloseCircleFilled style={{ color: '#e6a23c', fontSize: 44 }} />}
           <h2>{current.rating === 'good' ? '选择和拼写全部正确' : current.rating === 'hard' ? '拼写已纠正，继续巩固' : '继续练习，加深记忆'}</h2>
           <div className="classroom-meaning">{current.english}
@@ -421,12 +421,12 @@ export default function Classroom({ library = 'classroom' }: { library?: Vocabul
   }
 
   return <div className="page classroom-page">
-    <div className="classroom-toolbar">
-      <div><h1 className="page-title">{title}</h1><div className="page-subtitle">{isAccumulation ? '把日常遇见的词留下来' : '把课上学过的词记牢'} · 选意思，再拼写 · 随时继续上次进度</div></div>
+    <header className="page-heading classroom-toolbar">
+      <div><h1 className="page-title">{title}</h1><div className="page-subtitle">选释义、练拼写，进度自动保存。</div></div>
       <Space wrap><VolumeControl /><Button icon={<FolderOutlined />} onClick={() => { setEditingGroup(null); setGroupName(''); setGroupOpen(true) }}>管理分组</Button>
         <Button icon={<FileAddOutlined />} onClick={openImport}>批量添加 / 导入</Button>
         <Button type="primary" icon={<PlusOutlined />} onClick={() => openEntry()}>添加词汇</Button></Space>
-    </div>
+    </header>
     <div className="classroom-filters"><Select aria-label={isAccumulation ? '积累分组' : '课内分组'} value={group || 0} style={{ minWidth: 230, maxWidth: '100%' }}
       options={[{ value: 0, label: '全部分组' }, ...groupOptions]} onChange={value => { setGroup(value || undefined); setPage(1) }} />
       <Segmented value={kind} options={[{ label: '全部词汇', value: 'all' }, { label: '单词', value: 'word' }, { label: '短语', value: 'phrase' }]}

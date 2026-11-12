@@ -1,10 +1,10 @@
 import { useEffect, useRef } from 'react'
 import * as echarts from 'echarts/core'
-import { LineChart, BarChart } from 'echarts/charts'
+import { LineChart } from 'echarts/charts'
 import { GridComponent, LegendComponent, TooltipComponent, DataZoomComponent } from 'echarts/components'
 import { CanvasRenderer } from 'echarts/renderers'
 
-echarts.use([LineChart, BarChart, GridComponent, LegendComponent, TooltipComponent, DataZoomComponent, CanvasRenderer])
+echarts.use([LineChart, GridComponent, LegendComponent, TooltipComponent, DataZoomComponent, CanvasRenderer])
 
 export default function TrendChart({ trend }: { trend: any[] }) {
   const ref = useRef<HTMLDivElement>(null)
@@ -44,6 +44,7 @@ export default function TrendChart({ trend }: { trend: any[] }) {
 
     chartRef.current.setOption(
       {
+        animation: false,
         tooltip: {
           trigger: 'item',
           formatter: (p: any) =>
@@ -51,7 +52,11 @@ export default function TrendChart({ trend }: { trend: any[] }) {
         },
         legend: { top: 0, textStyle: { fontSize: 12 } },
         grid: { left: 42, right: 16, top: 34, bottom: 46 },
-        xAxis: { type: 'time', axisLabel: { fontSize: 11 } },
+        xAxis: {
+          type: 'time',
+          minInterval: 24 * 60 * 60 * 1000,
+          axisLabel: { fontSize: 11, hideOverlap: true, formatter: '{MM}-{dd}' },
+        },
         yAxis: { type: 'value', max: 15, axisLabel: { fontSize: 11 } },
         dataZoom: [{ type: 'inside' }],
         series,

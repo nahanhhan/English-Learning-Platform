@@ -44,7 +44,7 @@ def transport(monkeypatch, responses):
             value = responses.pop(0)
             if isinstance(value, Exception): raise value
             return value
-    monkeypatch.setattr(client.httpx, 'Client', Client)
+    monkeypatch.setattr(httpx, 'Client', Client)
     return calls
 
 

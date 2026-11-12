@@ -1,4 +1,3 @@
-import { Button, Result } from 'antd'
 import React from 'react'
 
 interface State {
@@ -20,16 +19,13 @@ export default class ErrorBoundary extends React.Component<{ children: React.Rea
   render() {
     if (this.state.error) {
       return (
-        <Result
-          status="error"
-          title="页面出了点问题"
-          subTitle={`渲染异常：${this.state.error.message || '未知错误'}`}
-          extra={
-            <Button type="primary" onClick={() => window.location.reload()}>
-              刷新页面
-            </Button>
-          }
-        />
+        <div className="page">
+          <section className="panel workspace-error" role="alert">
+            <h1 className="page-title">页面暂时无法显示</h1>
+            <p>可以刷新后重试，也可以从导航打开其他页面。</p>
+            <button className="workspace-menu-button" onClick={() => window.location.reload()}>刷新页面</button>
+          </section>
+        </div>
       )
     }
     return this.props.children

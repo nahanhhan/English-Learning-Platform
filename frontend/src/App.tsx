@@ -1,14 +1,6 @@
-import {
-  BarChartOutlined,
-  BookOutlined,
-  EditOutlined,
-  ReadOutlined,
-  SettingOutlined,
-  TranslationOutlined,
-} from '@ant-design/icons'
-import { Layout, Menu } from 'antd'
-import { Suspense, lazy, useEffect, useMemo, useState } from 'react'
-import { Link, Outlet, Route, Routes, useLocation } from 'react-router-dom'
+import { Suspense, lazy, useEffect, useRef } from 'react'
+import { NavLink, Route, Routes, useLocation } from 'react-router-dom'
+import ErrorBoundary from './ErrorBoundary'
 
 const Dashboard = lazy(() => import('./pages/Dashboard'))
 const Practice = lazy(() => import('./pages/Practice'))
@@ -18,96 +10,69 @@ const Settings = lazy(() => import('./pages/Settings'))
 const Classroom = lazy(() => import('./pages/Classroom'))
 const ShortTranslation = lazy(() => import('./pages/ShortTranslation'))
 
-const { Sider, Content, Header } = Layout
+const groups = [
+  { label: '', links: [['/', '学习概览']] },
+  { label: '练习', links: [['/practice/translation', '真题翻译'], ['/short-translation', '短句翻译'], ['/practice/writing', '写作练习']] },
+  { label: '词汇', links: [['/vocab', '背单词'], ['/phrases', '背短语'], ['/classroom', '课内生词和短语'], ['/accumulation', '平时单词短语积累']] },
+  { label: '', links: [['/settings', '设置']] },
+]
+
+function Navigation({ onNavigate }: { onNavigate?: () => void }) {
+  return (
+    <nav className="workspace-navigation" aria-label="主要导航">
+      {groups.map(({ label, links }) => (
+        <div className="navigation-group" key={links[0][0]}>
+          {label && <p className="navigation-label">{label}</p>}
+          {links.map(([path, title]) => (
+            <NavLink key={path} to={path} end onClick={onNavigate}>{title}</NavLink>
+          ))}
+        </div>
+      ))}
+    </nav>
+  )
+}
 
 export default function App() {
-  const location = useLocation()
-  const [collapsed, setCollapsed] = useState(false)
+  const { pathname } = useLocation()
+  const menu = useRef<HTMLDialogElement>(null)
+  const main = useRef<HTMLElement>(null)
+  const title = groups.flatMap(group => group.links).find(([path]) => path === pathname)?.[1]
 
-  const selected = useMemo(() => {
-    const p = location.pathname
-    if (p.startsWith('/practice')) return p
-    if (p.startsWith('/vocab')) return '/vocab'
-    if (p.startsWith('/phrases')) return '/phrases'
-    if (p.startsWith('/classroom')) return '/classroom'
-    if (p.startsWith('/accumulation')) return '/accumulation'
-    if (p.startsWith('/short-translation')) return '/short-translation'
-    if (p.startsWith('/settings')) return '/settings'
-    return '/'
-  }, [location.pathname])
-
-  // 路由级页面标题
   useEffect(() => {
-    const p = location.pathname
-    const names: [RegExp, string][] = [
-      [/^\/$/, '学习概览'],
-      [/^\/practice\/translation/, '翻译练习'],
-      [/^\/practice\/writing/, '写作练习'],
-      [/^\/vocab/, '背单词'],
-      [/^\/phrases/, '背短语'],
-      [/^\/classroom/, '课内生词和短语'],
-      [/^\/accumulation/, '平时单词短语积累'],
-      [/^\/short-translation/, '短句翻译'],
-      [/^\/settings/, '设置'],
-    ]
-    const name = names.find(([re]) => re.test(p))?.[1]
-    document.title = name ? `${name} · 英语学习平台` : '英语学习平台'
-  }, [location.pathname])
+    document.title = title ? `${title} · 英语学习平台` : '英语学习平台'
+  }, [title])
 
-  // 小窗口自动折叠侧栏
   useEffect(() => {
-    const onResize = () => setCollapsed(window.innerWidth < 1000)
-    onResize()
-    window.addEventListener('resize', onResize)
-    return () => window.removeEventListener('resize', onResize)
-  }, [])
-
-  const items = [
-    { key: '/', icon: <BarChartOutlined />, label: <Link to="/">学习概览</Link> },
-    { key: '/practice/translation', icon: <TranslationOutlined />, label: <Link to="/practice/translation">翻译练习</Link> },
-    { key: '/short-translation', icon: <TranslationOutlined />, label: <Link to="/short-translation">短句翻译</Link> },
-    { key: '/practice/writing', icon: <EditOutlined />, label: <Link to="/practice/writing">写作练习</Link> },
-    { key: '/vocab', icon: <BookOutlined />, label: <Link to="/vocab">背单词</Link> },
-    { key: '/phrases', icon: <ReadOutlined />, label: <Link to="/phrases">背短语</Link> },
-    { key: '/classroom', icon: <BookOutlined />, label: <Link to="/classroom">课内生词和短语</Link> },
-    { key: '/accumulation', icon: <ReadOutlined />, label: <Link to="/accumulation">平时单词短语积累</Link> },
-    { key: '/settings', icon: <SettingOutlined />, label: <Link to="/settings">设置</Link> },
-  ]
+    window.scrollTo(0, 0)
+  }, [pathname])
 
   return (
-    <Layout style={{ minHeight: '100vh' }}>
-      <Sider
-        theme="light"
-        collapsible
-        collapsed={collapsed}
-        onCollapse={setCollapsed}
-        width={200}
-        style={{ borderRight: '1px solid #eef0f3' }}
-      >
-        <div
-          style={{
-            height: 56,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: 8,
-            fontWeight: 700,
-            fontSize: collapsed ? 16 : 15,
-            color: '#3562a7',
-          }}
-        >
-          <span style={{ fontSize: 20 }}>📘</span>
-          {!collapsed && '英语学习平台'}
+    <div className="workspace">
+      <a className="skip-navigation" href="#workspace-content" onClick={event => {
+        event.preventDefault()
+        main.current?.focus()
+      }}>跳到主要内容</a>
+      <aside className="workspace-sidebar">
+        <NavLink className="workspace-brand" to="/">英语学习平台</NavLink>
+        <Navigation />
+      </aside>
+      <div className="workspace-mobile-header">
+        <NavLink className="workspace-brand" to="/">英语学习平台</NavLink>
+        <button className="workspace-menu-button" type="button" aria-haspopup="dialog" aria-controls="workspace-mobile-menu"
+          onClick={() => menu.current?.showModal()}>
+          页面导航
+        </button>
+      </div>
+      <dialog className="workspace-menu" id="workspace-mobile-menu" ref={menu} aria-labelledby="workspace-menu-title">
+        <div className="workspace-menu-header">
+          <h2 id="workspace-menu-title">页面导航</h2>
+          <button className="workspace-menu-button" type="button" onClick={() => menu.current?.close()}>关闭</button>
         </div>
-        <Menu mode="inline" selectedKeys={[selected]} items={items} style={{ borderInlineEnd: 'none' }} />
-      </Sider>
-      <Layout>
-        <Content>
-          <Suspense
-            fallback={
-              <div style={{ padding: 80, textAlign: 'center', color: '#999' }}>加载中…</div>
-            }
-          >
+        <Navigation onNavigate={() => menu.current?.close()} />
+      </dialog>
+      <main className="workspace-content" id="workspace-content" ref={main} tabIndex={-1}>
+        <ErrorBoundary key={pathname}>
+          <Suspense fallback={<div className="page route-placeholder" role="status">正在打开{title || '学习概览'}…</div>}>
             <Routes>
               <Route path="/" element={<Dashboard />} />
               <Route path="/short-translation" element={<ShortTranslation />} />
@@ -121,8 +86,8 @@ export default function App() {
               <Route path="*" element={<Dashboard />} />
             </Routes>
           </Suspense>
-        </Content>
-      </Layout>
-    </Layout>
+        </ErrorBoundary>
+      </main>
+    </div>
   )
 }

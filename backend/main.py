@@ -9,7 +9,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
-from app.database import Base, engine, DATA_DIR
+from app.database import DATA_DIR
 from app.routers import classroom, phrases, practice, questions, settings, speech, stats, vocab, short_translation
 from app.services.classroom import ClassroomError
 
@@ -25,16 +25,14 @@ app.add_middleware(
 )
 
 # 图表等数据文件
-from fastapi.staticfiles import StaticFiles as _StaticFiles  # noqa: E402
-
-app.mount("/data-static", _StaticFiles(directory=DATA_DIR), name="data")
+app.mount("/data-static", StaticFiles(directory=DATA_DIR), name="data")
 
 for r in (short_translation.router, speech.router, classroom.router, classroom.accumulation_router, questions.router, practice.router, vocab.router, phrases.router,
           stats.router, settings.router):
     app.include_router(r)
 
 # 托管前端构建产物
-FRONTEND_DIST = os.path.join(os.path.dirname(DATA_DIR), "..", "frontend", "dist")
+FRONTEND_DIST = os.path.join(os.path.dirname(__file__), "..", "frontend", "dist")
 
 if os.path.isdir(FRONTEND_DIST):
     app.mount("/assets", StaticFiles(directory=os.path.join(FRONTEND_DIST, "assets")), name="assets")
@@ -51,8 +49,7 @@ if os.path.isdir(FRONTEND_DIST):
 
 @app.on_event("startup")
 def startup():
-    Base.metadata.create_all(engine)
-    # 首次启动导入题库与词库
+    # 建表、存量迁移及增量导入在这里统一完成。
     from scripts.seed import ensure_seeded
     ensure_seeded()
     from app.database import SessionLocal
@@ -63,4 +60,14 @@ def startup():
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="127.0.0.1", port=8930, log_level="info")
+
+    class LocalServer(uvicorn.Server):
+        async def startup(self, sockets=None):
+            await super().startup(sockets=sockets)
+            if self.started and not self.should_exit and "--open-browser" in sys.argv:
+                import threading
+                import webbrowser
+
+                threading.Thread(target=webbrowser.open, args=("http://127.0.0.1:8930/",), daemon=True).start()
+
+    LocalServer(uvicorn.Config(app, host="127.0.0.1", port=8930, log_level="info")).run()

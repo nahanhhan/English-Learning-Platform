@@ -28,7 +28,7 @@ def install_client(monkeypatch, responses):
             if isinstance(response, Exception):
                 raise response
             return response
-    monkeypatch.setattr(ai_client.httpx, 'Client', Client)
+    monkeypatch.setattr(httpx, 'Client', Client)
     return requests
 
 
