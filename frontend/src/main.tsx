@@ -1,3 +1,5 @@
+import '@fontsource-variable/google-sans-flex'
+import '@fontsource-variable/noto-sans-sc'
 import React, { useLayoutEffect, useMemo, useState, useSyncExternalStore } from 'react'
 import ReactDOM from 'react-dom/client'
 import { ConfigProvider } from 'antd'
