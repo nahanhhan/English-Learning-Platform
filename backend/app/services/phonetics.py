@@ -28,6 +28,8 @@ SUPPLEMENTS = {
     "resignedly": "rɪˈzaɪnɪdli",
     # https://www.collinsdictionary.com/us/dictionary/english-pronunciations/gaiety
     "gaiety": "ˈɡeɪɪti",
+    # https://dictionary.cambridge.org/us/dictionary/english/underprivileged
+    "underprivileged": "ˌʌn.dɚˈprɪv.əl.ɪdʒd",
 }
 
 

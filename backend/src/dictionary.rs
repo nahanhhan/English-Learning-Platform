@@ -157,6 +157,7 @@ pub fn ipa(data: &Path, english: &str) -> String {
         "absent-mindedly" => "ˌæbsəntˈmaɪndɪdli",
         "resignedly" => "rɪˈzaɪnɪdli",
         "gaiety" => "ˈɡeɪɪti",
+        "underprivileged" => "ˌʌn.dɚˈprɪv.əl.ɪdʒd",
         _ => "",
     };
     if !supplement.is_empty() {

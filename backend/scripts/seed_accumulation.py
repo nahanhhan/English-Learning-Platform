@@ -12,10 +12,18 @@ UPDATE_PATH = INITIAL_PATH.with_name("accumulation_notes_20261101.json")
 LATEST_PATH = INITIAL_PATH.with_name("accumulation_notes_20261102.json")
 NOVEMBER_FOURTH_PATH = INITIAL_PATH.with_name("accumulation_notes_20261104.json")
 NOVEMBER_ELEVENTH_PATH = INITIAL_PATH.with_name("accumulation_notes_20261111.json")
+NOVEMBER_TWENTY_THIRD_PATH = INITIAL_PATH.with_name("accumulation_notes_20261123.json")
 
 
 def seed_accumulation(db):
-    for path in (INITIAL_PATH, UPDATE_PATH, LATEST_PATH, NOVEMBER_FOURTH_PATH, NOVEMBER_ELEVENTH_PATH):
+    for path in (
+        INITIAL_PATH,
+        UPDATE_PATH,
+        LATEST_PATH,
+        NOVEMBER_FOURTH_PATH,
+        NOVEMBER_ELEVENTH_PATH,
+        NOVEMBER_TWENTY_THIRD_PATH,
+    ):
         _seed_batch(db, json.loads(path.read_text(encoding="utf-8")))
 
 
