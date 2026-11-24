@@ -30,6 +30,8 @@ SUPPLEMENTS = {
     "gaiety": "ˈɡeɪɪti",
     # https://dictionary.cambridge.org/us/dictionary/english/underprivileged
     "underprivileged": "ˌʌn.dɚˈprɪv.əl.ɪdʒd",
+    # https://dictionary.cambridge.org/us/dictionary/english/unmatchable
+    "unmatchable": "ˌʌnˈmætʃ.ə.bəl",
 }
 
 

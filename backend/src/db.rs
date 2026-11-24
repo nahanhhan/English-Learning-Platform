@@ -250,6 +250,7 @@ fn seed(db: &Connection, dir: &Path) -> Result<()> {
         "accumulation_notes_20261104.json",
         "accumulation_notes_20261111.json",
         "accumulation_notes_20261123.json",
+        "accumulation_notes_20261124.json",
     ] {
         seed_library(db, dir, file, "accumulation")?;
     }

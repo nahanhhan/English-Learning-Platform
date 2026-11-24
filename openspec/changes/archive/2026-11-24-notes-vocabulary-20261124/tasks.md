@@ -1,0 +1,3 @@
+- [x] 核对 `English_notes.docx` 新增内容、现有词库及本地与远端 Git 进度。
+- [x] 整理词条批次 `accumulation_notes_20261124.json`，注册至 Rust 与 Python 种子流程并补齐音标。
+- [x] 更新并运行词库与音标专项测试，验证发布构建与实际增量导入结果。

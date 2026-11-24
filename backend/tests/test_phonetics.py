@@ -31,6 +31,7 @@ def test_accumulation_missing_american_pronunciations_are_offline_available():
     assert american_ipa('lamentation') == 'ˌlæm.enˈteɪ.ʃən'
     assert american_ipa('would-be') == 'ˈwʊd.bi'
     assert american_ipa('underprivileged') == 'ˌʌn.dɚˈprɪv.əl.ɪdʒd'
+    assert american_ipa('unmatchable') == 'ˌʌnˈmætʃ.ə.bəl'
     assert american_ipa('ill-reputed') == american_ipa('ill reputed')
     assert american_ipa('ill-reputed')
     paths = (Path(__file__).resolve().parent.parent / 'data').glob('accumulation*.json')
