@@ -15,7 +15,7 @@ def build_url(base_url: str) -> str:
     url = base_url.strip().rstrip('/')
     if url.endswith('/chat/completions'):
         return url
-    if not re.search(r'/v\d+(?:[a-z][\w.-]*)?$', url, re.I):
+    if not re.search(r'/v\d+(?:[a-z][\w.-]*)?(?:/openai)?$', url, re.I):
         url += '/v1'
     return url + '/chat/completions'
 
@@ -211,6 +211,8 @@ def refresh_models(provider: dict) -> list[dict]:
         url = 'https://api.deepseek.com/models'
     elif kind == 'anthropic':
         url = 'https://api.anthropic.com/v1/models?limit=100'
+    elif kind == 'gemini':
+        url = 'https://generativelanguage.googleapis.com/v1beta/openai/models'
     else:
         raise AiError('该预设暂不支持在线刷新，可保留当前模型或手动输入模型名')
     try:
@@ -249,7 +251,9 @@ def model_metadata(item, kind):
     """仅缓存经过核对的能力字段，不保存外部目录中的任意配置。"""
     if not isinstance(item, dict) or not isinstance(item.get('id'), str):
         return None
-    model = {'id': item['id']}
+    raw_id = item['id']
+    model_id = raw_id.removeprefix('models/') if kind == 'gemini' else raw_id
+    model = {'id': model_id}
     name = item.get('display_name') or item.get('name')
     if isinstance(name, str):
         model['name'] = name

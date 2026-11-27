@@ -238,7 +238,7 @@ fn save(db: &mut Connection, body: &Value, target: Option<i64>) -> ApiResult {
     if let Some(value) = kind {
         if !matches!(
             value,
-            "custom" | "deepseek" | "opencode_go" | "zhipu" | "anthropic"
+            "custom" | "deepseek" | "opencode_go" | "zhipu" | "anthropic" | "gemini"
         ) {
             return Err(ApiError::new(422, "服务类型无效"));
         }

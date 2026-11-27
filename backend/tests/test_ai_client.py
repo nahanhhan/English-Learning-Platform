@@ -14,6 +14,8 @@ def test_build_url_version_paths():
     assert build_url("https://open.bigmodel.cn/api/paas/v4") == "https://open.bigmodel.cn/api/paas/v4/chat/completions"
     assert build_url("https://opencode.ai/zen/go/v1") == "https://opencode.ai/zen/go/v1/chat/completions"
     assert build_url("https://example.com/v1") == "https://example.com/v1/chat/completions"
+    assert build_url("https://generativelanguage.googleapis.com/v1beta/openai") == \
+        "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions"
 
 
 def test_build_url_full_path_passthrough():

@@ -6,16 +6,24 @@ from urllib.parse import urlsplit
 DEEPSEEK_DOC = "https://api-docs.deepseek.com/guides/thinking_mode/"
 GO_DOC = "https://opencode.ai/v2/docs/console/go/"
 ANTHROPIC_DOC = "https://platform.claude.com/docs/en/build-with-claude/thinking"
+GEMINI_DOC = "https://ai.google.dev/gemini-api/docs/openai"
 PRESETS = [
     {"name": "DeepSeek 官方", "service_type": "deepseek", "base_url": "https://api.deepseek.com", "model": "deepseek-flash", "docs": DEEPSEEK_DOC},
     {"name": "OpenCode Go 订阅", "service_type": "opencode_go", "base_url": "https://opencode.ai/inference/go/openai/v1", "model": "glm-5.3-flash", "docs": GO_DOC},
     {"name": "Anthropic 官方", "service_type": "anthropic", "base_url": "https://api.anthropic.com", "model": "claude-haiku-5-5", "docs": ANTHROPIC_DOC},
+    {"name": "Google Gemini 官方", "service_type": "gemini", "base_url": "https://generativelanguage.googleapis.com/v1beta/openai", "model": "gemini-3.5-flash-lite", "docs": GEMINI_DOC},
     {"name": "智谱 GLM", "service_type": "zhipu", "base_url": "https://open.bigmodel.cn/api/paas/v4", "model": "glm-4.6", "docs": "https://docs.bigmodel.cn/"},
 ]
 GO_MODELS = ["glm-5.3-flash", "glm-5.3", "glm-5.2", "kimi-k3.1-pro", "kimi-k3", "kimi-k2.7-code",
              "deepseek-v4.1-flash", "deepseek-v4-pro", "minimax-m3.1-flash", "longcat-2.0", "mimo-v2.6-flash", "mimo-v2.6-pro", "claude-haiku-5-5"]
 CLAUDE_MODELS = ["claude-haiku-5-5", "claude-sonnet-5-5", "claude-opus-5-5", "claude-sonnet-4-6", "claude-opus-4-6"]
+GEMINI_MODELS = ["gemini-3.5-flash-lite", "gemini-4-hydrogen", "gemini-4-neon", "gemini-4-carbon"]
 EFFORT_LEVELS = ["minimal", "low", "medium", "high", "xhigh", "max", "ultra"]
+
+
+def _gemini_path(path: str) -> bool:
+    trimmed = path.rstrip("/")
+    return trimmed in ("/v1beta/openai", "/v1beta/openai/chat/completions")
 
 
 def service_type(provider):
@@ -31,6 +39,8 @@ def service_type(provider):
         return "zhipu"
     if url.hostname == "api.anthropic.com":
         return "anthropic"
+    if url.hostname == "generativelanguage.googleapis.com" and _gemini_path(url.path):
+        return "gemini"
     return "custom"
 
 
@@ -46,6 +56,7 @@ def catalogue(provider):
     kind = service_type(provider)
     ids = (["deepseek-flash", "deepseek-v4-pro"] if kind == "deepseek" else
            GO_MODELS if kind == "opencode_go" else CLAUDE_MODELS if kind == "anthropic" else
+           GEMINI_MODELS if kind == "gemini" else
            ["glm-4.6", "glm-5.3-flash", "glm-5.3"] if kind == "zhipu" else [])
     try:
         cache = json.loads(provider.get("models_json") or "[]")
@@ -112,6 +123,11 @@ def capabilities(provider):
         result = {"modes": ["auto", "enabled"], "levels": [], "control": "always", "note": "模型强制推理，不能关闭；未确认可调强度"}
     elif model.startswith("glm-4"):
         result = {"modes": ["auto", "enabled", "disabled"], "levels": [], "control": "thinking", "note": "支持推理开关"}
+    elif kind == "gemini":
+        if model in ("gemini-4-carbon", "gemini-4-neon", "gemini-4-hydrogen"):
+            result = {"modes": ["auto"], "levels": ["low", "medium", "high", "xhigh"], "control": "effort", "note": "支持 Gemini 4 推理强度调节，开关跟随模型默认"}
+        elif model == "gemini-3.5-flash-lite":
+            result = {"modes": ["auto"], "levels": ["minimal", "low", "medium", "high"], "control": "effort", "note": "支持 Gemini 推理强度调节，开关跟随模型默认"}
     # 同名模型在订阅服务上的强度可能与官方不同，以 Go 目录为准。
     if kind == "opencode_go":
         if model == "deepseek-v4-pro" or model == "glm-5.2":
@@ -150,6 +166,8 @@ def validate(provider):
         raise ValueError("DeepSeek 官方预设请使用 api.deepseek.com；其他地址请选择自定义服务")
     if kind == 'anthropic' and (url.scheme != 'https' or url.hostname != 'api.anthropic.com'):
         raise ValueError('Anthropic 官方入口请使用 https://api.anthropic.com，Go 订阅请选择 OpenCode Go')
+    if kind == 'gemini' and (url.scheme != 'https' or url.hostname != 'generativelanguage.googleapis.com' or not _gemini_path(url.path)):
+        raise ValueError('Google Gemini 官方预设请使用 https://generativelanguage.googleapis.com/v1beta/openai；其他地址请选择自定义服务')
     caps = capabilities(provider)
     mode = provider.get("reasoning_mode") or "auto"
     if mode not in caps["modes"]:

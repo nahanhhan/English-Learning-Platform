@@ -580,7 +580,7 @@ export default function Settings() {
             </Space>
           </Space>
           <Form.Item name="name" label="名称" rules={[{ required: true, message: '请输入名称' }]}>
-            <Input placeholder="如 Anthropic / DeepSeek / 智谱 / OpenCode" />
+            <Input placeholder="如 Gemini / Anthropic / DeepSeek / 智谱 / OpenCode" />
           </Form.Item>
           <Form.Item name="service_type" label="接入方式">
             <Select
@@ -629,6 +629,27 @@ export default function Settings() {
                   填写 Anthropic 官方 API 密钥，此配置与 Go 订阅分别保存。选择 Claude
                   后，在下方设置该模型支持的推理模式和强度。
                   <a href="https://platform.claude.com/docs/en/build-with-claude/thinking" target="_blank" rel="noreferrer">
+                    查看官方说明
+                  </a>
+                </span>
+              }
+            />
+          )}
+          {formType === 'gemini' && (
+            <Alert
+              type="info"
+              showIcon
+              style={{ marginBottom: 14 }}
+              message="Google Gemini 官方接口（AI Studio）"
+              description={
+                <span>
+                  请在 Google AI Studio 申请并填写 <code>GEMINI_API_KEY</code>，无需通过个人 Google 账号 OAuth 或外部 CLI
+                  代理。免费层存在速率限制且请求内容可能用于产品改进；绑定计费账号可切换至付费配额。{' '}
+                  <a href="https://aistudio.google.com/" target="_blank" rel="noreferrer">
+                    打开 Google AI Studio
+                  </a>{' '}
+                  ·{' '}
+                  <a href="https://ai.google.dev/gemini-api/docs/openai" target="_blank" rel="noreferrer">
                     查看官方说明
                   </a>
                 </span>

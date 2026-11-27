@@ -30,6 +30,12 @@ const CLAUDE: [&str; 5] = [
     "claude-sonnet-4-6",
     "claude-opus-4-6",
 ];
+const GEMINI: [&str; 4] = [
+    "gemini-3.5-flash-lite",
+    "gemini-4-hydrogen",
+    "gemini-4-neon",
+    "gemini-4-carbon",
+];
 
 pub fn kind(profile: &Value) -> &str {
     let selected = text(profile, "service_type");
@@ -44,6 +50,7 @@ pub fn kind(profile: &Value) -> &str {
         Some("api.deepseek.com") => "deepseek",
         Some("open.bigmodel.cn") => "zhipu",
         Some("api.anthropic.com") => "anthropic",
+        Some("generativelanguage.googleapis.com") if gemini_path(url.path()) => "gemini",
         _ => "custom",
     }
 }
@@ -52,11 +59,17 @@ fn go_path(path: &str) -> bool {
     path.starts_with("/zen/go/") || path.starts_with("/inference/go/")
 }
 
+fn gemini_path(path: &str) -> bool {
+    let trimmed = path.trim_end_matches('/');
+    trimmed == "/v1beta/openai" || trimmed == "/v1beta/openai/chat/completions"
+}
+
 pub fn catalogue(profile: &Value) -> Vec<Value> {
     let ids: &[&str] = match kind(profile) {
         "deepseek" => &["deepseek-flash", "deepseek-v4-pro"],
         "opencode_go" => &GO,
         "anthropic" => &CLAUDE,
+        "gemini" => &GEMINI,
         "zhipu" => &["glm-4.6", "glm-5.3-flash", "glm-5.3"],
         _ => &[],
     };
@@ -99,6 +112,7 @@ pub fn presets() -> Value {
         json!({"name":"DeepSeek 官方","service_type":"deepseek","base_url":"https://api.deepseek.com","model":"deepseek-flash","docs":"https://api-docs.deepseek.com/guides/thinking_mode/"}),
         json!({"name":"OpenCode Go 订阅","service_type":"opencode_go","base_url":"https://opencode.ai/inference/go/openai/v1","model":"glm-5.3-flash","docs":"https://opencode.ai/v2/docs/console/go/"}),
         json!({"name":"Anthropic 官方","service_type":"anthropic","base_url":"https://api.anthropic.com","model":"claude-haiku-5-5","docs":"https://platform.claude.com/docs/en/build-with-claude/thinking"}),
+        json!({"name":"Google Gemini 官方","service_type":"gemini","base_url":"https://generativelanguage.googleapis.com/v1beta/openai","model":"gemini-3.5-flash-lite","docs":"https://ai.google.dev/gemini-api/docs/openai"}),
         json!({"name":"智谱 GLM","service_type":"zhipu","base_url":"https://open.bigmodel.cn/api/paas/v4","model":"glm-4.6","docs":"https://docs.bigmodel.cn/"}),
     ];
     let profiles: Vec<_> = presets
@@ -193,6 +207,19 @@ pub fn capabilities(profile: &Value) -> Value {
             modes.extend(["enabled", "disabled"]);
             control = "thinking";
             note = "支持推理开关";
+        } else if kind == "gemini" {
+            if matches!(
+                model.as_str(),
+                "gemini-4-carbon" | "gemini-4-neon" | "gemini-4-hydrogen"
+            ) {
+                levels = vec!["low", "medium", "high", "xhigh"];
+                control = "effort";
+                note = "支持 Gemini 4 推理强度调节，开关跟随模型默认";
+            } else if model == "gemini-3.5-flash-lite" {
+                levels = vec!["minimal", "low", "medium", "high"];
+                control = "effort";
+                note = "支持 Gemini 推理强度调节，开关跟随模型默认";
+            }
         }
         if kind == "opencode_go" {
             if matches!(model.as_str(), "deepseek-v4-pro" | "glm-5.2") {
@@ -267,6 +294,15 @@ pub fn validate(profile: &Value) -> ApiResult<()> {
                 "Anthropic 官方入口请使用 https://api.anthropic.com，Go 订阅请选择 OpenCode Go",
             ));
         }
+        "gemini"
+            if url.scheme() != "https"
+                || url.host_str() != Some("generativelanguage.googleapis.com")
+                || !gemini_path(url.path()) =>
+        {
+            return Err(ApiError::bad(
+                "Google Gemini 官方预设请使用 https://generativelanguage.googleapis.com/v1beta/openai；其他地址请选择自定义服务",
+            ));
+        }
         _ => {}
     }
     reasoning(profile)?;
@@ -316,4 +352,65 @@ pub fn reasoning(profile: &Value) -> ApiResult<Value> {
         }
     }
     Ok(payload)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn gemini_preset_and_capabilities_are_consistent() {
+        let options = presets();
+        let gemini = options["profiles"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .find(|item| item["service_type"] == "gemini")
+            .expect("missing gemini preset");
+        assert_eq!(
+            gemini["base_url"],
+            "https://generativelanguage.googleapis.com/v1beta/openai"
+        );
+        assert_eq!(gemini["model"], "gemini-3.5-flash-lite");
+        assert_eq!(
+            gemini["capabilities"]["levels"],
+            json!(["minimal", "low", "medium", "high"])
+        );
+
+        let g4 = json!({
+            "service_type": "custom",
+            "base_url": "https://generativelanguage.googleapis.com/v1beta/openai/",
+            "model": "gemini-4-hydrogen",
+            "reasoning_mode": "auto",
+            "reasoning_effort": "xhigh"
+        });
+        assert_eq!(kind(&g4), "gemini");
+        assert_eq!(
+            capabilities(&g4)["levels"],
+            json!(["low", "medium", "high", "xhigh"])
+        );
+        assert_eq!(
+            reasoning(&g4).ok(),
+            Some(json!({"reasoning_effort": "xhigh"}))
+        );
+        assert!(validate(&g4).is_ok());
+
+        let invalid_url = json!({
+            "service_type": "gemini",
+            "base_url": "https://example.invalid/v1",
+            "model": "gemini-3.5-flash-lite",
+            "reasoning_mode": "auto",
+            "reasoning_effort": ""
+        });
+        assert!(validate(&invalid_url).is_err());
+
+        let invalid_effort = json!({
+            "service_type": "gemini",
+            "base_url": "https://generativelanguage.googleapis.com/v1beta/openai",
+            "model": "gemini-3.5-flash-lite",
+            "reasoning_mode": "auto",
+            "reasoning_effort": "xhigh"
+        });
+        assert!(validate(&invalid_effort).is_err());
+    }
 }

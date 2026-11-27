@@ -40,7 +40,7 @@ fn request_url(profile: &Value) -> String {
         return base.to_owned();
     }
     if VERSION
-        .get_or_init(|| Regex::new(r"(?i)/v\d+(?:[a-z][\w.-]*)?$").unwrap())
+        .get_or_init(|| Regex::new(r"(?i)/v\d+(?:[a-z][\w.-]*)?(?:/openai)?$").unwrap())
         .is_match(base)
     {
         format!("{base}/chat/completions")
@@ -267,7 +267,12 @@ pub fn extract_json(answer: &str) -> ApiResult<Value> {
 }
 
 fn model_metadata(item: &Value, kind: &str) -> Option<Value> {
-    let id = item["id"].as_str()?;
+    let raw_id = item["id"].as_str()?;
+    let id = if kind == "gemini" {
+        raw_id.strip_prefix("models/").unwrap_or(raw_id)
+    } else {
+        raw_id
+    };
     let mut model = json!({"id":id});
     if let Some(name) = item["display_name"].as_str().or(item["name"].as_str()) {
         model["name"] = json!(name);
@@ -311,6 +316,7 @@ pub fn refresh(profile: &Value) -> ApiResult<Vec<Value>> {
         "opencode_go" => "https://opencode.ai/inference/go/v1/models",
         "deepseek" => "https://api.deepseek.com/models",
         "anthropic" => "https://api.anthropic.com/v1/models?limit=100",
+        "gemini" => "https://generativelanguage.googleapis.com/v1beta/openai/models",
         _ => {
             return Err(ApiError::bad(
                 "该预设暂不支持在线刷新，可保留当前模型或手动输入模型名",
@@ -353,4 +359,35 @@ pub fn refresh(profile: &Value) -> ApiResult<Vec<Value>> {
         return Err(ApiError::bad("模型目录为空，已保留原配置"));
     }
     Ok(models)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn gemini_url_and_model_metadata_strip_prefix() {
+        let profile = json!({
+            "service_type": "gemini",
+            "base_url": "https://generativelanguage.googleapis.com/v1beta/openai",
+            "model": "gemini-3.5-flash-lite"
+        });
+        assert_eq!(
+            request_url(&profile),
+            "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions"
+        );
+        let full = json!({
+            "service_type": "gemini",
+            "base_url": "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions",
+            "model": "gemini-4-hydrogen"
+        });
+        assert_eq!(
+            request_url(&full),
+            "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions"
+        );
+        let item = json!({"id": "models/gemini-4-hydrogen", "display_name": "Gemini 4 Hydrogen"});
+        let parsed = model_metadata(&item, "gemini").unwrap();
+        assert_eq!(parsed["id"], "gemini-4-hydrogen");
+        assert_eq!(parsed["name"], "Gemini 4 Hydrogen");
+    }
 }
